@@ -93,10 +93,10 @@ class DetailView extends VBox {
     private Button BackButton;
     private Button DeleteButton;
     private boolean editing = false;
-    private DeleteWindow delewin;
+   
 
     DetailView(String names, String types, String IngredientLists, String StepInstructions) {
-        delewin = new DeleteWindow();
+      
         BackButton = new Button("Back");
         BackButton.setPrefSize(100, 50);
         BackButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
@@ -217,7 +217,8 @@ class DetailView extends VBox {
             }
         });
         this.DeleteButton.setOnAction(e ->{
-            this.delewin.ConfirmAgain(stage, recipe, recipeList, newWindow);            
+            DeleteWindow delewin = new DeleteWindow();
+            delewin.ConfirmAgain(stage, recipe, recipeList, newWindow);            
         });
         newWindow.setMaxHeight(800);
         newWindow.setMaxWidth(1400);
