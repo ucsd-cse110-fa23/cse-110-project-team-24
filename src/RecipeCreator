@@ -1,0 +1,131 @@
+public class RecipeParser { // get the title, instructions and ingredients from the ChatGpt response
+// the title is in the "title"
+
+    public static Recipe parseRecipe(RecipeGenerator generator) {
+        String response = generator.getRecipeResponse();
+        String title = getTitle(response);
+        String instructions = getInstructions(response);
+        String ingredients = getIngredients(response);
+
+        Recipe recipe = new Recipe(title, generator.getMealType(), instructions, ingredients);
+
+
+    }
+
+    private static String getTitle(String response) {
+        /**
+         * Source: https://www.w3schools.com/java/ref_string_indexof.asp
+         * Title: Java String indexOf() Method
+         * Date Accessed: 11/3/2023
+         * Use: Used to understand how to get index of a character in a string from a position (use of indexOf())
+         */
+        int firstQuote = response.indexOf("\"") + 1;
+        return response.substring(firstQuote,(response.indexOf("\"", firstQuote + 1)))
+    }
+
+    private static String getIngredients(String response) {
+        String firstDelimeter = "Ingredients";
+        String secondDelimeter = "Instructions"; 
+        String ingredients = response.substring(response.indexOf(firstDelimeter), 
+                response.indexOf(secondDelimeter)); // TODO: Might not need ingredients subtitle
+        return ingredients;
+    }
+     private static String getInstructions(String response) {
+        String firstDelimeter = "Instructions";
+        String ingredients = response.substring(response.indexOf(firstDelimeter)); // TODO: Might not need ingredients subtitle
+        return ingredients; 
+
+    }
+}
+
+RecipeCreator.parseRecipe((new ChatGpt ()).getRecipeResponse(BREAKFAST));
+
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public interface RecipeGenerator {
+    public String getRecipeRespone(MealType mealType);
+    public String getMealType();
+}
+class ChatGPTGenerator implements RecipeGenerator{
+
+    private static final String API_ENDPOINT = "https://api.openai.com/v1/completions";
+    private static final String API_KEY = "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";
+    private static final String MODEL = "text-davinci-003";
+    private MealType mealType;
+
+
+    private JSonObject createRequestBody(String prompt) {
+        // Create request body 
+        JSONObject requestBody;
+        requestBody = new JSONObject();
+        requestBody.put("model", MODEL);
+        requestBody.put("max_tokens", 100);
+        requestBody.put("temperature", 1.0);
+        requestBody.put("prompt", prompt);
+        return requestBody;
+    }
+
+    private HttpClient createClient(JSONObject requestBody) {
+        // Create the HTTP Client
+        HttpClient client = HttpClient.newHttpClient();
+        // Create the request object
+        HttpRequest request = HttpRequest
+        .newBuilder()
+        .uri(new URI(API_ENDPOINT))
+        .header("Content-Type", "application/json")
+        .header("Authorization", String.format("Bearer %s", API_KEY))
+        .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+        .build();
+        return client;
+    }
+
+    // return recipe response generated from ChatGPT given MealType
+    public String getRecipeResponse(MealType mealType) {  // TODO: for user story 3 add ingredients argument
+        this.mealType = mealType;
+        String prompt = String.format("Give me a %s recipe.", convertToString(mealType)); 
+        
+
+        JSonObject requestBody = createRequestBody(prompt);
+        HttpClient client = createClient(requestBody);
+
+        // Send the request and receive the response
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        // Process the response
+        String responseBody = response.body();
+        JSONObject responseJson - new JSONObject(responseBody);
+
+        JSONArray choices = responseJson.getJSONArray("choices");
+        String generatedText = choices.getJSONObject(0).getString("text");
+
+        return generatedText;
+    }
+
+    public String getMealType() {
+        return this.mealType;
+    }
+
+    private String convertToString(MealType mealType) {
+        switch (mealType) {
+            case BREAKFAST:
+                return "breakfast";
+                break;
+            case LUNCH:
+                return "lunch";
+                break;
+            case DINNER:
+                return "dinner";
+                break;
+            default:
+                return "";
+        }
+    }
+
+}
