@@ -8,18 +8,21 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.skin.TextAreaSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.TextAlignment;
+import javafx.geometry.Insets;
 import javafx.scene.text.*;
 import java.io.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
-
-
+import java.util.Observable;
 public class Main extends Application{
     
     public static void main(String[] args) {
@@ -56,34 +59,47 @@ class Contact extends HBox {
     private Button removeButton;
 
     Contact() {
-        this.setStyle("-fx-background-color: #f5cf52; -fx-border-width: 1; -fx-border-color:#000000; -fx-font-weight: bold;");
+        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
         this.name = new Text(); // TODO: want to set padding
-        this.email = "";
-        this.phoneNumber = "";
+        /*
+         * Source: https://stackoverflow.com/questions/18363585/adding-space-between-buttons-in-vbox
+         * Title: javafx 2 - https://stackoverflow.com/questions/18363585/adding-space-between-buttons-in-vbox
+         * Date Accessed: 10/9/2023
+         * Use: Used to discover spacing property and setSpacing() function.
+         */
+        this.setSpacing(50);
+
 
 
         this.setOnMouseClicked(e -> this.show());
         this.removeButton = new Button("Remove");
-        removeButton.setStyle("-fx-background-color:#ffed28");
-        
+        removeButton.setPrefSize(100, 20);
+        removeButton.setPrefHeight(Double.MAX_VALUE);
     
-        /*
-         * Source: https://stackoverflow.com/questions/41654333/how-to-align-children-in-a-hbox-left-center-and-right
-         * Title: java - How to align children in a HBox Left, Center and Right
-         * Date Accessed: 10/15/2023
-         * Use: I used this source to figure out how to align children of an HBox to different sides.
-         */
-        Region filler = new Region();
-        HBox.setHgrow(filler, Priority.ALWAYS);
-
-        this.getChildren().addAll(name, filler, removeButton);
+        this.getChildren().addAll(name, removeButton);
     }
 
     Contact(String label, String email, String phoneNumber) {
-        this();
-        this.name.setText(label); // TODO: want to set padding
+        this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;");
+        this.name = new Text(label); // TODO: want to set padding
         this.email = email;
         this.phoneNumber = phoneNumber;
+        /*
+         * Source: https://stackoverflow.com/questions/18363585/adding-space-between-buttons-in-vbox
+         * Title: javafx 2 - https://stackoverflow.com/questions/18363585/adding-space-between-buttons-in-vbox
+         * Date Accessed: 10/9/2023
+         * Use: Used to discover spacing property and setSpacing() function.
+         */
+        this.setSpacing(50);
+
+
+
+        this.setOnMouseClicked(e -> this.show());
+        this.removeButton = new Button("Remove");
+        removeButton.setPrefSize(100, 20);
+        removeButton.setPrefHeight(Double.MAX_VALUE);
+    
+        this.getChildren().addAll(name, removeButton);
     }
 
 
@@ -114,13 +130,9 @@ class Contact extends HBox {
         this.currentDisplay = ContactDisplay.of(this);
         // set up save button
         this.saveInfoButton = currentDisplay.getSaveInfoButton();
-        this.saveInfoButton.setOnAction(e -> {     
-            if (currentDisplay.getName().getText().equals("")) {
-                System.err.println("Must fill out name");
-                return;
-            } 
+        this.saveInfoButton.setOnAction(e -> {      
             this.name.setText(currentDisplay.getName().getText());
-            this.email = currentDisplay.getEmail().getText();
+            this.email =currentDisplay.getEmail().getText();
             this.phoneNumber = currentDisplay.getPhoneNumber().getText();
             this.picture = currentDisplay.getPicture();
             secondaryStage.close();
@@ -149,7 +161,7 @@ class Contact extends HBox {
         });
 
         // show contact display
-        Scene toShow = new Scene(this.currentDisplay, 250, 400);
+        Scene toShow = new Scene(this.currentDisplay, 100, 200);
         secondaryStage.setTitle("Contact");
         secondaryStage.setScene(toShow);
         secondaryStage.show();
@@ -168,32 +180,20 @@ class ContactDisplay extends VBox {
 
 
     ContactDisplay() {
-        this.setStyle("-fx-background-color: #eea80d");
-        this.setAlignment(Pos.BASELINE_CENTER);
-        this.setSpacing(20);
         this.name = new TextField();
         this.email = new TextField();
         this.phoneNumber = new TextField();
         this.saveInfoButton = new Button();
         this.picture = null;
         this.saveInfoButton.setText("Save");
-        saveInfoButton.setStyle("-fx-background-color:#ffed28");
-        this.uploadButton = new Button("Upload Image");
-        uploadButton.setStyle("-fx-background-color:#ffed28");
+        this.uploadButton = new Button();
+        this.uploadButton.setText("Upload");
 
         this.imageView = new ImageView();
 
-        
-        Label l1 = new Label("Name: ");
-        l1.setStyle("-fx-font-weight: bold;");
-        Label l2 = new Label("Email Address: ");
-        l2.setStyle("-fx-font-weight: bold;");
-        Label l3 = new Label("Phone Number: ");
-        l3.setStyle("-fx-font-weight: bold;");
-
-        HBox nameBox = new HBox(l1, this.name);
-        HBox emailBox = new HBox(l2, this.email);
-        HBox phoneNumberBox = new HBox(l3, this.phoneNumber);
+        HBox nameBox = new HBox(new Text("Name: "), this.name);
+        HBox emailBox = new HBox(new Text("Email Address: "), this.email);
+        HBox phoneNumberBox = new HBox(new Text("Phone Number: "), this.phoneNumber);
 
 
         this.getChildren().addAll(imageView, uploadButton, nameBox, emailBox, phoneNumberBox, saveInfoButton);
@@ -278,10 +278,6 @@ class ContactList extends VBox {
      */
     public void saveContacts() {
         try {
-            // delete previous entries
-            File toUpdate = new File("contacts.txt");
-            toUpdate.delete();
-
             FileWriter fr = new FileWriter("contacts.txt");
             fr.write("name, email, phone number\n");
             for (Object current: this.getChildren()) {
@@ -302,48 +298,24 @@ class ContactList extends VBox {
     public void loadContacts() {
         try {
             BufferedReader br = new BufferedReader(new FileReader("contacts.txt"));
-            br.readLine(); // ignore first line
             String nextLine;
-            String name;
-            String email;
-            String phoneNumber;
+            String name = "";
+            String email = "";
+            String phoneNumber = "";
 
             while ((nextLine = br.readLine()) != null) {
-                name = getSection(nextLine, 0);
-                email = getSection(nextLine, 1);
-                phoneNumber = getSection(nextLine, 2);
-
+                String[] sections = nextLine.split(",");
+                name = sections[0];
+                email = sections[1];
+                phoneNumber = sections[2];
 
                 Contact toAdd = new Contact(name, email, phoneNumber);
-                toAdd.getRemoveButton().setOnAction(e->{
-                    this.getChildren().remove(toAdd);
-                });
                 this.getChildren().add(toAdd);
             }
 
             br.close();
 
         } catch (Exception e) {e.printStackTrace();}
-    }
-
-    // get value at position index from line in CSV file
-    private static String getSection (String line, int index) {
-        int currentIndex = 0;
-        String result = "";
-        // navigate to section
-        for (int i = 0; i < index; i++) {
-            while (line.charAt(currentIndex) != ',') {
-                currentIndex++;
-            }
-            currentIndex++;
-        }
-
-        // get section
-        while (currentIndex < line.length() && line.charAt(currentIndex) != ',') {
-            result += line.charAt(currentIndex++);
-        }
-
-        return result;
     }
 
 }
@@ -356,22 +328,15 @@ class Footer extends HBox {
 
     Footer() {
         this.addButton = new Button();
-        Region filler1 = new Region();
-        HBox.setHgrow(filler1, Priority.ALWAYS);
         this.sortButton = new Button();
-        Region filler2 = new Region();
-        HBox.setHgrow(filler2, Priority.ALWAYS);
         this.saveContactsButton = new Button("Save Contacts");
-        Region filler3 = new Region();
-        HBox.setHgrow(filler3, Priority.ALWAYS);
         this.loadContactsButton = new Button("Load Contacts");
 
         sortButton.setText("Sort Contacts");
         addButton.setText("Add Contact");
 
 
-        this.getChildren().addAll(addButton, filler1, sortButton, filler2, 
-                saveContactsButton, filler3, loadContactsButton);
+        this.getChildren().addAll(addButton, sortButton, saveContactsButton, loadContactsButton);
     }
 
     public Button getAddButton() {
@@ -403,30 +368,24 @@ class Frame extends BorderPane {
     
     Frame() {
         this.contacts = new ContactList();
-        contacts.setStyle("-fx-background-color: #eea80d");
         this.footer = new Footer();
-        footer.setStyle("-fx-background-color: #c3550a");
         this.addButton = footer.getAddButton();
-        addButton.setStyle("-fx-background-color:#ffed28");
         this.sortButton = footer.getSortButton();
-        sortButton.setStyle("-fx-background-color:#ffed28");
         this.saveContactsButton = footer.getSaveContactsButton();
-        saveContactsButton.setStyle("-fx-background-color:#ffed28");
         this.loadContactsButton = footer.getLoadContactsButton();
-        loadContactsButton.setStyle("-fx-background-color:#ffed28");
 
-        ScrollPane scroller = new ScrollPane(contacts);
-        scroller.setFitToHeight(true);
-        scroller.setFitToWidth(true);
+        ScrollPane s1 = new ScrollPane(contacts);
+        s1.setFitToHeight(true);
+        s1.setFitToWidth(true);
 
         HBox header = new HBox();
-        header.setStyle("-fx-background-color: #c3550a;");
+        header.setStyle("-fx-background-color: #F0F8FF;");
         header.setAlignment(Pos.CENTER);
         Text title = new Text("Contacts");
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
         header.getChildren().add(title);
 
-        this.setCenter(scroller);
+        this.setCenter(s1);
         this.setBottom(this.footer);
         this.setTop(header);
 
