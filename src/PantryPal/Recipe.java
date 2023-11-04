@@ -1,11 +1,10 @@
 package PantryPal;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
 import javafx.scene.layout.*;
 
 
-
+//For US 4-3
 public class Recipe extends HBox{
     private Boolean needtodelete = false;
     private Button title;
