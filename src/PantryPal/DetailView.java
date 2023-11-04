@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
+//For US 4-1 DetailView
 public class DetailView extends VBox{
      private Label name;
     private TextArea type;
