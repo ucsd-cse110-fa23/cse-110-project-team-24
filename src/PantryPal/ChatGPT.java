@@ -16,10 +16,12 @@ public class ChatGPT {
     "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";
     private static final String MODEL = "text-davinci-003";
 
-    public static String ConductingRecipe(String type, String Ingredient) throws URISyntaxException, IOException, InterruptedException{
+    public  String ConductingRecipe(String type, String Ingredient) throws URISyntaxException, IOException, InterruptedException{
         //Set request parameter
         int maxTokens = 100;
-        String prompt = "I want a " + type+ ". And I have" + Ingredient + ". Could you give me a recipe with its name first and step by step instruction only.";
+        String prompt = "I want a " + type+ ". And I have" + Ingredient + ". Could you give me a recipe with following format:"+
+        "name is...... ingredient list is......('-' is prohibited) Instruction is......";
+       
         //int promptindex = 2;
         // while(promptindex != args.length){
         //     prompt.concat(args[promptindex]);
@@ -59,6 +61,7 @@ public class ChatGPT {
         JSONObject responseJson = new JSONObject(responseBody);
         JSONArray choices = responseJson.getJSONArray("choices");
         String generatedText = choices.getJSONObject(0).getString("text");
+        System.out.println(generatedText);
         return generatedText;
     }
 }

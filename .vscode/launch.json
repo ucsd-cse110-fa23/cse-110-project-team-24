@@ -16,7 +16,7 @@
             "request": "launch",
             "mainClass": "PantryPal.Main",
             "projectName": "cse-110-project-team-24_5ce35baa",
-            "vmArgs": "--module-path C:/Users/litia/Downloads/openjfx-21_windows-x64_bin-sdk/javafx-sdk-21/lib --add-modules javafx.controls,javafx.fxml"
+            "vmArgs": "--module-path C:/Users/litia/Downloads/openjfx-21.0.1_windows-x64_bin-sdk/javafx-sdk-21.0.1/lib --add-modules javafx.controls,javafx.fxml"
         
         }
     ]

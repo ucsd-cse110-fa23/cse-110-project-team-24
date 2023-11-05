@@ -44,7 +44,7 @@ public class AppFrame extends BorderPane{
             //     newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
             // });
             CreateView creating = new CreateView();
-            creating.OpenCreateView();
+            creating.OpenCreateView(taskList);
         });
     }
 }

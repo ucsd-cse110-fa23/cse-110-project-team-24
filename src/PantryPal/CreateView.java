@@ -2,6 +2,8 @@ package PantryPal;
 
 
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -109,7 +111,7 @@ public class CreateView extends VBox {
         Scene thirdScene = new Scene(auidos, 800, 200);
         return thirdScene;
     }
-    public void OpenCreateView(){
+    public void OpenCreateView(RecipeList taskList){
         Scene secondScene = CreateScene(this);
 		// New window (Stage)
 		Stage newWindow = new Stage();
@@ -132,9 +134,27 @@ public class CreateView extends VBox {
         });
 
         this.StartFinding.setOnAction(e -> {
+            this.startFinding(new ChatGPT(), newWindow, taskList);
 
         });
 		newWindow.show();
+    }
+
+    public void startFinding(ChatGPT chat, Stage newWindow, RecipeList taskList){
+        try {
+            String answer = chat.ConductingRecipe(this.getTypeArea().getText(), this.getIngredientList().getText()).toLowerCase();
+            GeneratedView CreatedViews = new GeneratedView();
+            CreatedViews.OpenGeneratedView(answer, newWindow, this.getTypeArea().getText(), taskList);
+        } catch (URISyntaxException e) {
+         
+            e.printStackTrace();
+        } catch (IOException e) {
+         
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+           
+            e.printStackTrace();
+        }
     }
     public void recordSounds(AudioRecorder audioRecorder){
         Scene thirdScene = CreateScene(audioRecorder);
