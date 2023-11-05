@@ -36,13 +36,15 @@ public class AppFrame extends BorderPane{
 
     public void addListeners(){
         Create.setOnAction(e -> {
-            Recipe newrecipe = new Recipe();
-            taskList.getChildren().add(newrecipe);
-            Button title = newrecipe.getTitle();
+            // Recipe newrecipe = new Recipe();
+            // taskList.getChildren().add(newrecipe);
+            // Button title = newrecipe.getTitle();
             
-            title.setOnAction(e1 -> {
-                newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
-            });
+            // title.setOnAction(e1 -> {
+            //     newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
+            // });
+            CreateView creating = new CreateView();
+            creating.OpenCreateView();
         });
     }
 }

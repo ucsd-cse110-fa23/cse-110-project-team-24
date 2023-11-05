@@ -11,7 +11,7 @@ import javafx.scene.text.TextAlignment;
 
 //For US 4-1 DetailView
 public class DetailView extends VBox{
-     private Label name;
+    private Label name;
     private TextArea type;
     private TextArea IngredientList;
     private TextArea StepInstruction;
