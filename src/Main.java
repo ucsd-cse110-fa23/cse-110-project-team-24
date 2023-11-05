@@ -247,7 +247,7 @@ class DetailView extends VBox {
     }
 }
 
-class DeleteWindow extends HBox{
+class DeleteWindow extends VBox{
     private Label Confirm;
     private Button Deleteit;
     private Button CancelDele;
