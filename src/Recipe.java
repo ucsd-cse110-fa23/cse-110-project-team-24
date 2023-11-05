@@ -42,4 +42,9 @@ public class Recipe {
     public void setSteps(String text) {
         this.steps = text;
     }
+
+    public boolean equals(Recipe other) {
+        return this.ingredients.equals(other.getIngredients()) && this.title.equals(other.getTitle())
+                && this.steps.equals(other.getSteps()) && (this.mealType == other.getMealType());
+    }
 }
