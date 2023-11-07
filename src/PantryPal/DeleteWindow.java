@@ -38,7 +38,7 @@ public class DeleteWindow extends VBox{
         return secondScene;
     }
 
-    public void ConfirmAgain(Stage stage, Recipe recipe, RecipeList recipeList, Stage dv){
+    public void ConfirmAgain(Stage stage, RecipeView recipe, RecipeList recipeList, Stage dv){
         	
 
 		Scene secondScene = CreateScene(this);

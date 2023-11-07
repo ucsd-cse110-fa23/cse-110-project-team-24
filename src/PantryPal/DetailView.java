@@ -11,6 +11,7 @@ import javafx.scene.text.TextAlignment;
 
 //For US 4-1 DetailView
 public class DetailView extends VBox{
+    private Recipe recipe;
     private Label name;
     private TextArea type;
     private TextArea IngredientList;
@@ -21,15 +22,16 @@ public class DetailView extends VBox{
     private boolean editing = false;
    
 
-    DetailView(String names, String types, String IngredientLists, String StepInstructions) {
+    DetailView(Recipe recipe) {
       
+        this.recipe = recipe;
         BackButton = new Button("Back");
         BackButton.setPrefSize(100, 50);
         BackButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
         BackButton.setAlignment(Pos.CENTER);
         this.getChildren().add(BackButton);
 
-        name = new Label( names);
+        name = new Label(recipe.getTitle());
         name.setPrefSize(1400, 50);
         name.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         name.setAlignment(Pos.TOP_CENTER);
@@ -38,7 +40,7 @@ public class DetailView extends VBox{
         this.getChildren().add(name);
 
 
-        type = new TextArea("Type is: " +types);
+        type = new TextArea("Type is: " + recipe.getMealType());
       
         type.setEditable(false);
         type.setPrefSize(1400, 100);
@@ -48,7 +50,7 @@ public class DetailView extends VBox{
         
         this.getChildren().add(type);
 
-        IngredientList = new TextArea(IngredientLists);
+        IngredientList = new TextArea(recipe.getIngredients());
         IngredientList.setPrefSize(1400, 200);
         IngredientList.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         IngredientList.setEditable(false);
@@ -58,7 +60,7 @@ public class DetailView extends VBox{
         IngredientList.setPadding(new Insets(10, 0, 10, 0));
         IngredientList.setEditable(false);
 
-        StepInstruction = new TextArea(StepInstructions);
+        StepInstruction = new TextArea(recipe.getSteps());
         StepInstruction.setPrefSize(1400, 300);
         StepInstruction.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         //StepInstruction.setAlignment(Pos.BASELINE_LEFT);
@@ -81,6 +83,7 @@ public class DetailView extends VBox{
         DeleteButton.setAlignment(Pos.CENTER);
         this.getChildren().addAll(EditButton, DeleteButton);
     }
+
     public void SetEditable(){
         if(editing == false){
             this.EditButton.setText("Editing");
@@ -113,35 +116,35 @@ public class DetailView extends VBox{
     }
 
     
-    public void OpenView(Stage stage, String Name, Recipe recipe, RecipeList recipeList){
+    public void OpenView(Stage stage, RecipeView recipeView, RecipeList recipeList){
         // StackPane secondaryLayout = new StackPane();
 		// secondaryLayout.getChildren().addAll(type, IngredientList, StepInstruction);
-         this.name.setText(Name);
+        this.name.setText(recipeView.getRecipe().getTitle());
 		Scene secondScene = CreateScene(this);
 
 		// New window (Stage)
 		Stage newWindow = new Stage();
-		newWindow.setTitle(Name);
+		newWindow.setTitle(recipe.getTitle());
 		newWindow.setScene(secondScene);
         this.EditButton.setOnAction(e -> {
             this.SetEditable();
         });
+
         this.BackButton.setOnAction(e -> {
             try{
-                recipe.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
-                for (int i = 0; i < recipe.getChildren().size(); i++) {
-                    recipe.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
+                recipeView.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
+                for (int i = 0; i < recipeView.getChildren().size(); i++) {
+                    recipeView.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
              // change color of task to green
                 }
                 newWindow.close();
             } catch(Exception e1){
                 System.out.println("Wrong Closing");
-                
             }
         });
         this.DeleteButton.setOnAction(e ->{
             DeleteWindow delewin = new DeleteWindow();
-            delewin.ConfirmAgain(stage, recipe, recipeList, newWindow);            
+            delewin.ConfirmAgain(stage, recipeView, recipeList, newWindow);            
         });
         newWindow.setMaxHeight(800);
         newWindow.setMaxWidth(1400);
@@ -152,9 +155,9 @@ public class DetailView extends VBox{
          
         newWindow.setOnCloseRequest((e -> {
             try{
-                recipe.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
-                for (int i = 0; i < recipe.getChildren().size(); i++) {
-                    recipe.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
+                recipeView.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
+                for (int i = 0; i < recipeView.getChildren().size(); i++) {
+                    recipeView.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
              // change color of task to green
                 }
                 newWindow.close();

@@ -30,8 +30,7 @@ class AudioRecorder extends VBox {
         // this.setPrefWrapLength(170);
 
         // Add the buttons and text fields
-        ReminderLabel = new TextField("Please tell us your type and ingredient list in the following format: I want a ......(T" +
-        "ype) And I have......and...(Your ingredients)");
+        ReminderLabel = new TextField("Please list the meal type (breakfast, lunch, or dinner) and ingredients in the following format: [meal type], [ingredient 1], [ingredient 2], . . .");
         ReminderLabel.setStyle(defaultButtonStyle);
         ReminderLabel.setPrefSize(800, 100);
 

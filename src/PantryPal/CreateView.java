@@ -115,7 +115,7 @@ public class CreateView extends VBox {
         Scene secondScene = CreateScene(this);
 		// New window (Stage)
 		Stage newWindow = new Stage();
-        newWindow.setTitle("Creating the recipe");
+        newWindow.setTitle("Create Recipe");
         newWindow.setScene(secondScene);
         this.EditButton.setOnAction(e -> {
             this.SetEditable();
@@ -134,28 +134,24 @@ public class CreateView extends VBox {
         });
 
         this.StartFinding.setOnAction(e -> {
-            this.startFinding(new ChatGPT(), newWindow, taskList);
+            this.startFinding(new ChatGPTResponse(), newWindow, taskList);
 
         });
 		newWindow.show();
     }
 
-    public void startFinding(ChatGPT chat, Stage newWindow, RecipeList taskList){
+    public void startFinding(APIResponse api, Stage newWindow, RecipeList taskList){
         try {
-            String answer = chat.ConductingRecipe(this.getTypeArea().getText(), this.getIngredientList().getText()).toLowerCase();
+            RecipeGenerator generator = new ChatGPTGenerator(new ChatGPTResponse());
+            Recipe generatedRecipe = generator.generateRecipe(this.getTypeArea().getText(), this.getIngredientList().getText());
             GeneratedView CreatedViews = new GeneratedView();
-            CreatedViews.OpenGeneratedView(answer, newWindow, this.getTypeArea().getText(), taskList);
-        } catch (URISyntaxException e) {
+            CreatedViews.OpenGeneratedView(generatedRecipe, newWindow, taskList);
+        } catch (Exception e) {
          
             e.printStackTrace();
-        } catch (IOException e) {
-         
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-           
-            e.printStackTrace();
-        }
+        } 
     }
+
     public void recordSounds(AudioRecorder audioRecorder){
         Scene thirdScene = CreateScene(audioRecorder);
 		// New window (Stage)
@@ -176,17 +172,15 @@ public class CreateView extends VBox {
                 Whisper transcript = new Whisper();
                 try {
                     String s = transcript.runningTanscription().toLowerCase();
-                    if(s.indexOf("i want a ") == -1 || s.indexOf("and i have") == -1){
-                        this.getTypeArea().setText("Wrong Input, Please record again");
-                        this.getIngredientList().setText("Wrong Input Please record again");
-                    }
+                    String[] words = s.split(" ");
+                    
 
-                    else{
-                    String type = GetTypes(s);
-                    String IngredientList = GetIngredientList(s);
+                    
+                    String type = words[0];
+                    String IngredientList = s.substring(s.indexOf(" "));
                     this.getTypeArea().setText(type);
                     this.getIngredientList().setText(IngredientList);
-                    }
+                    
                 } catch (Exception e1) {
                     
                     e1.printStackTrace();
