@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: complile
-      - run: javac APITest.java
+      - name: compile
+        run: javac APITest.java
 
       - name: run
-      - run: java APITest.java
+        run: java APITest.java
       
 
