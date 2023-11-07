@@ -1,3 +1,4 @@
+package PantryPal;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,7 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public interface APIResponse {
-    public String getText(MealType mealType, String Ingredients);
+    public String getText(String mealType, String Ingredients);
 }
 
 
@@ -20,8 +21,8 @@ class ChatGPTResponse implements APIResponse{
 
     // return recipe response generated from ChatGPT given MealType
     @Override
-    public String getText (MealType mealType, String ingredients) {  // TODO: for user story 3 add ingredients argument
-        String prompt = String.format("Give me a %s recipe.", convertToString(mealType)); 
+    public String getText (String mealType, String ingredients) { 
+        String prompt = String.format("Give me a %s recipe with the ingredients %s. Put the title after \"Title:\", the ingredients after \"Ingredients:\", and the instructions after \"Instructions:\". ", mealType, ingredients); 
         
 
         JSONObject requestBody = createRequestBody(prompt);
@@ -79,21 +80,8 @@ class ChatGPTResponse implements APIResponse{
         }
         return request;
     }
-
-    private String convertToString(MealType mealType) {
-        switch (mealType) {
-            case BREAKFAST:
-                return "breakfast";
-            case LUNCH:
-                return "lunch";
-            case DINNER:
-                return "dinner";
-            default:
-                return "";
-        }
-    }
-
 }
+
 
 
 class MockAPIResponse implements APIResponse {
@@ -102,7 +90,7 @@ class MockAPIResponse implements APIResponse {
         this.response = response;
     }
 
-    public String getText(MealType mealType, String Ingredients) {
+    public String getText(String mealType, String Ingredients) {
         return this.response;
     }
 

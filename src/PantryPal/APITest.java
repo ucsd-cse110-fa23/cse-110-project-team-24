@@ -1,3 +1,4 @@
+package PantryPal;
 //package test; 
 
 import static org.junit.Assert.assertEquals;
@@ -9,7 +10,7 @@ public class APITest {
 
 // This is just a random recipe from ChatGPT
     
-    private static String EXAMPLE = "Whole-Grain Egg Bake\r\n" + //
+    private static String EXAMPLE = "Title: Whole-Grain Egg Bake\r\n" + //
             "\r\n" + //
             "Ingredients:\r\n" + //
             "- 2 cups cooked whole-grain cereal, such as oatmeal, quinoa, or barley\r\n" + //
@@ -82,8 +83,8 @@ public class APITest {
         String expectedIngredients = EXPECTED_INGREDIENTS;
         String expectedSteps = EXPECTED_STEPS;
 
-        Recipe expected = new Recipe(expectedTitle, MealType.BREAKFAST, expectedIngredients, expectedSteps);
-        Recipe result = generator.generateRecipe(MealType.BREAKFAST, null);
+        Recipe expected = new Recipe(expectedTitle, "breakfast", expectedIngredients, expectedSteps);
+        Recipe result = generator.generateRecipe("breakfast", null);
         
         assertEquals(expected.ingredients, result.ingredients);
         assertEquals(expected.title, result.title);
