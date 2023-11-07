@@ -1,0 +1,14 @@
+name: tests
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: complile
+      - run: javac APITest.java
+
+      - name: run
+      - run: java APITest.java
+      
+
