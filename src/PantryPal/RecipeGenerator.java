@@ -40,7 +40,8 @@ class ChatGPTGenerator implements RecipeGenerator{ // get what the RecipeParser
         // int colonIndex = response.indexOf("\r\n"); 
         // String title = response.substring(0, colonIndex);
         // return title;
-        String titleSection = response.substring(7, response.indexOf("Ingredients") - 4);
+        int labelLength = 8;
+        String titleSection = response.substring(labelLength + 1, response.indexOf("Ingredients") - 2);
         return titleSection; 
     }
 
@@ -52,8 +53,8 @@ class ChatGPTGenerator implements RecipeGenerator{ // get what the RecipeParser
     //    String ingredients = response.substring(response.indexOf(firstDelimeter) +14, // the number of characters in the firstDelimeter and \r\n 
     //            instructionsPointer - 2);
     //     return ingredients;
-        int ingredientsStart = response.indexOf("Ingredients:") + 14;
-        int ingredentsEnd = response.indexOf("Instructions:") - 2;
+        int ingredientsStart = response.indexOf("Ingredients:") + 13;
+        int ingredentsEnd = response.indexOf("Instructions:") - 1;
         String ingredientsSection = response.substring(ingredientsStart, ingredentsEnd);
         return ingredientsSection;
     }
@@ -62,7 +63,7 @@ class ChatGPTGenerator implements RecipeGenerator{ // get what the RecipeParser
         // String firstDelimeter = "Instructions";
         // String ingredients = response.substring(response.indexOf(firstDelimeter)+ 15); // // the number of characters in the firstDelimeter and \r\n 
         // return ingredients; 
-        int instructionsStart = response.indexOf("Instructions:") + 15;
+        int instructionsStart = response.indexOf("Instructions:") + 14;
         String ingredientsSection = response.substring(instructionsStart);
         return ingredientsSection;
     }
