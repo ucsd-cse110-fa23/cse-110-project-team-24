@@ -6,7 +6,7 @@ jobs:
     
     steps:
       - name: compile
-        run: javac APITest.java
+        run: javac -cp "./src/PantryPal/" *.java
 
       - name: run
         run: java APITest.java
