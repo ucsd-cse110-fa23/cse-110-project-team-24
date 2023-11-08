@@ -1,15 +1,21 @@
 package pantrypal;
 
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javax.sound.sampled.*;
 
 class AudioRecorder extends VBox {
-    private Button BackANDTranscript;
+    private Button backAndTranscriptButton;
     private Button startButton;
     private Button stopButton;
     private AudioFormat audioFormat;
@@ -30,36 +36,37 @@ class AudioRecorder extends VBox {
         // this.setPrefWrapLength(170);
 
         // Add the buttons and text fields
-        ReminderLabel = new TextField("Please list the meal type (breakfast, lunch, or dinner) and ingredients in the following format: [meal type], [ingredient 1], [ingredient 2], . . .");
+        ReminderLabel = new TextField(
+                "Please list the meal type (breakfast, lunch, or dinner) and ingredients in the following format: [meal type], [ingredient 1], [ingredient 2], . . .");
         ReminderLabel.setStyle(defaultButtonStyle);
         ReminderLabel.setPrefSize(800, 100);
 
         startButton = new Button("Start");
         startButton.setStyle(defaultButtonStyle);
-    
 
         stopButton = new Button("Stop");
         stopButton.setStyle(defaultButtonStyle);
 
-        BackANDTranscript = new Button("Back And Transciprt");
-        BackANDTranscript.setStyle(defaultButtonStyle);
-
+        backAndTranscriptButton = new Button("Back And Transciprt");
+        backAndTranscriptButton.setStyle(defaultButtonStyle);
 
         recordingLabel = new Label("Recording...");
         recordingLabel.setStyle(defaultLabelStyle);
 
-        this.getChildren().addAll(startButton, stopButton, recordingLabel, BackANDTranscript, ReminderLabel);
+        this.getChildren().addAll(startButton, stopButton, recordingLabel, backAndTranscriptButton, ReminderLabel);
 
         // Get the audio format
         audioFormat = getAudioFormat();
 
         // Add the listeners to the buttons
-        addListeners();
+        addStartAndStopListeners();
     }
-    public Button getBackAndTRanscButton(){
-        return this.BackANDTranscript;
+
+    public Button getbackAndTranscriptButtonButton() {
+        return this.backAndTranscriptButton;
     }
-    public void addListeners() {
+
+    public void addStartAndStopListeners() {
         // Start Button
         startButton.setOnAction(e -> {
             startRecording();
@@ -70,7 +77,6 @@ class AudioRecorder extends VBox {
             stopRecording();
         });
 
-        
     }
 
     private AudioFormat getAudioFormat() {
@@ -98,35 +104,66 @@ class AudioRecorder extends VBox {
                 bigEndian);
     }
 
+
+    public void setBackAndTrancriptListener(Stage recorderWindow, CreateView view) {
+        this.getbackAndTranscriptButtonButton().setOnAction(e -> {
+            recorderWindow.close();
+            // String s = "i want a lunch, and i have carrots, eggs, and rices";
+            // String type = GetTypes(s);
+            // String IngredientList = GetIngredientList(s);
+            // this.getTypeArea().setText(type);
+            // this.getIngredientList().setText(IngredientList);
+            Path p = Paths.get("recording.mp3");
+            if (Files.exists(p)) {
+                Whisper transcriptor = new Whisper();
+                try {
+                    String s = transcriptor.transcript().toLowerCase();
+                    String[] words = s.split(" ");
+
+                    String type = words[0];
+                    String IngredientList = s.substring(s.indexOf(" "));
+                    view.getTypeArea().setText(type);
+                    view.getIngredientList().setText(IngredientList);
+
+                } catch (Exception e1) {
+
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void startRecording() {
         Thread t = new Thread(
-            new Runnable() {
-                public void run() {
-        try {
-            // the format of the TargetDataLine
-            DataLine.Info dataLineInfo = new DataLine.Info(
-                    TargetDataLine.class,
-                    audioFormat);
-            // the TargetDataLine used to capture audio data from the microphone
-            targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
-            targetDataLine.open(audioFormat);
-            targetDataLine.start();
-            recordingLabel.setVisible(true);
+                new Runnable() {
+                    public void run() {
+                        try {
+                            // the format of the TargetDataLine
+                            DataLine.Info dataLineInfo = new DataLine.Info(
+                                    TargetDataLine.class,
+                                    audioFormat);
+                            // the TargetDataLine used to capture audio data from the microphone
+                            targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
+                            targetDataLine.open(audioFormat);
+                            targetDataLine.start();
+                            recordingLabel.setVisible(true);
 
-            // the AudioInputStream that will be used to write the audio data to a file
-            AudioInputStream audioInputStream = new AudioInputStream(
-                    targetDataLine);
+                            // the AudioInputStream that will be used to write the audio data to a file
+                            AudioInputStream audioInputStream = new AudioInputStream(
+                                    targetDataLine);
 
-            // the file that will contain the audio data
-            File audioFile = new File("recording.mp3");
-            AudioSystem.write(
-                    audioInputStream,
-                    AudioFileFormat.Type.WAVE,
-                    audioFile);
-            recordingLabel.setVisible(false);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }}});
+                            // the file that will contain the audio data
+                            File audioFile = new File("recording.mp3");
+                            AudioSystem.write(
+                                    audioInputStream,
+                                    AudioFileFormat.Type.WAVE,
+                                    audioFile);
+                            recordingLabel.setVisible(false);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
         t.start();
     }
 
@@ -135,4 +172,3 @@ class AudioRecorder extends VBox {
         targetDataLine.close();
     }
 }
-
