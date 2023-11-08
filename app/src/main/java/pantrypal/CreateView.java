@@ -70,7 +70,7 @@ public class CreateView extends VBox {
         StartRecording.setAlignment(Pos.CENTER);
         this.getChildren().add(StartRecording);
 
-        StartFinding = new Button("Start Find Your Recipe");
+        StartFinding = new Button("Create Recipe");
         StartFinding.setPrefSize(600, 100);
         StartFinding.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
         StartFinding.setPadding(new Insets(0,10,0,10));
@@ -134,21 +134,23 @@ public class CreateView extends VBox {
         });
 
         this.StartFinding.setOnAction(e -> {
-            this.startFinding(new ChatGPTResponse(), newWindow, taskList);
-
+            Recipe generatedRecipe = this.findRecipe();
+            GeneratedView CreatedViews = new GeneratedView();
+            CreatedViews.OpenGeneratedView(generatedRecipe, newWindow, taskList);
         });
 		newWindow.show();
     }
 
-    public void startFinding(APIResponse api, Stage newWindow, RecipeList taskList){
+    public Recipe findRecipe(){
         try {
             RecipeGenerator generator = new ChatGPTGenerator(new ChatGPTResponse());
             Recipe generatedRecipe = generator.generateRecipe(this.getTypeArea().getText(), this.getIngredientList().getText());
-            GeneratedView CreatedViews = new GeneratedView();
-            CreatedViews.OpenGeneratedView(generatedRecipe, newWindow, taskList);
+            
+            return generatedRecipe;
+            
         } catch (Exception e) {
-         
             e.printStackTrace();
+            return null;
         } 
     }
 

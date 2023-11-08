@@ -41,7 +41,7 @@ class ChatGPTGenerator implements RecipeGenerator{ // get what the RecipeParser
         // String title = response.substring(0, colonIndex);
         // return title;
         int labelLength = 8;
-        String titleSection = response.substring(labelLength + 1, response.indexOf("Ingredients") - 2);
+        String titleSection = response.substring(labelLength + 1, response.indexOf("\n"));
         return titleSection; 
     }
 
