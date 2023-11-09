@@ -45,13 +45,21 @@ public class RecipeCreationTest {
             "- 1/2 cup chopped bell pepper\n" + //
             "- 1/2 cup shredded cheddar cheese\n" + //
             "- 2 tablespoons olive oil\n" + //
-            "- Chopped fresh herbs, such as parsley or chives (optional)\n";
+            "- Chopped fresh herbs, such as parsley or chives (optional)";
     private static String EXPECTED_STEPS = "1. Preheat oven to 350°F. Grease an 8-inch square baking dish.\n" + //
             "\n" + //
             "2. Stir together cereal, eggs, milk, salt, and pepper in a large bowl. Fold in onion, bell pepper, cheese, and olive oil. \n"
             + //
             "\n" + //
             "3. Pour mixture into the prepared baking dish and bake for 25 to 30 minutes, until set and lightly browned on top. Sprinkle with herbs, if desired, and serve.";
+    
+    private final String NO_NEWLINES = "Title: A title Ingredients: Ingredient 1, Ingredient 2 Instructions: Step 1, Step 2";
+    private final String NO_NEWLINES_TITLE = "A title";
+    private final String NO_NEWLINES_INGREDIENTS = "Ingredient 1, Ingredient 2";
+    private final String NO_NEWLINES_INSTRUCTIONS = "Step 1, Step 2";
+
+    private final String NO_FIELDS = "Title:Ingredients:Instructions:";
+
 
     @Test
     public void getTitleTest() {
@@ -59,7 +67,25 @@ public class RecipeCreationTest {
         ChatGPTGenerator generator = new ChatGPTGenerator(api);
         String expectedResult = generator.getTitle(EXAMPLE);
         assertEquals("Whole-Grain Egg Bake", expectedResult);
-        // assertEquals(expectedResult, generator.getTitle(EXAMPLE));
+
+        String restOfRecipe = "Title:   %s\n\nIngredients:\nInstructions";
+        String shortTitle = "Eggs";
+        String shortTitleRecipe = String.format(restOfRecipe, shortTitle);
+        assertEquals(shortTitle, generator.getTitle(shortTitleRecipe));
+
+        String longTitle = "This is a very long title which should be included since it was generated!";
+        String longTitleRecipe = String.format(restOfRecipe, longTitle);
+        assertEquals(longTitle, generator.getTitle(longTitleRecipe));
+
+
+        String multiLineTitle = "Line 1 of title\nAnother title Line\n yet another line";
+        String multiLineTitleRecipe = String.format(restOfRecipe, multiLineTitle);
+        assertEquals(multiLineTitle, generator.getTitle(multiLineTitleRecipe));
+
+
+        assertEquals(NO_NEWLINES_TITLE, generator.getTitle(NO_NEWLINES));
+
+        assertEquals("", generator.getTitle(NO_FIELDS));
     }
 
     @Test
@@ -69,6 +95,24 @@ public class RecipeCreationTest {
         String expectedResult = generator.getIngredients(EXAMPLE);
         String expectedIngredients = EXPECTED_INGREDIENTS;
         assertEquals(expectedIngredients, expectedResult);
+
+        String restOfRecipe = "Title:\n\nIngredients:\n%s\nInstructions:";
+        String oneIngredient = "Just this ingredient";
+        String manyIngredients = "Ingredient1\nINgredient2\nIngredient3\nIngredient4" +
+            "\nIngredient5\nIngredient6\nIngredient7\nIngredient8\nIngredient9\nIngredient10";
+        String noNewlines = "Ingredient1, Ingredient2, Ingredient3";
+        
+        String oneIngredientRecipe = String.format(restOfRecipe, oneIngredient);
+        String manyIngredientsRecipe = String.format(restOfRecipe, manyIngredients);
+        String noNewlinesRecipe = String.format(restOfRecipe, noNewlines);
+
+        assertEquals(oneIngredient, generator.getIngredients(oneIngredientRecipe));
+        assertEquals(manyIngredients, generator.getIngredients(manyIngredientsRecipe));
+        assertEquals(noNewlines, generator.getIngredients(noNewlinesRecipe));
+
+        assertEquals(NO_NEWLINES_INGREDIENTS, generator.getIngredients(NO_NEWLINES));
+
+        assertEquals("", generator.getIngredients(NO_FIELDS));
     }
 
     @Test
@@ -76,8 +120,11 @@ public class RecipeCreationTest {
         APIResponse api = new MockAPIResponse(EXAMPLE);
         ChatGPTGenerator generator = new ChatGPTGenerator(api);
         String expectedResult = generator.getInstructions(EXAMPLE);
-        String expectedSteps = EXPECTED_STEPS;
-        assertEquals(expectedSteps, expectedResult);
+        assertEquals(EXPECTED_STEPS, expectedResult);
+
+        assertEquals(NO_NEWLINES_INSTRUCTIONS, generator.getInstructions(NO_NEWLINES));
+
+        assertEquals("", generator.getInstructions(NO_FIELDS));
     }
 
     @Test

@@ -5,8 +5,6 @@ package pantrypal;
 
 import org.junit.jupiter.api.Test;
 
-import javafx.stage.Stage;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VoiceInputTest {

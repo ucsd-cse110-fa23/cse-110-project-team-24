@@ -35,36 +35,59 @@ class ChatGPTGenerator implements RecipeGenerator{ // get what the RecipeParser
          * Date Accessed: 11/3/2023
          * Use: Used to understand how to get index of a character in a string from a position (use of indexOf())
          */
-        
-
-        // int colonIndex = response.indexOf("\r\n"); 
-        // String title = response.substring(0, colonIndex);
-        // return title;
-        int labelLength = 8;
-        String titleSection = response.substring(labelLength + 1, response.indexOf("Ingredients") - 2);
+        int titleIndex = response.indexOf("Title:") + "Title:".length();
+        int begin = titleIndex;
+        while (isWhiteSpace(response.charAt(begin))) {
+            begin++;
+        }
+        int ingredientsIndex = response.indexOf("Ingredients");
+        int end = ingredientsIndex - 1;
+        while (isWhiteSpace(response.charAt(end))) {
+            end--;
+        }
+        end++;
+        String titleSection = response.substring(begin, end);
         return titleSection; 
     }
 
-    String getIngredients(String response) {
-    //     String firstDelimeter = "Ingredients";
-    //     String secondDelimeter = "Instructions"; 
-    //     int instructionsPointer = response.indexOf(secondDelimeter);
+    private boolean isWhiteSpace(char c) {
+        boolean isNotWhiteSpace = (c > 20) && (c < 127) && (c != ' ');
+        return !isNotWhiteSpace;
+    }
 
-    //    String ingredients = response.substring(response.indexOf(firstDelimeter) +14, // the number of characters in the firstDelimeter and \r\n 
-    //            instructionsPointer - 2);
-    //     return ingredients;
-        int ingredientsStart = response.indexOf("Ingredients:") + 13;
-        int ingredentsEnd = response.indexOf("Instructions:") - 1;
-        String ingredientsSection = response.substring(ingredientsStart, ingredentsEnd);
+    String getIngredients(String response) {
+        int ingredientsIndex = response.indexOf("Ingredients:");
+        int start = ingredientsIndex + "Ingredients:".length();
+        while (isWhiteSpace(response.charAt(start)))
+            start++;
+
+        int instructionsIndex = response.indexOf("Instructions:") - 1;
+        int end = instructionsIndex;
+        while (isWhiteSpace(response.charAt(end)))
+            end--;
+        end++;
+
+        if (start > end)
+            return "";
+
+        String ingredientsSection = response.substring(start, end);
         return ingredientsSection;
     }
 
     String getInstructions(String response) {
-        // String firstDelimeter = "Instructions";
-        // String ingredients = response.substring(response.indexOf(firstDelimeter)+ 15); // // the number of characters in the firstDelimeter and \r\n 
-        // return ingredients; 
-        int instructionsStart = response.indexOf("Instructions:") + 14;
-        String ingredientsSection = response.substring(instructionsStart);
+        int instructionsIndex = response.indexOf("Instructions:");
+        int start = instructionsIndex + "Instructions:".length();
+
+        if (start >= response.length())
+            return "";
+
+            
+        while (isWhiteSpace(response.charAt(start)))
+            start++;
+
+        
+
+        String ingredientsSection = response.substring(start);
         return ingredientsSection;
     }
 
