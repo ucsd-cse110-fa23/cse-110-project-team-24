@@ -1,7 +1,9 @@
 package pantrypal;
 
+import java.io.File;
+
 public interface Transcription {
-    public String transcript();
+    public String transcript(File f);
 }
 
 class MockTranscription implements Transcription {
@@ -10,7 +12,7 @@ class MockTranscription implements Transcription {
         this.text = response;
     }
     @Override
-    public String transcript() {
+    public String transcript(File f) {
         return this.text;
     }
 }

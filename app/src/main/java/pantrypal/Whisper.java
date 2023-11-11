@@ -78,10 +78,8 @@ class Whisper implements Transcription{
         System.out.println("Error Result: " + errorResult);
     }
 
-    public String transcript()  {
+    public String transcript(File f)  {
         try {
-            // Create file object from file path
-            File file = new File("recording.mp3");
             // Set up HTTP connection
             URL url = new URI(API_ENDPOINT).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -98,7 +96,7 @@ class Whisper implements Transcription{
             // Write model parameter to request body
             writeParameterToOutputStream(outputStream, "model", MODEL, boundary);
             // Write file parameter to request body
-            writeFileToOutputStream(outputStream, file, boundary);
+            writeFileToOutputStream(outputStream, f, boundary);
             // Write closing boundary to request body
             outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
             // Flush and close output stream

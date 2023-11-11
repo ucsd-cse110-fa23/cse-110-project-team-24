@@ -117,15 +117,15 @@ public class CreateView extends VBox {
     public void OpenCreateView(RecipeList taskList) {
         Scene secondScene = CreateScene(this);
         // New window (Stage)
-        Stage newWindow = new Stage();
-        newWindow.setTitle("Create Recipe");
-        newWindow.setScene(secondScene);
+        Stage createViewWindow = new Stage();
+        createViewWindow.setTitle("Create Recipe");
+        createViewWindow.setScene(secondScene);
         this.EditButton.setOnAction(e -> {
             this.SetEditable();
         });
         this.BackButton.setOnAction(e -> {
             try {
-                newWindow.close();
+                createViewWindow.close();
             } catch (Exception e1) {
                 System.out.println("Wrong Closing");
 
@@ -135,7 +135,7 @@ public class CreateView extends VBox {
         this.StartRecording.setOnAction(e -> {
             AudioRecorder recorder = new AudioRecorder();
             Stage recorderWindow = new Stage();
-            newWindow.setTitle("Recording your Sounds");
+            createViewWindow.setTitle("Recording your Sounds");
             Scene thirdScene = CreateScene(recorder);
             recorderWindow.setScene(thirdScene);
             recorderWindow.show();
@@ -144,43 +144,43 @@ public class CreateView extends VBox {
         });
 
         this.StartFinding.setOnAction(e -> {
-            Recipe generatedRecipe = this.findRecipe();
+            Recipe generatedRecipe = GetGeneratedRecipe(this.getTypeArea().getText(), 
+                    this.getIngredientList().getText());
             GeneratedView CreatedViews = new GeneratedView();
-            CreatedViews.OpenGeneratedView(generatedRecipe, newWindow, taskList);
+            CreatedViews.OpenGeneratedView(generatedRecipe, createViewWindow, taskList);
         });
-        newWindow.show();
+        createViewWindow.show();
     }
 
-    public Recipe findRecipe() {
-        try {
-            RecipeGenerator generator = new ChatGPTGenerator(new ChatGPTResponse());
-            Recipe generatedRecipe = generator.generateRecipe(this.getTypeArea().getText(),
-                    this.getIngredientList().getText());
-
+    private static Recipe GetGeneratedRecipe(String mealType, String recipeText) { // TODO: replace to get generated recipe from server
+         try {
+            RecipeGenerator generator = new ChatGPTGenerator(new ChatGPTResponse()); 
+            Recipe generatedRecipe = generator.generateRecipe(mealType,
+                    recipeText);
             return generatedRecipe;
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+    
     }
-
     
 
-    public static String GetTypes(String s) {
-        return s.substring(s.indexOf("i want a ") + 9, s.indexOf("and i have") - 1);
-    }
+    // public static String GetTypes(String s) {
+    //     return s.substring(s.indexOf("i want a ") + 9, s.indexOf("and i have") - 1);
+    // }
 
-    public static String GetIngredientList(String s) {
-        String RawIngredient = s.substring(s.indexOf("and i have ") + 11);
-        String[] ingredientLists = RawIngredient.split(" ");
-        String ans = "";
-        for (int i = 0; i < ingredientLists.length; i++) {
-            if (ingredientLists[i].contains("and")) {
-                continue;
-            }
-            ans += ingredientLists[i] + "\r\n";
-        }
-        return ans;
-    }
+    // public static String GetIngredientList(String s) {
+    //     String rawIngredients = s.substring(s.indexOf("and i have ") + 11);
+    //     String[] ingredientList = rawIngredients.split(" ");
+    //     String ans = "";
+    //     for (int i = 0; i < ingredientList.length; i++) {
+    //         if (ingredientList[i].contains("and")) {
+    //             continue;
+    //         }
+    //         ans += ingredientList[i] + "\r\n";
+    //     }
+    //     return ans;
+    // }
 }

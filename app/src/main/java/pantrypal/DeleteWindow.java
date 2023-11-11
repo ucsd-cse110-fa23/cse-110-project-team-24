@@ -52,7 +52,7 @@ public class DeleteWindow extends VBox{
         });
 
         Deleteit.setOnAction(e -> {
-            recipe.setDeleteit();
+            recipe.setRecipeDeleteButton();
             recipeList.removeSelectedRecipes();
             dv.close();
             newWindow.close();

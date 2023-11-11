@@ -117,7 +117,7 @@ class AudioRecorder extends VBox {
             if (Files.exists(p)) {
                 Whisper transcriptor = new Whisper();
                 try {
-                    String s = transcriptor.transcript().toLowerCase();
+                    String s = transcriptor.transcript(new File("recording.mp3")).toLowerCase(); // TODO: Server request
                     String[] words = s.split(" ");
 
                     String type = words[0];

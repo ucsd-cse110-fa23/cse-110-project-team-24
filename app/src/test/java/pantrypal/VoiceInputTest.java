@@ -17,7 +17,7 @@ public class VoiceInputTest {
         String ingredients = "One Ingredient\nSecond Ingredient";
         String instructions = "Some step\nAnother easy step\nThird step";
         Transcription t = new MockTranscription(recipe);
-        String transcription  = t.transcript();
+        String transcription  = t.transcript(null);
         RecipeGenerator generator = new ChatGPTGenerator(new MockAPIResponse(transcription));
         Recipe result = generator.generateRecipe(mealType, transcription);
 
