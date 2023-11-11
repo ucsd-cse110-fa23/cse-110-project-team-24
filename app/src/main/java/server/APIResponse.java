@@ -1,4 +1,4 @@
-package pantrypal;
+package server;
 
 
 import java.io.IOException;

@@ -8,6 +8,7 @@ class RecipeList extends VBox {
         this.setStyle("-fx-background-color: #F0F8FF;");
     }
     public void removeSelectedRecipes() {
-        this.getChildren().removeIf(task -> task instanceof RecipeView && ((RecipeView) task).getDeleteit());
+        this.getChildren().removeIf(task -> task instanceof RecipeView && ((RecipeView) task).hasBeenDeleted());
+        // TODO: tell server to delete
     }
 }

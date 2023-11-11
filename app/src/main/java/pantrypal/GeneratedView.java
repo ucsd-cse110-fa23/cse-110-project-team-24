@@ -69,27 +69,29 @@ public class GeneratedView extends VBox{
         return secondScene;
     }
 
-    public String GetName(String ans){
-        if(ans.contains("name")){
-            String Name = ans.substring(ans.indexOf("name: ")+4, ans.indexOf("\n", ans.indexOf("name")+4));
-            return Name;
-        }
-        return "Failed to Get Name from GPT ANSWER";
-    }
-    public String GetingredientList(String ans){
-        if(ans.contains("ingredient")){
-            String List = ans.substring(ans.indexOf("ingredient"), ans.indexOf("instruction"));
-            return List;
-        }
-        return "Failed to Get ingredient List from GPT ANSWER";
-    }
-    public String GetInstruction(String ans){
-        if(ans.contains("instruction")){
-            String Instruction = ans.substring(ans.indexOf("instruction"));
-            return Instruction;
-        }
-        return "Failed to Get Instruction from GPT ANSWER";
-    }
+    // public String GetName(String ans){
+    //     if(ans.contains("name")){
+    //         String Name = ans.substring(ans.indexOf("name: ")+4, ans.indexOf("\n", ans.indexOf("name")+4));
+    //         return Name;
+    //     }
+    //     return "Failed to Get Name from GPT ANSWER";
+    // }
+
+    // public String GetingredientList(String ans){
+    //     if(ans.contains("ingredient")){
+    //         String List = ans.substring(ans.indexOf("ingredient"), ans.indexOf("instruction"));
+    //         return List;
+    //     }
+    //     return "Failed to Get ingredient List from GPT ANSWER";
+    // }
+
+    // public String GetInstruction(String ans){
+    //     if(ans.contains("instruction")){
+    //         String Instruction = ans.substring(ans.indexOf("instruction"));
+    //         return Instruction;
+    //     }
+    //     return "Failed to Get Instruction from GPT ANSWER";
+    // }
 
     public void OpenGeneratedView(Recipe generatedRecipe, Stage original, RecipeList taskList){
         Scene secondScene = CreateScene(this);
@@ -113,10 +115,12 @@ public class GeneratedView extends VBox{
             titleButton.setOnAction(e1 -> {
                 newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
             });
+            // TODO: tell server to add new recipe
             taskList.getChildren().add(0, newrecipe);
             original.close();
             newWindow.close();
         });
+
         newWindow.show();
     }
 }
