@@ -1,9 +1,7 @@
-package pantrypal;
-
-import java.io.File;
+package server;
 
 public interface Transcription {
-    public String transcript(File f);
+    public String transcript(byte[] fileData);
 }
 
 class MockTranscription implements Transcription {
@@ -12,7 +10,7 @@ class MockTranscription implements Transcription {
         this.text = response;
     }
     @Override
-    public String transcript(File f) {
+    public String transcript(byte[] fileData) {
         return this.text;
     }
 }

@@ -1,4 +1,4 @@
-package pantrypal;
+package server;
 
 public enum MealType {
     BREAKFAST,

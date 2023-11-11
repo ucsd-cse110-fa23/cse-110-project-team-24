@@ -6,6 +6,8 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerMain {
 
@@ -18,15 +20,16 @@ public class ServerMain {
     ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
     // create a map to store data
-    Map<String, String> data = new HashMap<>();
+    List<Recipe> recipes = new ArrayList<>();
 
     // create a server
     HttpServer server = HttpServer.create(
         new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT),
         0);
   
-    server.createContext("/", new RequestHandler(data));
-    server.createContext("/name", new MyHandler(data));
+    server.createContext("/generator/", new GenerationHandler(recipes));
+    server.createContext("/transcript/", new TranscriptionHandler(recipes));
+
     server.setExecutor(threadPoolExecutor);
     server.start();
 

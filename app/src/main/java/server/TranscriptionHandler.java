@@ -8,11 +8,11 @@ import java.util.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class MyHandler implements HttpHandler {
-    private final Map<String, String> data;
+public class TranscriptionHandler implements HttpHandler {
+    private List<Recipe> recipes;
 
-    public MyHandler(Map<String, String> data) {
-        this.data = data;
+    public TranscriptionHandler(List<Recipe> recipes) {
+        this.recipes = recipes;
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -41,25 +41,16 @@ public class MyHandler implements HttpHandler {
         String response = "Invalid GET request";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
-        String name = query.substring(query.indexOf("=") + 1);
-        // if (query != null) {
+        
+        if (query != null) {
+            byte[] fileData = query.substring(query.indexOf("=") + 1).getBytes();
+            Transcription transciptor = new Whisper();
+            response = transciptor.transcript(fileData);
+        }
 
-        // }
-
-        StringBuilder htmlBuilder = new StringBuilder();
-
-        htmlBuilder
-                .append("<html>")
-                .append("<body>")
-                .append("<h1>")
-                .append("Hello ")
-                .append(name)
-                .append("</h1>")
-                .append("</body>")
-                .append("</html>");
+        
 
         // encode HTML content
-        response = htmlBuilder.toString();
         return response;
     }
 

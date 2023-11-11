@@ -154,10 +154,8 @@ public class CreateView extends VBox {
 
     private static Recipe GetGeneratedRecipe(String mealType, String recipeText) { // TODO: replace to get generated recipe from server
          try {
-            RecipeGenerator generator = new ChatGPTGenerator(new ChatGPTResponse()); 
-            Recipe generatedRecipe = generator.generateRecipe(mealType,
-                    recipeText);
-            return generatedRecipe;
+            String recipe = PerformRequest.performRequest("generator/", "GET", null, mealType + "," + recipeText);
+            return Recipe.of(recipe);
 
         } catch (Exception e) {
             e.printStackTrace();

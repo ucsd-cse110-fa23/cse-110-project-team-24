@@ -1,4 +1,4 @@
-package pantrypal;
+package server;
 public class Recipe {
     String title;
     String mealType;
@@ -10,12 +10,6 @@ public class Recipe {
         this.mealType = mealType;
         this.ingredients = ingredients;
         this.steps = steps;
-    }
-
-    // returns Recipe based on string representation with format title;mealType;ingredients;steps
-    public static Recipe of (String representation) {
-        String[] components = representation.split(";");
-        return new Recipe(components[0], components[1], components[2], components[3]);
     }
 
     public String getTitle() {
@@ -55,6 +49,10 @@ public class Recipe {
                 && this.steps.equals(other.getSteps()) && (this.mealType == other.getMealType());
     }
 
+    // return string representation of recipe
+    public String toString() {
+        return String.format("%s;%s;%s;%s", this.title, this.mealType, this.ingredients, this.steps);
+    }
 
 }
 

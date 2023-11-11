@@ -1,4 +1,4 @@
-package pantrypal;
+package server;
 
 import java.io.*;
 import java.net.*;
@@ -25,26 +25,7 @@ class Whisper implements Transcription{
         outputStream.write((parameterValue + "\r\n").getBytes());
     }
 
-    // Helper method to write a file to the output stream in multipart form data
-    // format
-    private static void writeFileToOutputStream(
-            OutputStream outputStream,
-            File file,
-            String boundary) throws IOException {
-        outputStream.write(("--" + boundary + "\r\n").getBytes());
-        outputStream.write(
-                ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
-                        file.getName() +
-                        "\"\r\n").getBytes());
-        outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
-        FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-        }
-        fileInputStream.close();
-    }
+    
 
     private static String handleSuccessResponse(HttpURLConnection connection)
             throws IOException, JSONException {
@@ -78,11 +59,33 @@ class Whisper implements Transcription{
         System.out.println("Error Result: " + errorResult);
     }
 
-    public String transcript(File f)  {
+
+    // Helper method to write a file to the output stream in multipart form data
+    // format
+    // private static void writeFileToOutputStream(
+    //         OutputStream outputStream,
+    //         File file,
+    //         String boundary) throws IOException {
+        
+    //     outputStream.write(
+    //             ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
+    //                     file.getName() +
+    //                     "\"\r\n").getBytes());
+    //     outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
+    //     FileInputStream fileInputStream = new FileInputStream(file);
+    //     byte[] buffer = new byte[1024];
+    //     int bytesRead;
+    //     while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+    //         outputStream.write(buffer, 0, bytesRead);
+    //     }
+    //     fileInputStream.close();
+    // }
+
+    public String transcript(byte[] fileData)  {
         try {
             // Set up HTTP connection
             URL url = new URI(API_ENDPOINT).toURL();
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection(); // Response code becomes -1
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
             // Set up request headers
@@ -95,8 +98,12 @@ class Whisper implements Transcription{
             OutputStream outputStream = connection.getOutputStream();
             // Write model parameter to request body
             writeParameterToOutputStream(outputStream, "model", MODEL, boundary);
+
+
             // Write file parameter to request body
-            writeFileToOutputStream(outputStream, f, boundary);
+            outputStream.write(("--" + boundary + "\r\n").getBytes());
+            outputStream.write(fileData);
+
             // Write closing boundary to request body
             outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
             // Flush and close output stream
@@ -104,7 +111,8 @@ class Whisper implements Transcription{
             // String transcription = outputStream.toString();
             outputStream.close();
             // Get response code
-            int responseCode = connection.getResponseCode();
+            int responseCode = connection.getResponseCode(); // response code is 200, HTTP_OK is 400
+            
             // Check response code and handle response accordingly
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String ans = handleSuccessResponse(connection);

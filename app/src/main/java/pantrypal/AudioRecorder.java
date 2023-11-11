@@ -108,20 +108,16 @@ class AudioRecorder extends VBox {
     public void setBackAndTrancriptListener(Stage recorderWindow, CreateView view) {
         this.getbackAndTranscriptButtonButton().setOnAction(e -> {
             recorderWindow.close();
-            // String s = "i want a lunch, and i have carrots, eggs, and rices";
-            // String type = GetTypes(s);
-            // String IngredientList = GetIngredientList(s);
-            // this.getTypeArea().setText(type);
-            // this.getIngredientList().setText(IngredientList);
             Path p = Paths.get("recording.mp3");
             if (Files.exists(p)) {
-                Whisper transcriptor = new Whisper();
                 try {
-                    String s = transcriptor.transcript(new File("recording.mp3")).toLowerCase(); // TODO: Server request
-                    String[] words = s.split(" ");
+                    String fileData = GetFileData(new File("recording.mp3"));
+                    String audioTranscription = PerformRequest.performRequest("transcript/", "GET", null, fileData);
+
+                    String[] words = audioTranscription.split(" ");
 
                     String type = words[0];
-                    String IngredientList = s.substring(s.indexOf(" "));
+                    String IngredientList = audioTranscription.substring(audioTranscription.indexOf(" "));
                     view.getTypeArea().setText(type);
                     view.getIngredientList().setText(IngredientList);
 
@@ -132,6 +128,7 @@ class AudioRecorder extends VBox {
             }
         });
     }
+
 
     private void startRecording() {
         Thread t = new Thread(
@@ -165,6 +162,29 @@ class AudioRecorder extends VBox {
                     }
                 });
         t.start();
+    }
+
+    // return String to be written to output stream on server
+    private String GetFileData(File file) {
+        String fileData = "";
+        try {
+        fileData += ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
+                        file.getName() +
+                        "\"\r\n").getBytes();
+        fileData += ("Content-Type: audio/mpeg\r\n\r\n").getBytes();
+
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+            fileData += bytesRead;
+        }
+        fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return fileData;
     }
 
     private void stopRecording() {
