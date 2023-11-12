@@ -15,13 +15,17 @@ class Whisper implements Transcription{
     // Helper method to write a parameter to the output stream in multipart form
     // data format
     private static void writeParameterToOutputStream(
-            OutputStream outputStream,
-            String parameterName,
-            String parameterValue,
-            String boundary) throws IOException {
+        OutputStream outputStream,
+        String parameterName,
+        String parameterValue,
+        String boundary
+        ) throws IOException {
         outputStream.write(("--" + boundary + "\r\n").getBytes());
-        outputStream.write(
-                ("Content-Disposition: form-data; name=\"" + parameterName + "\"\r\n\r\n").getBytes());
+            outputStream.write(
+        (
+            "Content-Disposition: form-data; name=\"" + parameterName + "\"\r\n\r\n"
+        ).getBytes()
+        );
         outputStream.write((parameterValue + "\r\n").getBytes());
     }
 
@@ -62,27 +66,40 @@ class Whisper implements Transcription{
 
     // Helper method to write a file to the output stream in multipart form data
     // format
-    // private static void writeFileToOutputStream(
-    //         OutputStream outputStream,
-    //         File file,
-    //         String boundary) throws IOException {
-        
-    //     outputStream.write(
-    //             ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
-    //                     file.getName() +
-    //                     "\"\r\n").getBytes());
-    //     outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());
-    //     FileInputStream fileInputStream = new FileInputStream(file);
-    //     byte[] buffer = new byte[1024];
-    //     int bytesRead;
-    //     while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-    //         outputStream.write(buffer, 0, bytesRead);
-    //     }
-    //     fileInputStream.close();
-    // }
+    private static void writeFileToOutputStream(
+        OutputStream outputStream,
+        File file,
+        String boundary
+        ) throws IOException {
+        outputStream.write(("--" + boundary + "\r\n").getBytes());
+        outputStream.write(
+        (
+        "Content-Disposition: form-data; name=\"file\"; filename=\"" +
+        file.getName() +
+        "\"\r\n"
+        ).getBytes()
+            );
+        outputStream.write(("Content-Type: audio/mpeg\r\n\r\n").getBytes());   
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] buffer = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        fileInputStream.close();
+    }
+    public static File DatatoFile(byte[] filedata) throws FileNotFoundException, IOException{
+        File outputfile = new File("RecordingServer.mp3");
+        try (FileOutputStream outputStream = new FileOutputStream(outputfile)) {
+            outputStream.write(filedata);
+        }
+        return outputfile;
+    }
+
 
     public String transcript(byte[] fileData)  {
         try {
+            //File file = new File("recording.mp3");
             // Set up HTTP connection
             URL url = new URI(API_ENDPOINT).toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection(); // Response code becomes -1
@@ -99,11 +116,11 @@ class Whisper implements Transcription{
             // Write model parameter to request body
             writeParameterToOutputStream(outputStream, "model", MODEL, boundary);
 
-
+            File datatoFile = DatatoFile(fileData);
             // Write file parameter to request body
-            outputStream.write(("--" + boundary + "\r\n").getBytes());  // TODO: Difference that must be causing error I think
-            outputStream.write(fileData);
-
+           // outputStream.write(("--" + boundary + "\r\n").getBytes());
+            //outputStream.write(fileData);
+            writeFileToOutputStream(outputStream, datatoFile, boundary);
             // Write closing boundary to request body
             outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
             // Flush and close output stream
@@ -111,17 +128,17 @@ class Whisper implements Transcription{
             // String transcription = outputStream.toString();
             outputStream.close();
             // Get response code
-            int responseCode = connection.getResponseCode(); // response code is 400 (means request malformed), HTTP_OK is 200
-           // System.out.println(responseCode);
-
+            int responseCode = connection.getResponseCode(); // response code is 400, HTTP_OK is 200
+            
             // Check response code and handle response accordingly
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String ans = handleSuccessResponse(connection);
                 return ans;
-            } else {
+            } 
+            else {
                 handleErrorResponse(connection);
                 connection.disconnect();
-                return "Error while transcripting";
+                return "Error while transcripting because of Wrong Response Code";
             }
         }
         catch (Exception e) {

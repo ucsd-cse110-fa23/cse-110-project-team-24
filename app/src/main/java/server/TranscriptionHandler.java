@@ -3,6 +3,7 @@ package server;
 import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -41,9 +42,11 @@ public class TranscriptionHandler implements HttpHandler {
         String response = "Invalid GET request";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
+        query = query.substring(query.indexOf("=") + 1);
         
         if (query != null) {
-            byte[] fileData = query.substring(query.indexOf("=") + 1).getBytes();
+            query = URLDecoder.decode(query, java.nio.charset.StandardCharsets.ISO_8859_1);
+            byte[] fileData = query.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
             Transcription transciptor = new Whisper();
             response = transciptor.transcript(fileData);
         }

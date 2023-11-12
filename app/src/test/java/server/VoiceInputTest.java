@@ -5,6 +5,12 @@ package server;
 
 import org.junit.jupiter.api.Test;
 
+import server.ChatGPTGenerator;
+import server.MockAPIResponse;
+import server.MockTranscription;
+import server.RecipeGenerator;
+import server.Transcription;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VoiceInputTest {
@@ -19,7 +25,7 @@ public class VoiceInputTest {
         Transcription t = new MockTranscription(recipe);
         String transcription  = t.transcript(null);
         RecipeGenerator generator = new ChatGPTGenerator(new MockAPIResponse(transcription));
-        Recipe result = generator.generateRecipe(mealType, transcription);
+        server.Recipe result = generator.generateRecipe(mealType, transcription);
 
         Recipe expected = new Recipe(title, mealType, ingredients, instructions);
         assertEquals(true, expected.equals(result));
