@@ -45,14 +45,16 @@ public class BaseHandler implements HttpHandler {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
-        String[] components = postData.split(";");
+        postData = URLDecoder.decode(postData, "US-ASCII");
+        String[] recipeComponents = postData.split(";");
 
         // Store recipe
-        Recipe toAdd = new Recipe(components[0], components[1], components[2], components[3]);
+        Recipe toAdd = new Recipe(recipeComponents[0], recipeComponents[1], 
+                recipeComponents[2], recipeComponents[3]);
         recipes.add(0, toAdd);
 
         scanner.close();
-        return "Added recipe " + toAdd;
+        return URLEncoder.encode("Added recipe " + toAdd.toString(), "US-ASCII");
     }
 
     private String handleDelete(HttpExchange httpExchange) throws IOException {
@@ -60,12 +62,19 @@ public class BaseHandler implements HttpHandler {
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
         query = query.substring(query.indexOf("=") + 1);
+        query = URLDecoder.decode(query, "US-ASCII");
     
         if (query != null) {
             String[] components = query.split(";");
             Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3]);
-            this.recipes.remove(toDelete);
-            return "Deleted recipe " + toDelete;
+            for (Recipe recipe:this.recipes) {
+                if (recipe.getTitle().equals(toDelete.getTitle())) {
+                    this.recipes.remove(recipe);
+                    return URLEncoder.encode("Deleted recipe " + recipe.toString(), "US-ASCII");
+                }
+            }
+            response = URLEncoder.encode("Unable to find recipe " + toDelete.toString(), "US-ASCII");
+            
         }
         return response;
     }

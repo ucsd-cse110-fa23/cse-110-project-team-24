@@ -31,7 +31,7 @@ public class PerformRequest {
 
             if (data != null) {
                 OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-                out.write(data);
+                out.write(URLEncoder.encode(data, "US-ASCII"));
                 out.flush();
                 out.close();
             }
