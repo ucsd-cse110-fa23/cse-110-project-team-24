@@ -192,6 +192,7 @@ public class CreateView extends VBox {
         } catch (Exception e) {
             // Print stack trace in case of an error
             e.printStackTrace();
+            //return null otherwise
             return null;
         }
     
