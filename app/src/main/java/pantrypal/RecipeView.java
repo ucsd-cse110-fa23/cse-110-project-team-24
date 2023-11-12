@@ -6,7 +6,7 @@ import javafx.scene.layout.*;
 
 //For US 4-3
 public class RecipeView extends HBox{
-    private Boolean needtodelete = false;
+    private Boolean recipeDeleteButton = false;
     private Button titleButton;
     private Stage stage;
     private Recipe recipe;
@@ -23,8 +23,9 @@ public class RecipeView extends HBox{
         titleButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         this.getChildren().add(titleButton);
     }
-    public boolean getDeleteit(){
-        return this.needtodelete;
+
+    public boolean hasBeenDeleted(){
+        return this.recipeDeleteButton;
     }    
     public Stage getStage(){
         return this.stage;
@@ -39,17 +40,17 @@ public class RecipeView extends HBox{
         this.titleButton.setText(RecipeName);
         this.recipe.setTitle(RecipeName);
     }
-    public void setDeleteit(){
-        this.needtodelete = true;
+    public void setRecipeDeleteButton(){
+        this.recipeDeleteButton = true;
     }
     public void OpenDetailView(Stage stage, RecipeList recipeList){
         this.setStyle("-fx-border-color: #000000; -fx-border-width: 0; -fx-font-weight: bold;");
         for (int i = 0; i < this.getChildren().size(); i++) {
             this.getChildren().get(i).setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;");
-             // change color of task to green
+             // change color of recipe to green
         }
-        DetailView Viewinside = new DetailView(recipe);
-		Viewinside.OpenView(stage, this, recipeList);
+        DetailView viewinside = new DetailView(this.recipe);
+		viewinside.OpenView(stage, this, recipeList);
     }
 
     public Recipe getRecipe() {

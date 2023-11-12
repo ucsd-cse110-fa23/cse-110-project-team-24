@@ -12,6 +12,12 @@ public class Recipe {
         this.steps = steps;
     }
 
+    // returns Recipe based on string representation with format title;mealType;ingredients;steps
+    public static Recipe of (String representation) {
+        String[] components = representation.split(";");
+        return new Recipe(components[0], components[1], components[2], components[3]);
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -33,7 +39,7 @@ public class Recipe {
     }
 
     public void setIngredients(String text) {
-        this.title = ingredients;
+        this.ingredients = text;
     }
 
     public String getSteps() {
@@ -49,6 +55,10 @@ public class Recipe {
                 && this.steps.equals(other.getSteps()) && (this.mealType == other.getMealType());
     }
 
+    // return string representation of recipe
+    public String toString() {
+        return String.format("%s;%s;%s;%s", this.title, this.mealType, this.ingredients, this.steps);
+    }
 
 }
 
