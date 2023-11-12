@@ -74,6 +74,7 @@ public class BaseHandler implements HttpHandler {
                 String t2 = toDelete.getTitle();
                 if (t1.equals(t2)) {
                     this.recipes.remove(recipe);
+                    //return endcoded recipe
                     return URLEncoder.encode("Deleted recipe " + recipe.toString(), "US-ASCII");
                 }
             }
