@@ -11,6 +11,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.nio.charset.StandardCharsets;
 
 import javax.sound.sampled.*;
 
@@ -59,14 +61,14 @@ class AudioRecorder extends VBox {
         audioFormat = getAudioFormat();
 
         // Add the listeners to the buttons
-        addStartAndStopListeners();
+        addListeners();
     }
 
     public Button getbackAndTranscriptButtonButton() {
         return this.backAndTranscriptButton;
     }
 
-    public void addStartAndStopListeners() {
+    public void addListeners() {
         // Start Button
         startButton.setOnAction(e -> {
             startRecording();
@@ -76,7 +78,6 @@ class AudioRecorder extends VBox {
         stopButton.setOnAction(e -> {
             stopRecording();
         });
-
     }
 
     private AudioFormat getAudioFormat() {
@@ -111,8 +112,10 @@ class AudioRecorder extends VBox {
             Path p = Paths.get("recording.mp3");
             if (Files.exists(p)) {
                 try {
-                    String fileData = GetFileData(new File("recording.mp3"));
-                    String audioTranscription = PerformRequest.performRequest("transcript/", "GET", null, fileData);
+                    byte[] fileData = GetFileData(new File("recording.mp3"));
+                    String fileString = new String(fileData, java.nio.charset.StandardCharsets.ISO_8859_1);
+                    //String fileDataString = new String(fileData, StandardCharsets.UTF_8);
+                    String audioTranscription = PerformRequest.performRequest("transcript/", "GET", null, fileString);
 
                     String[] words = audioTranscription.split(" ");
 
@@ -165,26 +168,38 @@ class AudioRecorder extends VBox {
     }
 
     // return String to be written to output stream on server
-    private String GetFileData(File file) {
-        String fileData = "";
-        try {
-        fileData += ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
-                        file.getName() +
-                        "\"\r\n").getBytes();
-        fileData += ("Content-Type: audio/mpeg\r\n\r\n").getBytes();
+    private byte[] GetFileData(File file) throws IOException {
+        // String fileData = "";
+        // try {
+        // fileData += ("Content-Disposition: form-data; name=\"file\"; filename=\"" +
+        //                 file.getName() +
+        //                 "\"\r\n").getBytes();
+        // fileData += ("Content-Type: audio/mpeg\r\n\r\n").getBytes();
 
-        FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] buffer = new byte[1024];
-        int bytesRead;
-        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-            fileData += bytesRead;
+        // FileInputStream fileInputStream = new FileInputStream(file);
+        // byte[] buffer = new byte[1024];
+        // int bytesRead;
+        // while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+        //     fileData += bytesRead;
+        // }
+        // fileInputStream.close();
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        //     return null;
+        // }
+        // return fileData;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream("Recording.mp3"));
+        int read;
+        byte[] buff = new byte[1024];
+        while ((read = in.read(buff)) > 0)
+        {
+            out.write(buff, 0, read);
         }
-        fileInputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return fileData;
+        out.flush();
+        byte[] audioBytes = out.toByteArray();
+        //String audioString = new String(audioBytes, java.nio.charset.StandardCharsets.ISO_8859_1);     
+        return audioBytes;
     }
 
     private void stopRecording() {

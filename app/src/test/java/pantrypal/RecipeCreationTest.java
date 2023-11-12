@@ -6,6 +6,9 @@ package pantrypal;
 import org.junit.jupiter.api.Test;
 
 import javafx.stage.Stage;
+import server.APIResponse;
+import server.ChatGPTGenerator;
+import server.MockAPIResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -136,11 +139,11 @@ public class RecipeCreationTest {
         String expectedSteps = EXPECTED_STEPS;
 
         Recipe expected = new Recipe(expectedTitle, "breakfast", expectedIngredients, expectedSteps);
-        Recipe result = generator.generateRecipe("breakfast", null);
+        server.Recipe result = generator.generateRecipe("breakfast", null);
 
-        assertEquals(expected.ingredients, result.ingredients);
-        assertEquals(expected.title, result.title);
-        assertEquals(expected.steps, result.steps);
+        assertEquals(expected.ingredients, result.getIngredients());
+        assertEquals(expected.title, result.getTitle());
+        assertEquals(expected.steps, result.getSteps());
         assertEquals(true, expected.equals(result));
     }
 
@@ -161,7 +164,7 @@ public class RecipeCreationTest {
             String ingredients = "Ingredient 1\nIngredient2";
             String instructions = "Step 1\n Step 2\n";
 
-            Recipe result = (new ChatGPTGenerator(new MockAPIResponse(recipe))).generateRecipe(mealType, "Some Ingredients");
+            server.Recipe result = (new ChatGPTGenerator(new MockAPIResponse(recipe))).generateRecipe(mealType, "Some Ingredients");
             assertEquals(title, result.getTitle());
             assertEquals(ingredients, result.getIngredients());
             assertEquals(instructions, result.getSteps());
