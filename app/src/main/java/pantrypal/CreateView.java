@@ -135,6 +135,12 @@ public class CreateView extends VBox {
     }
 
     // Opens the CreateView with the ability to record, edit, and find recipes
+    /**
+     * sets up the user interface for creating new recipes.
+     * functionalities for editing recipe details, recording audio 
+     * for recipe ingredients and generating a recipe based on user inputs. 
+     * It also handles navigation back to the main interface.
+     */
     public void OpenCreateView(RecipeList taskList) {
         Scene secondScene = CreateScene(this);
         // New window (Stage)
