@@ -1,4 +1,4 @@
-package pantrypal;
+package server;
 
 import org.junit.jupiter.api.Test;
 
