@@ -115,7 +115,7 @@ class AudioRecorder extends VBox {
                     byte[] fileData = GetFileData(new File("recording.mp3"));
                     String fileString = new String(fileData, java.nio.charset.StandardCharsets.ISO_8859_1);
                     //String fileDataString = new String(fileData, StandardCharsets.UTF_8);
-                    String audioTranscription = PerformRequest.performRequest("transcript/", "GET", null, fileString);
+                    String audioTranscription = PerformRequest.performTranscriptionRequest("transcript/", "GET", null, fileString);
 
                     String[] words = audioTranscription.split(" ");
 

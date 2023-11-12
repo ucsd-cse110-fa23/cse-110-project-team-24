@@ -152,7 +152,7 @@ public class CreateView extends VBox {
         createViewWindow.show();
     }
 
-    private static Recipe GetGeneratedRecipe(String mealType, String recipeText) { // TODO: replace to get generated recipe from server
+    private static Recipe GetGeneratedRecipe(String mealType, String recipeText) { 
          try {
             String recipe = PerformRequest.performRequest("generator/", "GET", null, mealType + ";" + recipeText);
             return Recipe.of(recipe);
