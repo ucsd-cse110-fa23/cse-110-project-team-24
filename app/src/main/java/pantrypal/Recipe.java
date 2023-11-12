@@ -14,6 +14,7 @@ public class Recipe {
 
     // returns Recipe based on string representation with format title;mealType;ingredients;steps
     public static Recipe of (String representation) {
+        System.out.println(representation);
         String[] components = representation.split(";");
         return new Recipe(components[0], components[1], components[2], components[3]);
     }

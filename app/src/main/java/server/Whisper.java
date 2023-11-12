@@ -101,7 +101,7 @@ class Whisper implements Transcription{
 
 
             // Write file parameter to request body
-            outputStream.write(("--" + boundary + "\r\n").getBytes());
+            outputStream.write(("--" + boundary + "\r\n").getBytes());  // TODO: Difference that must be causing error I think
             outputStream.write(fileData);
 
             // Write closing boundary to request body
@@ -111,8 +111,9 @@ class Whisper implements Transcription{
             // String transcription = outputStream.toString();
             outputStream.close();
             // Get response code
-            int responseCode = connection.getResponseCode(); // response code is 200, HTTP_OK is 400
-            
+            int responseCode = connection.getResponseCode(); // response code is 400 (means request malformed), HTTP_OK is 200
+           // System.out.println(responseCode);
+
             // Check response code and handle response accordingly
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 String ans = handleSuccessResponse(connection);
@@ -125,7 +126,7 @@ class Whisper implements Transcription{
         }
         catch (Exception e) {
             e.printStackTrace();
-            return "Error while transcripting";
+            return "Exception while transcripting";
         }
             
     }
