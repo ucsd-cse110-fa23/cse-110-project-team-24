@@ -109,8 +109,8 @@ class AudioRecorder extends VBox {
     public void setBackAndTrancriptListener(Stage recorderWindow, CreateView view) {
         this.getbackAndTranscriptButtonButton().setOnAction(e -> {
             recorderWindow.close();
-            Path p = Paths.get("recording.mp3");
-            if (Files.exists(p)) {
+            Path filePath = Paths.get("recording.mp3");
+            if (Files.exists(filePath)) {
                 try {
                     byte[] fileData = GetFileData(new File("recording.mp3"));
                     String fileString = new String(fileData, java.nio.charset.StandardCharsets.ISO_8859_1);

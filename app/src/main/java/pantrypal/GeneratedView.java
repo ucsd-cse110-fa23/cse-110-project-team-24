@@ -115,10 +115,10 @@ public class GeneratedView extends VBox{
             titleButton.setOnAction(e1 -> {
                 newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
             });
-            Recipe toAdd = newrecipe.getRecipe();
+            Recipe receipetoAdd = newrecipe.getRecipe();
 
 
-            PerformRequest.performRequest("", "PUT", toAdd.getTitle() + ";" + toAdd.getMealType() + ";" + toAdd.getIngredients() + ";" + toAdd.getSteps(), null);
+            PerformRequest.performRequest("", "PUT", receipetoAdd.getTitle() + ";" + receipetoAdd.getMealType() + ";" + receipetoAdd.getIngredients() + ";" + receipetoAdd.getSteps(), null);
 
 
             taskList.getChildren().add(0, newrecipe);
