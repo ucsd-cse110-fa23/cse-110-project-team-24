@@ -83,7 +83,7 @@ public class DetailView extends VBox {
         this.getChildren().addAll(EditButton, DeleteButton);
     }
 
-    public void SetEditable() {
+    public void SetEditable(RecipeView currentRecipe) {
         if (editing == false) {
             this.EditButton.setText("Editing");
             this.EditButton.setStyle("-fx-background-color: #DE3163; -fx-border-width: 0;");
@@ -97,6 +97,8 @@ public class DetailView extends VBox {
             editing = true;
             return;
         }
+
+        // TODO: Actually update recipe on server and here
         this.EditButton.setText("Edit");
         EditButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
         editing = false;
@@ -107,7 +109,18 @@ public class DetailView extends VBox {
         name.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         StepInstruction.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         type.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
+        
+        this.updateRecipe(currentRecipe, IngredientList.getText(), StepInstruction.getText());
 
+    }
+
+    // Update RecipeView for edited recipe and change recipe on server
+    private void updateRecipe(RecipeView rv, String updatedIngredients, String updatedInstructions) {
+        Recipe originalRecipe = rv.getRecipe();
+        originalRecipe.setIngredients(updatedIngredients);
+        originalRecipe.setSteps(updatedInstructions);
+
+        PerformRequest.performRequest("", "POST", rv.getRecipe().toString(), null);
     }
 
     public static Scene CreateScene(DetailView d) {
@@ -127,7 +140,7 @@ public class DetailView extends VBox {
         newWindow.setTitle(recipe.getTitle());
         newWindow.setScene(secondScene);
         this.EditButton.setOnAction(e -> {
-            this.SetEditable();
+            this.SetEditable(recipeView);
         });
 
         this.BackButton.setOnAction(e -> {

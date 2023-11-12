@@ -33,7 +33,7 @@ public class Recipe {
     }
 
     public void setIngredients(String text) {
-        this.title = ingredients;
+        this.ingredients = text;
     }
 
     public String getSteps() {

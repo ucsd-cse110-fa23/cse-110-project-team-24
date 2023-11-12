@@ -23,6 +23,7 @@ public class RecipeView extends HBox{
         titleButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         this.getChildren().add(titleButton);
     }
+
     public boolean hasBeenDeleted(){
         return this.recipeDeleteButton;
     }    

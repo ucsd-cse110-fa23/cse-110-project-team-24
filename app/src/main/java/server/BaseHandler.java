@@ -24,6 +24,8 @@ public class BaseHandler implements HttpHandler {
                 response = handlePut(httpExchange);
             } else if (method.equals("DELETE")) {
                 response = handleDelete(httpExchange);
+            } else if(method.equals("POST")){
+                response = handlePost(httpExchange);
             } 
             else {
                 throw new Exception("Not Valid Request Method");
@@ -68,7 +70,9 @@ public class BaseHandler implements HttpHandler {
             String[] components = query.split(";");
             Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3]);
             for (Recipe recipe:this.recipes) {
-                if (recipe.getTitle().equals(toDelete.getTitle())) {
+                String t1 = recipe.getTitle();
+                String t2 = toDelete.getTitle();
+                if (t1.equals(t2)) {
                     this.recipes.remove(recipe);
                     return URLEncoder.encode("Deleted recipe " + recipe.toString(), "US-ASCII");
                 }
@@ -77,6 +81,31 @@ public class BaseHandler implements HttpHandler {
             
         }
         return response;
+    }
+
+    private String handlePost(HttpExchange httpExchange) throws IOException {
+        InputStream inStream = httpExchange.getRequestBody();
+        Scanner scanner = new Scanner(inStream);
+        String postData = scanner.nextLine();
+        postData = URLDecoder.decode(postData, "US-ASCII");
+        String[] recipeComponents = postData.split(";");
+
+        Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1], 
+                recipeComponents[2], recipeComponents[3]);
+        // Update recipe
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe current = recipes.get(i);
+            if (current.getTitle().equals(toUpdate.getTitle())) {
+                current.setIngredients(toUpdate.getIngredients());
+                current.setSteps(toUpdate.getSteps());
+                return URLEncoder.encode("Updated recipe to " + toUpdate.toString(), "US-ASCII");
+            }
+        }
+
+        scanner.close();
+        return URLEncoder.encode("Could not find recipe " + toUpdate.toString(), "US-ASCII");
+
+
     }
 
 }

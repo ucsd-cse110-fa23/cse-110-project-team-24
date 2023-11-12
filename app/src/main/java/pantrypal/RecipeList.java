@@ -20,7 +20,8 @@ class RecipeList extends VBox {
                 DeleteBackendRecipe(toDelete);
             }
         }
-        recipesToDelete.removeAll(recipesToDelete);
+
+        this.getChildren().removeAll(recipesToDelete);
     }
 
     private void DeleteBackendRecipe(Recipe toDelete) {

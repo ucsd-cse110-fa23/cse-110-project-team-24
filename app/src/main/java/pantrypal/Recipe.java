@@ -39,7 +39,7 @@ public class Recipe {
     }
 
     public void setIngredients(String text) {
-        this.title = ingredients;
+        this.ingredients = text;
     }
 
     public String getSteps() {
@@ -55,6 +55,10 @@ public class Recipe {
                 && this.steps.equals(other.getSteps()) && (this.mealType == other.getMealType());
     }
 
+    // return string representation of recipe
+    public String toString() {
+        return String.format("%s;%s;%s;%s", this.title, this.mealType, this.ingredients, this.steps);
+    }
 
 }
 
