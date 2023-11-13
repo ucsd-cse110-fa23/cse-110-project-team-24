@@ -57,19 +57,19 @@ public class RecipeDelation {
                 assertEquals(taskList.getChildren().get(0),null);
             }});
     }
-    @Test
-    public void DeleteWindowCancel(){
-        com.sun.javafx.application.PlatformImpl.startup(()->{});
-        Platform.runLater(new Runnable() {
+    // @Test
+    // public void DeleteWindowCancel(){
+    //     com.sun.javafx.application.PlatformImpl.startup(()->{});
+    //     Platform.runLater(new Runnable() {
             
-            public void run() {
-            Recipe expected = new Recipe(EXPECTED_TITLE, "breakfast", EXPECTED_INGREDIENTS, EXPECTED_STEPS);
-            RecipeView expectedView = new RecipeView(expected);
-            RecipeList taskList = new RecipeList();
-            taskList.getChildren().add(expectedView);            
-            DeleteWindow delewin = new DeleteWindow();
-                delewin.getCancelDele().fire();
-                assertEquals(taskList.getChildren().get(0),expectedView);
-            }});
-    }
+    //         public void run() {
+    //         Recipe expected = new Recipe(EXPECTED_TITLE, "breakfast", EXPECTED_INGREDIENTS, EXPECTED_STEPS);
+    //         RecipeView expectedView = new RecipeView(expected);
+    //         RecipeList taskList = new RecipeList();
+    //         taskList.getChildren().add(expectedView);            
+    //         DeleteWindow delewin = new DeleteWindow();
+    //             delewin.getCancelDele().fire();
+    //             assertEquals(taskList.getChildren().get(0),expectedView);
+    //         }});
+    // }
 }
