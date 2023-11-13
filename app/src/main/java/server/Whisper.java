@@ -143,7 +143,7 @@ class Whisper implements Transcription{
         }
         catch (Exception e) {
             e.printStackTrace();
-            return "Error while transcripting";
+            return "Exception while transcripting";
         }
             
     }

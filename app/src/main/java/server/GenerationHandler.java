@@ -7,7 +7,7 @@ import java.util.*;
 
 public class GenerationHandler implements HttpHandler {
 
-    private List recipes;
+    private List<Recipe> recipes;
 
     public GenerationHandler(List<Recipe> recipes) {
         this.recipes = recipes;
@@ -49,12 +49,15 @@ public class GenerationHandler implements HttpHandler {
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
         if (query != null) {
-            String[] parsedQuery = query.substring(query.indexOf("=") + 1).split(",");
-            String mealType = parsedQuery[0]; // Retrieve data from hashmap
-            String ingredients = parsedQuery[1];
+            String parsedQuery = query.substring(query.indexOf("=") + 1);
+            String decodedQuery = URLDecoder.decode(parsedQuery, "US-ASCII");
+            String[] components = decodedQuery.split(";");
+            String mealType = components[0]; // Retrieve data from hashmap
+            String ingredients = components[1];
             APIResponse api = new ChatGPTResponse();
             RecipeGenerator generator = new ChatGPTGenerator(api);
-            return generator.generateRecipe(mealType, ingredients).toString();
+            String recipe = generator.generateRecipe(mealType, ingredients).toString();
+            return URLEncoder.encode(recipe, "US-ASCII");
         }
         return response;
     }

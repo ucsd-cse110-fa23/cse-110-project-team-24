@@ -29,6 +29,7 @@ public class ServerMain {
   
     server.createContext("/generator/", new GenerationHandler(recipes));
     server.createContext("/transcript/", new TranscriptionHandler(recipes));
+    server.createContext("/", new BaseHandler(recipes));
 
     server.setExecutor(threadPoolExecutor);
     server.start();

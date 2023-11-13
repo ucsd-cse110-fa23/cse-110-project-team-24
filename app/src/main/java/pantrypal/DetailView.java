@@ -1,5 +1,6 @@
 package pantrypal;
 
+//(import statements)
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +13,8 @@ import javafx.scene.text.TextAlignment;
 
 //For US 4-1 DetailView
 public class DetailView extends VBox {
+
+    // UI components and state variables
     private Recipe recipe;
     private Label name;
     private TextArea type;
@@ -24,6 +27,8 @@ public class DetailView extends VBox {
 
     DetailView(Recipe recipe) {
 
+         // Initialize and style UI components
+          // Add components to the VBox
         this.recipe = recipe;
         BackButton = new Button("Back");
         BackButton.setPrefSize(100, 50);
@@ -83,7 +88,10 @@ public class DetailView extends VBox {
         this.getChildren().addAll(EditButton, DeleteButton);
     }
 
-    public void SetEditable() {
+    // Toggles the editability of the recipe details and updates the UI accordingly
+    // Toggle edit mode and update component styles and editability
+    // Update the recipe on server after editing
+    public void SetEditable(RecipeView currentRecipe) {
         if (editing == false) {
             this.EditButton.setText("Editing");
             this.EditButton.setStyle("-fx-background-color: #DE3163; -fx-border-width: 0;");
@@ -97,6 +105,8 @@ public class DetailView extends VBox {
             editing = true;
             return;
         }
+
+        //Actually update recipe on server and here (TD)
         this.EditButton.setText("Edit");
         EditButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
         editing = false;
@@ -107,15 +117,28 @@ public class DetailView extends VBox {
         name.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         StepInstruction.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         type.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
+        
+        this.updateRecipe(currentRecipe, IngredientList.getText(), StepInstruction.getText());
 
     }
 
+    // Update RecipeView for edited recipe and change recipe on server
+    private void updateRecipe(RecipeView rv, String updatedIngredients, String updatedInstructions) {
+        // Update the recipe and send a POST request with the new details
+        Recipe originalRecipe = rv.getRecipe();
+        originalRecipe.setIngredients(updatedIngredients);
+        originalRecipe.setSteps(updatedInstructions);
+
+        PerformRequest.performRequest("", "POST", rv.getRecipe().toString(), null);
+    }
+
+    // Creates a new Scene with the DetailView instance
     public static Scene CreateScene(DetailView d) {
         Scene secondScene = new Scene(d, 1000, 600);
         return secondScene;
     }
 
-    // open Detail View Window
+     // Opens the DetailView in a new window and sets up actions for buttons
     public void OpenView(Stage stage, RecipeView recipeView, RecipeList recipeList) {
         // StackPane secondaryLayout = new StackPane();
         // secondaryLayout.getChildren().addAll(type, IngredientList, StepInstruction);
@@ -126,12 +149,17 @@ public class DetailView extends VBox {
         Stage newWindow = new Stage();
         newWindow.setTitle(recipe.getTitle());
         newWindow.setScene(secondScene);
+
+        // Set action for EditButton to enable editing mode
         this.EditButton.setOnAction(e -> {
-            this.SetEditable();
+            this.SetEditable(recipeView);
         });
 
+         // Set action for BackButton to close the detail view 
         this.BackButton.setOnAction(e -> {
             try {
+
+                 // Revert style changes in the recipe view
                 recipeView.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
                 for (int i = 0; i < recipeView.getChildren().size(); i++) {
                     recipeView.getChildren().get(i).setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
@@ -143,11 +171,13 @@ public class DetailView extends VBox {
             }
         });
 
+        // Set action for DeleteButton to open a delete confirmation window
         this.DeleteButton.setOnAction(e -> {
             DeleteWindow delewin = new DeleteWindow();
             delewin.ConfirmAgain(stage, recipeView, recipeList, newWindow);
         });
         
+         // Set the maximum size for the detail view window
         newWindow.setMaxHeight(800);
         newWindow.setMaxWidth(1400);
         // Set position of second window, related to primary window.
@@ -155,6 +185,7 @@ public class DetailView extends VBox {
         newWindow.setY(stage.getY() + 100);
         newWindow.show();
 
+        // Set action for when the window is requested to close
         newWindow.setOnCloseRequest((e -> {
             try {
                 recipeView.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
