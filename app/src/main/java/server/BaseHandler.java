@@ -43,7 +43,8 @@ public class BaseHandler implements HttpHandler {
         outStream.close();
     }
 
-    private String handlePut(HttpExchange httpExchange) throws IOException {
+    // Add new recipe with components encoded in httpExchange request body
+     String handlePut(HttpExchange httpExchange) throws IOException {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
@@ -59,7 +60,8 @@ public class BaseHandler implements HttpHandler {
         return URLEncoder.encode("Added recipe " + toAdd.toString(), "US-ASCII");
     }
 
-    private String handleDelete(HttpExchange httpExchange) throws IOException {
+    // Delete recipe with componenets encoded in httpExchange URI query
+     String handleDelete(HttpExchange httpExchange) throws IOException {
         String response = "Invalid DELETE Request";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
@@ -84,10 +86,12 @@ public class BaseHandler implements HttpHandler {
         return response;
     }
 
-    private String handlePost(HttpExchange httpExchange) throws IOException {
+    // update recipe with information encoded in request body 
+     String handlePost(HttpExchange httpExchange) throws IOException {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
+        scanner.close();
         postData = URLDecoder.decode(postData, "US-ASCII");
         String[] recipeComponents = postData.split(";");
 

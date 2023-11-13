@@ -6,7 +6,6 @@ package server;
 import org.junit.jupiter.api.Test;
 
 import javafx.stage.Stage;
-import server.APIResponse;
 import server.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,7 +68,6 @@ public class RecipeCreationTest {
         ChatGPTGenerator generator = new ChatGPTGenerator(api);
         String expectedResult = generator.getTitle(EXAMPLE);
         assertEquals("Whole-Grain Egg Bake", expectedResult);
-
         String restOfRecipe = "Title:   %s\n\nIngredients:\nInstructions";
         String shortTitle = "Eggs";
         String shortTitleRecipe = String.format(restOfRecipe, shortTitle);
