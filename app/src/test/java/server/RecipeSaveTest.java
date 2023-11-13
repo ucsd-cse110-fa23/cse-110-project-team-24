@@ -1,20 +1,16 @@
 package server;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import pantrypal.Recipe;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.List;
 
-import javafx.application.Application;
-import pantrypal.AppFrame;
 import pantrypal.RecipeList;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import pantrypal.RecipeView;
+
 import org.junit.jupiter.api.Test;
 
 import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
 
 public class RecipeSaveTest {
 
@@ -37,8 +33,10 @@ public class RecipeSaveTest {
             "2. Stir together cereal, eggs, milk, salt, and pepper in a large bowl. Fold in onion, bell pepper, cheese, and olive oil. \n" + //
             "3. Pour mixture into the prepared baking dish and bake for 25 to 30 minutes, until set and lightly browned on top. Sprinkle with herbs, if desired, and serve.";
     Recipe recipe = new Recipe(Title,  "breakfast", responseIngredients, instructions);
-    
+
     RecipeList taskList = new RecipeList();
+    RecipeView newrecipe = new RecipeView(recipe);
+    taskList.getChildren().add(newrecipe);
     try{
         taskList.saveRecipe();
     } catch (Exception e1) {
