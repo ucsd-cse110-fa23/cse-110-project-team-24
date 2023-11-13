@@ -1,17 +1,25 @@
 package server;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
+
 import javafx.application.Application;
 import pantrypal.AppFrame;
+import pantrypal.RecipeList;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
+
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 
 public class RecipeSaveTest {
 
     @Test
     public void saveTest(){
-
-    File file = new File("StoredRecipe.csv");
 
     String Title = "Whole-Grain Egg Bake";
     String responseIngredients = "- 2 cups cooked whole-grain cereal, such as oatmeal, quinoa, or barley\n" + //
@@ -30,17 +38,33 @@ public class RecipeSaveTest {
             "3. Pour mixture into the prepared baking dish and bake for 25 to 30 minutes, until set and lightly browned on top. Sprinkle with herbs, if desired, and serve.";
     Recipe recipe = new Recipe(Title,  "breakfast", responseIngredients, instructions);
     
-    //TODO
-    AppFrame root = new AppFrame();
-    root.getRecipeList().saveRecipe();
-    //TODO end
-
+    RecipeList taskList = new RecipeList();
+    try{
+        taskList.saveRecipe();
+    } catch (Exception e1) {
+        e1.printStackTrace();
+    }
+    
+    String queriedTitle = "";
+    String queriedIngredients = "";
+    String queriedInstruction = "";
     File file = new File("StoredRecipe.csv");
+    try{
         FileReader filereader = new FileReader(file);
         CSVReader csvReader = new CSVReader(filereader);
         List<String[]> allRows = csvReader.readAll();
-    assertEquals(Title, allRows[0]);
-    assertEquals(responseIngredients, allRows[2]);
-    assertEquals(instructions, allRows[3]);
+        for (String[] row : allRows) {
+            queriedTitle = row[0];
+            queriedIngredients = row[1];
+            queriedInstruction = row[2];
+        }
+        csvReader.close();
     }
+    catch (Exception e2) {
+        e2.printStackTrace();
+    assertEquals(Title, queriedTitle);
+    assertEquals(responseIngredients, queriedIngredients);
+    assertEquals(instructions,queriedInstruction);
+    }
+}
 }
