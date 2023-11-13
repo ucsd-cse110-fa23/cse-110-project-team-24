@@ -18,7 +18,7 @@ public class GenerationHandler implements HttpHandler {
         String method = httpExchange.getRequestMethod();
         try {
             if (method.equals("GET")) {
-                response = handleGet(httpExchange);
+                response = handleGet(httpExchange, new ChatGPTGenerator(new ChatGPTResponse()));
             } 
             // else if (method.equals("POST")) {
             //     response = handlePost(httpExchange);
@@ -44,83 +44,28 @@ public class GenerationHandler implements HttpHandler {
 
     }
 
-    private String handleGet(HttpExchange httpExchange) throws IOException {
+    private String handleGet(HttpExchange httpExchange, RecipeGenerator generator) throws IOException {
         String response = "Invalid GET request";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
         if (query != null) {
-            String parsedQuery = query.substring(query.indexOf("=") + 1);
-            String decodedQuery = URLDecoder.decode(parsedQuery, "US-ASCII");
+            String decodedQuery = getParsedAndDecodedQuery(query);
             String[] components = decodedQuery.split(";");
             String mealType = components[0]; // Retrieve data from hashmap
             String ingredients = components[1];
-            APIResponse api = new ChatGPTResponse();
-            RecipeGenerator generator = new ChatGPTGenerator(api);
             String recipe = generator.generateRecipe(mealType, ingredients).toString();
             return URLEncoder.encode(recipe, "US-ASCII");
         }
         return response;
     }
 
-    // private String handlePost(HttpExchange httpExchange) throws IOException {
-    //     InputStream inStream = httpExchange.getRequestBody();
-    //     Scanner scanner = new Scanner(inStream);
-    //     String postData = scanner.nextLine();
-    //     String language = postData.substring(
-    //             0,
-    //             postData.indexOf(",")), year = postData.substring(postData.indexOf(",") + 1);
 
-    //     // Store data in hashmap
-    //     data.put(language, year);
-
-    //     String response = "Posted entry {" + language + ", " + year + "}";
-    //     System.out.println(response);
-    //     scanner.close();
-
-    //     return response;
-    // }
-
-    // private String handlePut(HttpExchange httpExchange) throws IOException {
-    //     InputStream inStream = httpExchange.getRequestBody();
-    //     Scanner scanner = new Scanner(inStream);
-    //     String postData = scanner.nextLine();
-    //     String language = postData.substring(
-    //             0,
-    //             postData.indexOf(",")), year = postData.substring(postData.indexOf(",") + 1);
-
-    //     // Store data in hashmap
-    //     String response;
-    //     String previous = null;
-    //     if ((previous = data.put(language, year)) == null) {
-    //         response = "Added entry {" + language + ", " + year + "}";
-    //         System.out.println(response);
-    //     } else {
-    //         response = String.format("Updated entry {%s, %s} (previous year: %s)",
-    //                 language, year, previous);
-    //         System.out.println(response);
-    //     }
-
-    //     scanner.close();
-    //     return response;
-    // }
-
-    // private String handleDelete(HttpExchange httpExchange) throws IOException {
-    //     String response = "Invalid DELETE Request";
-    //     URI uri = httpExchange.getRequestURI();
-    //     String query = uri.getRawQuery();
-    
-    //     if (query != null) {
-    //         String value = query.substring(query.indexOf("=") + 1);
-    //         String year = data.remove(value); // Retrieve data from hashmap
-            
-    //         if (year != null) {
-    //             response = "Deleted entry {" + value + ", " + year + "}";
-    //             System.out.println(response);
-    //         } else {
-    //             response = "No data found for " + value;
-    //         }
-    //     }
-    //     return response;
-    // }
+    static String getParsedAndDecodedQuery(String query) throws UnsupportedEncodingException {
+        if (query == null) 
+            return null;
+        String parsedQuery = query.substring(query.indexOf("=") + 1);
+        String decodedQuery = URLDecoder.decode(parsedQuery, "US-ASCII");
+        return decodedQuery;
+    }
 
 }
