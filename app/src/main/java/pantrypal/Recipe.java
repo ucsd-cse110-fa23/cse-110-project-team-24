@@ -1,10 +1,14 @@
 package pantrypal;
+
+
 public class Recipe {
+     // Class attributes for recipe details
     String title;
     String mealType;
     String ingredients;
     String steps;
 
+    // Constructor to create a new Recipe instance
     Recipe (String title, String mealType, String ingredients, String steps) {
         this.title = title;
         this.mealType = mealType;
@@ -12,12 +16,16 @@ public class Recipe {
         this.steps = steps;
     }
 
+    // Static method to create a Recipe instance from a string representation
     // returns Recipe based on string representation with format title;mealType;ingredients;steps
     public static Recipe of (String representation) {
+        // Split the string representation into its components
         String[] components = representation.split(";");
+        // Create and return a new Recipe object
         return new Recipe(components[0], components[1], components[2], components[3]);
     }
 
+     // Getters and setters for each attribute
     public String getTitle() {
         return this.title;
     }
@@ -50,13 +58,16 @@ public class Recipe {
         this.steps = text;
     }
 
+     // Method to check if two Recipe objects are equal
     public boolean equals(Recipe other) {
+        // Check if all attributes of this recipe match those of the other recipe
         return this.ingredients.equals(other.getIngredients()) && this.title.equals(other.getTitle())
                 && this.steps.equals(other.getSteps()) && (this.mealType == other.getMealType());
     }
 
-    // return string representation of recipe
+    // Method to return a string representation of the Recipe
     public String toString() {
+        // Format and return the recipe details as a semicolon-separated string
         return String.format("%s;%s;%s;%s", this.title, this.mealType, this.ingredients, this.steps);
     }
 
