@@ -25,18 +25,18 @@ public class DetailView extends VBox {
     private Button DeleteButton;
     private boolean editing = false;
 
-    DetailView(Recipe recipe) {
+    public DetailView(Recipe expected){
 
          // Initialize and style UI components
           // Add components to the VBox
-        this.recipe = recipe;
+        this.recipe = expected;
         BackButton = new Button("Back");
         BackButton.setPrefSize(100, 50);
         BackButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
         BackButton.setAlignment(Pos.CENTER);
         this.getChildren().add(BackButton);
 
-        name = new Label(recipe.getTitle());
+        name = new Label(expected.getTitle());
         name.setPrefSize(1400, 50);
         name.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         name.setAlignment(Pos.TOP_CENTER);
@@ -44,7 +44,7 @@ public class DetailView extends VBox {
         name.setTextAlignment(TextAlignment.CENTER);
         this.getChildren().add(name);
 
-        type = new TextArea("Type is: " + recipe.getMealType());
+        type = new TextArea("Type is: " + expected.getMealType());
 
         type.setEditable(false);
         type.setPrefSize(1400, 100);
@@ -54,7 +54,7 @@ public class DetailView extends VBox {
 
         this.getChildren().add(type);
 
-        IngredientList = new TextArea(recipe.getIngredients());
+        IngredientList = new TextArea(expected.getIngredients());
         IngredientList.setPrefSize(1400, 200);
         IngredientList.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         IngredientList.setEditable(false);
@@ -64,7 +64,7 @@ public class DetailView extends VBox {
         IngredientList.setPadding(new Insets(10, 0, 10, 0));
         IngredientList.setEditable(false);
 
-        StepInstruction = new TextArea(recipe.getSteps());
+        StepInstruction = new TextArea(expected.getSteps());
         StepInstruction.setPrefSize(1400, 300);
         StepInstruction.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         // StepInstruction.setAlignment(Pos.BASELINE_LEFT);
@@ -87,7 +87,21 @@ public class DetailView extends VBox {
         DeleteButton.setAlignment(Pos.CENTER);
         this.getChildren().addAll(EditButton, DeleteButton);
     }
-
+    public TextArea getType(){
+        return this.type;
+    }
+    public Button getDletebutton(){
+        return this.DeleteButton;
+    }
+    public TextArea getIngredient(){
+        return this.IngredientList;
+    }
+    public Button getEditButton(){
+        return this.EditButton;
+    }
+    public TextArea getInstruction(){
+        return this.StepInstruction;
+    }
     // Toggles the editability of the recipe details and updates the UI accordingly
     // Toggle edit mode and update component styles and editability
     // Update the recipe on server after editing

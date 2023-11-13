@@ -1,4 +1,9 @@
 package pantrypal;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import com.opencsv.exceptions.CsvException;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
@@ -24,7 +29,11 @@ public class AppFrame extends BorderPane{
 
         // Create a tasklist Object to hold the tasks
         taskList = new RecipeList();
-        
+        try {
+            taskList.loadRecipe();
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
         // Initialise the Footer Object
         footer = new Footer();
 
@@ -45,7 +54,9 @@ public class AppFrame extends BorderPane{
     }
 
     // Method to add event listeners to components
-
+    public RecipeList getRecipeList(){
+        return this.taskList;
+    }
     public void addListeners(){
         Create.setOnAction(e -> {
 
@@ -53,6 +64,7 @@ public class AppFrame extends BorderPane{
             CreateView createView = new CreateView();
             createView.OpenCreateView(taskList);
         });
+        
     }
 }
 

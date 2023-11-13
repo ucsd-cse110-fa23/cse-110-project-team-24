@@ -1,5 +1,7 @@
 package pantrypal;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +23,14 @@ public class Main extends Application {
         primaryStage.setResizable(true);
         // Show the app
         primaryStage.show();
-        
+        primaryStage.setOnCloseRequest(e ->{
+            try {
+                root.getRecipeList().saveRecipe();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
     }
 
     public static void runApplication(String[] args) {
