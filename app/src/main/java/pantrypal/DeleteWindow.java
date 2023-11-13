@@ -13,9 +13,9 @@ public class DeleteWindow extends VBox{
     private Button Deleteit;
     private Button CancelDele;
     private boolean deleteconfirm = false;
+    public static boolean isCreated = true;
 
-
-    DeleteWindow() {
+    public DeleteWindow() {
 
           // Initialize confirmation label
         Confirm = new Label("Confirm to delete this Recipe?");
@@ -40,7 +40,12 @@ public class DeleteWindow extends VBox{
     public boolean isdelete(){
         return deleteconfirm;
     }
-
+    public Button getDeleteit(){
+        return this.Deleteit;
+    }
+    public Button getCancelDele(){
+        return this.CancelDele;
+    }
      // Method to set deletion confirmation
     public void setdelete(){
         deleteconfirm = true;

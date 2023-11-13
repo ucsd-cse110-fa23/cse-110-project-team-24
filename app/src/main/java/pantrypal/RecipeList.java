@@ -1,11 +1,23 @@
 package pantrypal;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-class RecipeList extends VBox {
-    RecipeList(){
+public class RecipeList extends VBox {
+    public RecipeList(){
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #F0F8FF;");
@@ -33,7 +45,46 @@ class RecipeList extends VBox {
         // Remove all marked recipes from the VBox children
         this.getChildren().removeAll(recipesToDelete);
     }
+    public void loadRecipe() throws IOException, CsvException{
+        File file = new File("StoredRecipe.csv");
+        FileReader filereader = new FileReader(file);
+        CSVReader csvReader = new CSVReader(filereader);
+        List<String[]> allRows = csvReader.readAll();
+        for (String[] row : allRows) {
+            Recipe Stored = new Recipe(row[0], row[1], row[2], row[3]);
+            RecipeView StoredView = new RecipeView(Stored);
+            Button titleButton = StoredView.getTitle();            
+            titleButton.setOnAction(e1 -> {
+                try {
+                    StoredView.OpenDetailView(StoredView.getStage(), this);
+                } catch (Exception e2) {
+                    // TODO Auto-generated catch block
+                    e2.printStackTrace();
+                }
+            });
+            this.getChildren().add(StoredView);
+        }
+        csvReader.close();
+    }
 
+    public void saveRecipe() throws IOException{
+        File file = new File("StoredRecipe.csv");
+        String[] row = new String[4];
+        FileWriter fileWriter = new FileWriter(file);
+        CSVWriter csvWriter = new CSVWriter(fileWriter);
+        for (int i = 0; i < this.getChildren().size(); i++) {
+            if(this.getChildren().get(i) instanceof RecipeView){
+                RecipeView recipeView =  (RecipeView) this.getChildren().get(i);
+                Recipe recipe = recipeView.getRecipe();
+                row[0] = recipe.getTitle();
+                row[1] = recipe.getMealType();
+                row[2] = recipe.getIngredients();
+                row[3] = recipe.getSteps();
+                csvWriter.writeNext(row);                
+        }
+    }
+    csvWriter.close();
+    }
     // Method to send a request to the backend to delete a recipe
     private void DeleteBackendRecipe(Recipe toDelete) {
         PerformRequest.performRequest("", "DELETE", null,
