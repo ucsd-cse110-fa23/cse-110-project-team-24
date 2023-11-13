@@ -101,7 +101,12 @@ public class GeneratedView extends VBox{
             RecipeView newrecipe = new RecipeView(generatedRecipe);
             Button titleButton = newrecipe.getTitle();            
             titleButton.setOnAction(e1 -> {
-                newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
+                try {
+                    newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
+                } catch (Exception e2) {
+                    // TODO Auto-generated catch block
+                    e2.printStackTrace();
+                }
             });
             Recipe receipetoAdd = newrecipe.getRecipe();
 
