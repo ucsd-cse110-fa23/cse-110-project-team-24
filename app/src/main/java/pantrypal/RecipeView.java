@@ -13,7 +13,7 @@ public class RecipeView extends HBox{
     private Stage stage;
     private Recipe recipe;
 
-    RecipeView(Recipe recipe) {
+    public RecipeView(Recipe recipe) {
         this.recipe = recipe;
 
         stage = new Stage();       
@@ -41,7 +41,6 @@ public class RecipeView extends HBox{
     public Button getTitle(){
         return this.titleButton;
     }
-
     // Getter for the title name
     public String getTitleName(){
         return this.titleButton.getText();
@@ -59,7 +58,7 @@ public class RecipeView extends HBox{
     }
 
      // Method to open the detailed view of the recipe
-    public void OpenDetailView(Stage stage, RecipeList recipeList){
+    public void OpenDetailView(Stage stage, RecipeList recipeList) throws Exception{
         this.setStyle("-fx-border-color: #000000; -fx-border-width: 0; -fx-font-weight: bold;");
         for (int i = 0; i < this.getChildren().size(); i++) {
             this.getChildren().get(i).setStyle("-fx-background-color: #BCE29E; -fx-border-width: 0;");

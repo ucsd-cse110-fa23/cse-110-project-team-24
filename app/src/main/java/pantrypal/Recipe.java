@@ -9,7 +9,7 @@ public class Recipe {
     String steps;
 
     // Constructor to create a new Recipe instance
-    Recipe (String title, String mealType, String ingredients, String steps) {
+    public Recipe (String title, String mealType, String ingredients, String steps) {
         this.title = title;
         this.mealType = mealType;
         this.ingredients = ingredients;
