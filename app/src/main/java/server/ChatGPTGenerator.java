@@ -1,6 +1,6 @@
 package server;
 
-public class ChatGPTGenerator implements RecipeGenerator{ // get what the RecipeParser 
+public class ChatGPTGenerator implements RecipeGenerator{
     APIResponse api;
     
     public ChatGPTGenerator (APIResponse api) {
