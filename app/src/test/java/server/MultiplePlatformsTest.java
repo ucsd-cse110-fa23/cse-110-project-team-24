@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 public class MultiplePlatformsTest {
     private final String ENCODING = "US-ASCII";
+    private final String RECIPE_SEPARATOR = "RECIPE_SEPARATOR";
     // Basic case
     String title1 = "RecipeTitle";
     String type1 = "RecipeType";
@@ -180,6 +181,15 @@ public class MultiplePlatformsTest {
             assertEquals(0, recipes.size());
         } catch (Exception e) {
         }
+    }
+
+    @Test
+    public void testHandleGet() {
+        BaseHandler handler = new BaseHandler(recipes);
+        String expected = title1 + ";" + type1 + ";" + ingredients1 + ";" + instructions1 + 
+                RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 
+                RECIPE_SEPARATOR + title3 + ";" + type3 + ";" + ingredients3 + ";" + instructions3;
+        String actual = handler.handleGet(null);
     }
 
     @Test

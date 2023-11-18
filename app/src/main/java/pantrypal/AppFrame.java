@@ -29,11 +29,6 @@ public class AppFrame extends BorderPane{
 
         // Create a tasklist Object to hold the tasks
         taskList = new RecipeList();
-        try {
-            taskList.loadRecipe();
-        } catch (IOException | CsvException e) {
-            e.printStackTrace();
-        }
         // Initialise the Footer Object
         footer = new Footer();
 
