@@ -11,9 +11,10 @@ import com.sun.net.httpserver.HttpHandler;
 
 public class BaseHandler implements HttpHandler {
     private List<Recipe> recipes;
-
+    FileRecipesCoordinator coordinator;
     public BaseHandler(List<Recipe> recipes) {
         this.recipes = recipes;
+        this.coordinator = new FileRecipesCoordinator(recipes);
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -26,7 +27,9 @@ public class BaseHandler implements HttpHandler {
                 response = handleDelete(httpExchange);
             } else if(method.equals("POST")){
                 response = handlePost(httpExchange);
-            } 
+            } else if (method.equals("GET")) {
+                response = handleGet(httpExchange);
+            }
             else {
                 throw new Exception("Not Valid Request Method");
             }
@@ -54,10 +57,15 @@ public class BaseHandler implements HttpHandler {
         // Store recipe
         Recipe toAdd = new Recipe(recipeComponents[0], recipeComponents[1], 
                 recipeComponents[2], recipeComponents[3]);
-        recipes.add(0, toAdd);
+        addRecipe(toAdd);
 
         scanner.close();
         return URLEncoder.encode("Added recipe " + toAdd.toString(), "US-ASCII");
+    }
+
+    void addRecipe(Recipe toAdd) throws IOException {
+        recipes.add(0, toAdd);
+        coordinator.updateRecipes();
     }
 
     // Delete recipe with componenets encoded in httpExchange URI query
@@ -71,19 +79,27 @@ public class BaseHandler implements HttpHandler {
         if (query != null) {
             String[] components = query.split(";");
             Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3]);
-            for (Recipe recipe:this.recipes) {
+                                
+            if (deleteRecipe(toDelete)) {
+                //return endcoded recipe
+                return URLEncoder.encode("Deleted recipe " + toDelete.toString(), "US-ASCII");
+            }
+            response = URLEncoder.encode("Unable to find recipe " + toDelete.toString(), "US-ASCII");
+        }
+        return response;
+    }
+
+    boolean deleteRecipe(Recipe toDelete) throws IOException {
+        for (Recipe recipe:this.recipes) {
                 String t1 = recipe.getTitle();
                 String t2 = toDelete.getTitle();
                 if (t1.equals(t2)) {
                     this.recipes.remove(recipe);
-                    //return endcoded recipe
-                    return URLEncoder.encode("Deleted recipe " + recipe.toString(), "US-ASCII");
+                    coordinator.updateRecipes();
+                    return true;
                 }
-            }
-            response = URLEncoder.encode("Unable to find recipe " + toDelete.toString(), "US-ASCII");
-            
         }
-        return response;
+        return false;
     }
 
     // update recipe with information encoded in request body 
@@ -97,20 +113,44 @@ public class BaseHandler implements HttpHandler {
 
         Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1], 
                 recipeComponents[2], recipeComponents[3]);
+        
         // Update recipe
-        for (int i = 0; i < recipes.size(); i++) {
-            Recipe current = recipes.get(i);
-            if (current.getTitle().equals(toUpdate.getTitle())) {
-                current.setIngredients(toUpdate.getIngredients());
-                current.setSteps(toUpdate.getSteps());
-                return URLEncoder.encode("Updated recipe to " + toUpdate.toString(), "US-ASCII");
-            }
+        if (updateRecipe(toUpdate)) {
+            return URLEncoder.encode("Updated recipe to " + toUpdate.toString(), "US-ASCII");
         }
 
         scanner.close();
         return URLEncoder.encode("Could not find recipe " + toUpdate.toString(), "US-ASCII");
 
 
+    }
+
+    boolean updateRecipe(Recipe edited) throws IOException {
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe current = recipes.get(i);
+            if (current.getTitle().equals(edited.getTitle())) {
+                current.setIngredients(edited.getIngredients());
+                current.setSteps(edited.getSteps());
+                coordinator.updateRecipes();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // return delimeter separated lists of formatted recipes
+    String handleGet(HttpExchange httpExchange) {
+        String result = "";
+        for (Recipe recipe:recipes){
+            result += recipe.toString();
+            result += "RECIPE_SEPARATOR";
+        }
+        try {
+            return URLEncoder.encode(result, "US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

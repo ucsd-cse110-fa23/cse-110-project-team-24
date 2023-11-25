@@ -38,6 +38,9 @@ public class PerformRequest {
 
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response = in.readLine();
+            if (response == null) {
+                response = "";
+            }
             in.close();
             return URLDecoder.decode(response, "US-ASCII");
         } catch (Exception ex) {
