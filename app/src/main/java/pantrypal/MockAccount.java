@@ -2,6 +2,8 @@ package pantrypal;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import java.util.ArrayList;
+
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -11,12 +13,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
 public class MockAccount implements SuperAccount{
+    public static ArrayList<Document> Mockdatabase = new ArrayList<>();
     public String username;
     public String password;
-    String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
-    MongoClient mongoClient = MongoClients.create(uri);
-    MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
-    MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
+   
 
     public MockAccount(String usr, String pass) {
        username = usr;
@@ -33,21 +33,23 @@ public class MockAccount implements SuperAccount{
         Account.append("username", this.username)
             .append("password", this.password);
         if(this.MockCheckAccountExisted().equals("-1")){
-            AccountCollection.insertOne(Account);
+           Mockdatabase.add(Account);
         }
     }
     public String MockCheckAccountExisted(){
-        Document Account = AccountCollection.find(eq("username", this.username)).first();
-        //return -1 if the account never exists;
-        if(Account == null){
-            return "-1";
+        for(int i = 0; i< Mockdatabase.size();i++){
+            if(Mockdatabase.get(i).get("username").equals(username)){
+                Document Account = Mockdatabase.get(i);                
+                String password = (String) Account.get("password");
+                //return 1 if this account could be found in the remote database
+                if(password.equals(this.password)){
+                    return "1";
+                }
+                //return 0 if the username is correct but the password is incorrect
+                return "0";
+            }
         }
-        String password = (String) Account.get("password");
-        //return 1 if this account could be found in the remote database
-        if(password.equals(this.password)){
-            return "1";
-        }
-        //return 0 if the username is correct but the password is incorrect
-        return "0";
+        return "-1";
+       
     }
 }

@@ -41,10 +41,7 @@ public class AccountTest {
     private static final String usrname3 = "Safia";
     private static final String password3 = "7654321";
     private  static ArrayList<MockAccount> Accounts = new ArrayList<>();
-     String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
-     MongoClient mongoClient = MongoClients.create(uri);
-     MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
-     MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
+    
 
 
     @BeforeEach
@@ -60,12 +57,12 @@ public class AccountTest {
         for(int i = 0; i< Accounts.size(); i++){
             Accounts.get(i).InsertNewAccount();
         }
-         for(int i = 0; i< Accounts.size(); i++){
-             Document Account = AccountCollection.find(eq("username", Accounts.get(i).GetUsername())).first();
+         for(int i = 0; i< MockAccount.Mockdatabase.size(); i++){
+             Document Account = MockAccount.Mockdatabase.get(i);
              assertEquals(Accounts.get(i).GetUsername(), Account.get("username"));
              assertEquals(Accounts.get(i).GetPassword(), Account.get("password"));
         }
-       AccountCollection.drop();
+        MockAccount.Mockdatabase.clear();
     }
 
     @Test
@@ -77,7 +74,7 @@ public class AccountTest {
             String info = Accounts.get(i).MockCheckAccountExisted();
             assertTrue(info.equals("1"));
         }
-        AccountCollection.drop();
+         MockAccount.Mockdatabase.clear();
     }
     @Test
      public void testValidWhenInvalid(){
@@ -85,7 +82,7 @@ public class AccountTest {
             String info = Accounts.get(i).MockCheckAccountExisted();
             assertTrue(info.equals("-1"));
         }
-        AccountCollection.drop();
+         MockAccount.Mockdatabase.clear();
     }
 
      @Test
@@ -100,7 +97,7 @@ public class AccountTest {
             String info = Accounts.get(i).MockCheckAccountExisted();
             assertTrue(info.equals("0"));
         }
-        AccountCollection.drop();
+         MockAccount.Mockdatabase.clear();
     }
 
     
