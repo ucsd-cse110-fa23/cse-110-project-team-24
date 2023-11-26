@@ -28,50 +28,31 @@ import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.*;
 
 import pantrypal.Account;
+import pantrypal.MockAccount;
 
 public class AccountTest {
     private static final String usrname1 = "RobinLi";
     private static final String password1 = "1234567";
 
-    private static final int SERVER_PORT = 8100;
-    private static final String SERVER_HOSTNAME = "localhost";
+
     private static final String usrname2 = "AJ";
     private static final String password2 = "abcdefg";
 
     private static final String usrname3 = "Safia";
     private static final String password3 = "7654321";
-    private  static ArrayList<Account> Accounts = new ArrayList<>();
+    private  static ArrayList<MockAccount> Accounts = new ArrayList<>();
     private static String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
     private static MongoClient mongoClient = MongoClients.create(uri);
     private static MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
     private static MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
-    private static HttpServer server;
+
 
     @BeforeAll
     public static void SetUpandAddAccounts() throws IOException{
-        String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
-        MongoClient mongoClient = MongoClients.create(uri);
-        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-        MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
-        MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
-        // create a map to store data
-        List<Recipe> recipes = new ArrayList<>();
-
-        // create a server
-        server = HttpServer.create(
-            new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT),
-            0);
-  
-        server.createContext("/generator/", new GenerationHandler(recipes));
-        server.createContext("/transcript/", new TranscriptionHandler(recipes));
-        server.createContext("/", new BaseHandler(recipes));
-        server.createContext("/CreateAccount", new AccountHandler());
-        server.createContext("/CheckAccountValid", new AccountHandler());
-        server.setExecutor(threadPoolExecutor);
-        server.start();
-        Accounts.add(new Account(usrname1, password1));
-        Accounts.add(new Account(usrname2, password2));
-        Accounts.add(new Account(usrname3, password3)); 
+        
+        Accounts.add(new MockAccount(usrname1, password1));
+        Accounts.add(new MockAccount(usrname2, password2));
+        Accounts.add(new MockAccount(usrname3, password3)); 
              
     }
     @Test
@@ -80,9 +61,9 @@ public class AccountTest {
             Accounts.get(i).InsertNewAccount();
         }
          for(int i = 0; i< Accounts.size(); i++){
-             Document Account = AccountCollection.find(eq("username", Accounts.get(i).GerUsername())).first();
-             assertEquals(Accounts.get(i).GerUsername(), Account.get("username"));
-             assertEquals(Accounts.get(i).GerPassword(), Account.get("password"));
+             Document Account = AccountCollection.find(eq("username", Accounts.get(i).GetUsername())).first();
+             assertEquals(Accounts.get(i).GetUsername(), Account.get("username"));
+             assertEquals(Accounts.get(i).GetPassword(), Account.get("password"));
         }
        AccountCollection.drop();
     }
@@ -93,7 +74,7 @@ public class AccountTest {
             Accounts.get(i).InsertNewAccount();
         }
         for(int i = 0; i< Accounts.size(); i++){
-            String info = Accounts.get(i).CheckAccountExisted();
+            String info = Accounts.get(i).MockCheckAccountExisted();
             assertTrue(info.equals("1"));
         }
         AccountCollection.drop();
@@ -101,7 +82,7 @@ public class AccountTest {
     @Test
      public void testValidWhenInvalid(){
         for(int i = 0; i< Accounts.size(); i++){
-            String info = Accounts.get(i).CheckAccountExisted();
+            String info = Accounts.get(i).MockCheckAccountExisted();
             assertTrue(info.equals("-1"));
         }
         AccountCollection.drop();
@@ -109,14 +90,14 @@ public class AccountTest {
 
      @Test
      public void testValidwithIncorrectPassword(){
-        Account WrongUser1 = new Account(usrname1, "passs");
+        MockAccount WrongUser1 = new MockAccount(usrname1, "passs");
         WrongUser1.InsertNewAccount();
-        Account WrongUser2 = new Account(usrname2, "pasdf");
+        MockAccount WrongUser2 = new MockAccount(usrname2, "pasdf");
         WrongUser2.InsertNewAccount();
-        Account WrongUser3 = new Account(usrname3, "pasdfasasss");
+        MockAccount WrongUser3 = new MockAccount(usrname3, "pasdfasasss");
         WrongUser3.InsertNewAccount();
         for(int i = 0; i< Accounts.size(); i++){
-            String info = Accounts.get(i).CheckAccountExisted();
+            String info = Accounts.get(i).MockCheckAccountExisted();
             assertTrue(info.equals("0"));
         }
         AccountCollection.drop();
@@ -124,7 +105,7 @@ public class AccountTest {
 
     @AfterAll
     public static void ClearDataBase(){
-        server.stop(1);
+        AccountCollection.drop();
         
     }
 }

@@ -1,7 +1,7 @@
 package pantrypal;
 
 
-public class Account {
+public class Account implements SuperAccount{
     
     private String username;
     private String password;
