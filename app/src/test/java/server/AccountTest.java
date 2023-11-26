@@ -49,7 +49,11 @@ public class AccountTest {
 
     @BeforeAll
     public static void SetUpandAddAccounts() throws IOException{
+        String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
+        MongoClient mongoClient = MongoClients.create(uri);
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+        MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
+        MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
         // create a map to store data
         List<Recipe> recipes = new ArrayList<>();
 
@@ -68,7 +72,7 @@ public class AccountTest {
         Accounts.add(new Account(usrname1, password1));
         Accounts.add(new Account(usrname2, password2));
         Accounts.add(new Account(usrname3, password3)); 
-        AccountCollection.drop();       
+             
     }
     @Test
     public void testHandlePut(){
