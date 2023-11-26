@@ -4,9 +4,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetSocketAddress;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+import com.sun.net.httpserver.*;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.concurrent.*;
 import org.bson.Document;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,6 +32,8 @@ public class AccountTest {
     private final String usrname1 = "RobinLi";
     private final String password1 = "1234567";
 
+    private static final int SERVER_PORT = 8100;
+    private static final String SERVER_HOSTNAME = "localhost";
     private final String usrname2 = "AJ";
     private final String password2 = "abcdefg";
 
@@ -35,10 +44,26 @@ public class AccountTest {
     MongoClient mongoClient = MongoClients.create(uri);
     MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
     MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
+    HttpServer server;
 
     @BeforeEach
-    public void addAccounts(){
-        
+    public void SetUpandAddAccounts() throws IOException{
+        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+        // create a map to store data
+        List<Recipe> recipes = new ArrayList<>();
+
+        // create a server
+        server = HttpServer.create(
+            new InetSocketAddress(SERVER_HOSTNAME, SERVER_PORT),
+            0);
+  
+        server.createContext("/generator/", new GenerationHandler(recipes));
+        server.createContext("/transcript/", new TranscriptionHandler(recipes));
+        server.createContext("/", new BaseHandler(recipes));
+        server.createContext("/CreateAccount", new AccountHandler());
+        server.createContext("/CheckAccountValid", new AccountHandler());
+        server.setExecutor(threadPoolExecutor);
+        server.start();
         Accounts.add(new Account(usrname1, password1));
         Accounts.add(new Account(usrname2, password2));
         Accounts.add(new Account(usrname3, password3));        
@@ -91,5 +116,7 @@ public class AccountTest {
     @AfterEach
     public void ClearDataBase(){
         AccountCollection.drop();
+        server.stop(1);
+        
     }
 }
