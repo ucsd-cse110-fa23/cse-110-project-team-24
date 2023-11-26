@@ -41,15 +41,15 @@ public class AccountTest {
     private static final String usrname3 = "Safia";
     private static final String password3 = "7654321";
     private  static ArrayList<MockAccount> Accounts = new ArrayList<>();
-    private static String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
-    private static MongoClient mongoClient = MongoClients.create(uri);
-    private static MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
-    private static MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
+     String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
+     MongoClient mongoClient = MongoClients.create(uri);
+     MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
+     MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
 
 
-    @BeforeAll
-    public static void SetUpandAddAccounts() throws IOException{
-        
+    @BeforeEach
+    void SetUpandAddAccounts() throws IOException{
+
         Accounts.add(new MockAccount(usrname1, password1));
         Accounts.add(new MockAccount(usrname2, password2));
         Accounts.add(new MockAccount(usrname3, password3)); 
@@ -103,9 +103,5 @@ public class AccountTest {
         AccountCollection.drop();
     }
 
-    @AfterAll
-    public static void ClearDataBase(){
-        AccountCollection.drop();
-        
-    }
+    
 }
