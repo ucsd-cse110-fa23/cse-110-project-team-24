@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.*;
 import org.bson.Document;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,25 +30,25 @@ import static com.mongodb.client.model.Filters.*;
 import pantrypal.Account;
 
 public class AccountTest {
-    private final String usrname1 = "RobinLi";
-    private final String password1 = "1234567";
+    private static final String usrname1 = "RobinLi";
+    private static final String password1 = "1234567";
 
     private static final int SERVER_PORT = 8100;
     private static final String SERVER_HOSTNAME = "localhost";
-    private final String usrname2 = "AJ";
-    private final String password2 = "abcdefg";
+    private static final String usrname2 = "AJ";
+    private static final String password2 = "abcdefg";
 
-    private final String usrname3 = "Safia";
-    private final String password3 = "7654321";
-    ArrayList<Account> Accounts = new ArrayList<>();
-    String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
-    MongoClient mongoClient = MongoClients.create(uri);
-    MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
-    MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
-    HttpServer server;
+    private static final String usrname3 = "Safia";
+    private static final String password3 = "7654321";
+    private  static ArrayList<Account> Accounts = new ArrayList<>();
+    private static String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
+    private static MongoClient mongoClient = MongoClients.create(uri);
+    private static MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
+    private static MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
+    private static HttpServer server;
 
-    @BeforeEach
-    public void SetUpandAddAccounts() throws IOException{
+    @BeforeAll
+    public static void SetUpandAddAccounts() throws IOException{
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         // create a map to store data
         List<Recipe> recipes = new ArrayList<>();
@@ -66,7 +67,8 @@ public class AccountTest {
         server.start();
         Accounts.add(new Account(usrname1, password1));
         Accounts.add(new Account(usrname2, password2));
-        Accounts.add(new Account(usrname3, password3));        
+        Accounts.add(new Account(usrname3, password3)); 
+        AccountCollection.drop();       
     }
     @Test
     public void testHandlePut(){
@@ -78,7 +80,7 @@ public class AccountTest {
              assertEquals(Accounts.get(i).GerUsername(), Account.get("username"));
              assertEquals(Accounts.get(i).GerPassword(), Account.get("password"));
         }
-       
+       AccountCollection.drop();
     }
 
     @Test
@@ -90,6 +92,7 @@ public class AccountTest {
             String info = Accounts.get(i).CheckAccountExisted();
             assertTrue(info.equals("1"));
         }
+        AccountCollection.drop();
     }
     @Test
      public void testValidWhenInvalid(){
@@ -97,6 +100,7 @@ public class AccountTest {
             String info = Accounts.get(i).CheckAccountExisted();
             assertTrue(info.equals("-1"));
         }
+        AccountCollection.drop();
     }
 
      @Test
@@ -111,11 +115,11 @@ public class AccountTest {
             String info = Accounts.get(i).CheckAccountExisted();
             assertTrue(info.equals("0"));
         }
+        AccountCollection.drop();
     }
 
-    @AfterEach
-    public void ClearDataBase(){
-        AccountCollection.drop();
+    @AfterAll
+    public static void ClearDataBase(){
         server.stop(1);
         
     }
