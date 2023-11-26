@@ -59,7 +59,7 @@ public class MultiplePlatformsTest {
     @Test
     public void testHandlePost() {
         ArrayList<Recipe> recipes = new ArrayList();
-        BaseHandler handler = new BaseHandler(recipes);
+        BaseHandler handler = new BaseHandler(new RecipeList(new NoModification()));
 
         try {
             String title = "RecipeTitle";
@@ -115,7 +115,7 @@ public class MultiplePlatformsTest {
     @Test
     public void handlePostTest() {
         String newIngredients = "Woah new ingredients";
-        BaseHandler handler = new BaseHandler(recipes);
+        BaseHandler handler = new BaseHandler(new RecipeList(new NoModification()));
         try {
             handler.handlePost(new MockExchange("https://localhost/", 
                     URLEncoder.encode(title1 + ";" + type1 + ";" +  newIngredients + ";" + instructions1, ENCODING)));
@@ -152,7 +152,7 @@ public class MultiplePlatformsTest {
     @Test
     public void handleDeleteTest() {
         try {
-            BaseHandler handler = new BaseHandler(recipes);
+            BaseHandler handler = new BaseHandler(new RecipeList(new NoModification()));
             handler.handlePost(new MockExchange("https://localhost/" + "?=" + 
                     URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + instructions2, ENCODING), null));
             Recipe actual = recipes.get(0);
@@ -185,7 +185,7 @@ public class MultiplePlatformsTest {
 
     @Test
     public void testHandleGet() {
-        BaseHandler handler = new BaseHandler(recipes);
+        BaseHandler handler = new BaseHandler(new RecipeList(new NoModification()));
         String expected = title1 + ";" + type1 + ";" + ingredients1 + ";" + instructions1 + 
                 RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 
                 RECIPE_SEPARATOR + title3 + ";" + type3 + ";" + ingredients3 + ";" + instructions3;

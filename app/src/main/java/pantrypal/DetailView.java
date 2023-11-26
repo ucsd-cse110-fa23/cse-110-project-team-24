@@ -143,7 +143,8 @@ public class DetailView extends VBox {
         originalRecipe.setIngredients(updatedIngredients);
         originalRecipe.setSteps(updatedInstructions);
 
-        PerformRequest.performRequest("", "POST", rv.getRecipe().toString(), null);
+        RecipeList parent = (RecipeList) rv.getParent();
+        parent.getPerformRequest().performRequest("", "POST", rv.getRecipe().toString(), null);
     }
 
     // Creates a new Scene with the DetailView instance

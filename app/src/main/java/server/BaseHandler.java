@@ -10,9 +10,9 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class BaseHandler implements HttpHandler {
-    private List<Recipe> recipes;
+    private RecipeList recipes;
     FileRecipesCoordinator coordinator;
-    public BaseHandler(List<Recipe> recipes) {
+    public BaseHandler(RecipeList recipes) {
         this.recipes = recipes;
         this.coordinator = new FileRecipesCoordinator(recipes);
     }
@@ -60,11 +60,11 @@ public class BaseHandler implements HttpHandler {
         addRecipe(toAdd);
 
         scanner.close();
-        return URLEncoder.encode("Added recipe " + toAdd.toString(), "US-ASCII");
+        return URLEncoder.encode(String.format("%d%s", 0, toAdd.toString()), "US-ASCII");
     }
 
     void addRecipe(Recipe toAdd) throws IOException {
-        recipes.add(0, toAdd);
+        recipes.add(toAdd);
         coordinator.updateRecipes();
     }
 
@@ -80,26 +80,24 @@ public class BaseHandler implements HttpHandler {
             String[] components = query.split(";");
             Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3]);
                                 
-            if (deleteRecipe(toDelete)) {
-                //return endcoded recipe
-                return URLEncoder.encode("Deleted recipe " + toDelete.toString(), "US-ASCII");
-            }
-            response = URLEncoder.encode("Unable to find recipe " + toDelete.toString(), "US-ASCII");
+            int pos = deleteRecipe(toDelete);
+            return URLEncoder.encode(String.format("%d%s", pos, toDelete.toString()), "US-ASCII");
         }
         return response;
     }
 
-    boolean deleteRecipe(Recipe toDelete) throws IOException {
-        for (Recipe recipe:this.recipes) {
-                String t1 = recipe.getTitle();
-                String t2 = toDelete.getTitle();
-                if (t1.equals(t2)) {
-                    this.recipes.remove(recipe);
-                    coordinator.updateRecipes();
-                    return true;
-                }
+    int deleteRecipe(Recipe toDelete) throws IOException {
+        for (int i = 0; i < this.recipes.size(); i++){
+            Recipe recipe = this.recipes.get(i);
+            String t1 = recipe.getTitle();
+            String t2 = toDelete.getTitle();
+            if (t1.equals(t2)) {
+                this.recipes.remove(recipe);
+                coordinator.updateRecipes();
+                return i;
+            }
         }
-        return false;
+        return -1;
     }
 
     // update recipe with information encoded in request body 
@@ -114,35 +112,31 @@ public class BaseHandler implements HttpHandler {
         Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1], 
                 recipeComponents[2], recipeComponents[3]);
         
-        // Update recipe
-        if (updateRecipe(toUpdate)) {
-            return URLEncoder.encode("Updated recipe to " + toUpdate.toString(), "US-ASCII");
-        }
-
-        scanner.close();
-        return URLEncoder.encode("Could not find recipe " + toUpdate.toString(), "US-ASCII");
+        
+        return URLEncoder.encode(String.format("%d%s", updateRecipe(toUpdate), toUpdate.toString()), "US-ASCII");
 
 
     }
 
-    boolean updateRecipe(Recipe edited) throws IOException {
+    // Update recipe in recipe list and return position of updated recipe
+    int updateRecipe(Recipe edited) throws IOException {
         for (int i = 0; i < recipes.size(); i++) {
             Recipe current = recipes.get(i);
             if (current.getTitle().equals(edited.getTitle())) {
                 current.setIngredients(edited.getIngredients());
                 current.setSteps(edited.getSteps());
                 coordinator.updateRecipes();
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     // return delimeter separated lists of formatted recipes
     String handleGet(HttpExchange httpExchange) {
         String result = "";
-        for (Recipe recipe:recipes){
-            result += recipe.toString();
+        for (int i = 0; i < recipes.size(); i ++) {
+            result += recipes.get(i).toString();
             result += "RECIPE_SEPARATOR";
         }
         try {

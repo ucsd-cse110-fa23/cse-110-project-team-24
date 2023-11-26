@@ -73,8 +73,8 @@ public class DeleteWindow extends VBox{
 
          // Set action for Deleteit button to delete the recipe and close windows
         Deleteit.setOnAction(e -> {
-            recipe.setRecipeDeleteButton();
-            recipeList.removeSelectedRecipes();
+            recipeList.getPerformRequest().performRequest("", "DELETE", null,
+                recipe.getRecipe().toString());
             dv.close();
             newWindow.close();
                         

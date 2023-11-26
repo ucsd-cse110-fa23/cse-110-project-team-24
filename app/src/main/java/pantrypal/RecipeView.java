@@ -72,4 +72,9 @@ public class RecipeView extends HBox{
     public Recipe getRecipe() {
         return this.recipe;
     }
+
+    public void update(Recipe r) {
+        this.recipe = r;
+        this.setTitleName(r.getTitle());
+    }
 }

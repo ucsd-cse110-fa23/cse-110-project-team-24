@@ -22,7 +22,6 @@ public class GeneratedView extends VBox{
     private Button SaveButton;
 
     GeneratedView(){
-
         Createlabel = new Label();
         Createlabel.setPrefSize(600, 200);
         Createlabel.setAlignment(Pos.CENTER);
@@ -104,17 +103,15 @@ public class GeneratedView extends VBox{
                 try {
                     newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
                 } catch (Exception e2) {
-                    // TODO Auto-generated catch block
                     e2.printStackTrace();
                 }
             });
-            Recipe receipetoAdd = newrecipe.getRecipe();
+            Recipe recipeToAdd = newrecipe.getRecipe();
 
             // Perform a PUT request to save the recipe on the server
-            PerformRequest.performRequest("", "PUT", receipetoAdd.getTitle() + ";" + receipetoAdd.getMealType() + ";" + receipetoAdd.getIngredients() + ";" + receipetoAdd.getSteps(), null);
+            taskList.getPerformRequest().performRequest("", "PUT", recipeToAdd.toString(), null);
 
-            // Add the new recipe to the task list and close the windows
-            taskList.getChildren().add(0, newrecipe);
+            // Close Windows
             original.close();
             newWindow.close();
         });

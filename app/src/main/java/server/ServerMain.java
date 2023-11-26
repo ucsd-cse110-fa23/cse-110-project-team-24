@@ -17,8 +17,8 @@ public class ServerMain {
     // create a thread pool to handle requests
     ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
-    // create a map to store data
-    List<Recipe> recipes = new ArrayList<>();
+    // create a structure to store data
+    RecipeList recipes = new RecipeList(new NoModification());
 
     // create a server
     HttpServer server = HttpServer.create(

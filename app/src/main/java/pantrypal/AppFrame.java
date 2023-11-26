@@ -24,11 +24,11 @@ public class AppFrame extends BorderPane{
     
 
     // Constructor for AppFrame
-    AppFrame(){
+    AppFrame(PerformRequest pr){
         header = new Header();
 
         // Create a tasklist Object to hold the tasks
-        taskList = new RecipeList();
+        taskList = new RecipeList(pr);
         // Initialise the Footer Object
         footer = new Footer();
 

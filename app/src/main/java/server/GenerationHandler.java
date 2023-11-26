@@ -7,9 +7,9 @@ import java.util.*;
 
 public class GenerationHandler implements HttpHandler {
 
-    private List<Recipe> recipes;
+    private RecipeList recipes;
 
-    public GenerationHandler(List<Recipe> recipes) {
+    public GenerationHandler(RecipeList recipes) {
         this.recipes = recipes;
     }
 
@@ -19,14 +19,7 @@ public class GenerationHandler implements HttpHandler {
         try {
             if (method.equals("GET")) {
                 response = handleGet(httpExchange, new ChatGPTGenerator(new ChatGPTResponse()));
-            } 
-            // else if (method.equals("POST")) {
-            //     response = handlePost(httpExchange);
-            // } else if (method.equals("PUT")) {
-            //     response = handlePut(httpExchange);
-            // } else if (method.equals("DELETE")) {
-            //     response = handleDelete(httpExchange);
-            // } 
+            }
             else {
                 throw new Exception("Not Valid Request Method");
             }
