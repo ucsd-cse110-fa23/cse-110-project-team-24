@@ -23,8 +23,10 @@ import java.net.URLDecoder;
 
 public class RecipeList extends VBox implements Observer {
     PerformRequest pr;
+    private String sortMethod;
 
     public RecipeList(PerformRequest pr) {
+        this.sortMethod = "None";
         this.pr = pr;
         pr.registerObserver(this);
         this.setSpacing(5); // sets spacing between tasks
@@ -38,7 +40,7 @@ public class RecipeList extends VBox implements Observer {
     }
 
     private void loadRecipes() throws UnsupportedEncodingException {
-        pr.performRequest("", "GET", null, null);
+        pr.performRequest("", "GET", null, this.sortMethod);
     }
 
     
@@ -46,6 +48,9 @@ public class RecipeList extends VBox implements Observer {
     @Override
     public void update(String method, int pos, Recipe r) {
         switch (method) {
+            case "REMOVEALL":
+                this.getChildren().removeAll(this.getChildren());
+                break;
             case "GET":
                 RecipeView newView = new RecipeView(r);
                 Button titleButton = newView.getTitle();
@@ -69,6 +74,10 @@ public class RecipeList extends VBox implements Observer {
                 this.getChildren().remove(pos);
                 return;
         }
+    }
+
+    public void setSortMethod(String text) {
+        this.sortMethod = text;
     }
 
     public PerformRequest getPerformRequest() {

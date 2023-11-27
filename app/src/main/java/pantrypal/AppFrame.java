@@ -5,6 +5,8 @@ import java.io.IOException;
 import com.opencsv.exceptions.CsvException;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 
@@ -18,9 +20,10 @@ public class AppFrame extends BorderPane{
     // Footer component of the app
     private Footer footer;
     // List to display recipes or tasks
-    private RecipeList taskList; 
+    private RecipeList recipeList; 
     // Button to initiate creation of a new recipe or task
     private Button Create; 
+    private MenuButton sortByButton;
     
 
     // Constructor for AppFrame
@@ -28,12 +31,12 @@ public class AppFrame extends BorderPane{
         header = new Header();
 
         // Create a tasklist Object to hold the tasks
-        taskList = new RecipeList(pr);
+        recipeList = new RecipeList(pr);
         // Initialise the Footer Object
         footer = new Footer();
 
          // Setting up a ScrollPane for the taskList for scroll function
-        ScrollPane s1 = new ScrollPane(taskList);
+        ScrollPane s1 = new ScrollPane(recipeList);
         s1.setFitToWidth(true);
         s1.setFitToHeight(true);
 
@@ -45,20 +48,37 @@ public class AppFrame extends BorderPane{
         this.setBottom(footer);
 
         this.Create = footer.getCreateButton();
+        this.sortByButton = footer.getSortByButton();
         addListeners();
     }
 
     // Method to add event listeners to components
     public RecipeList getRecipeList(){
-        return this.taskList;
+        return this.recipeList;
     }
     public void addListeners(){
         Create.setOnAction(e -> {
 
             //creates a new CreateView instance and opens it
             CreateView createView = new CreateView();
-            createView.OpenCreateView(taskList);
+            createView.OpenCreateView(recipeList);
         });
+
+        MenuItem alphabeticalSortingOption = sortByButton.getItems().get(0);
+        alphabeticalSortingOption.setOnAction(e -> {
+            recipeList.setSortMethod("Alphabetical");
+            sortByButton.setText("Sort By (Currently Alphabetical)");
+            recipeList.getPerformRequest().performRequest("", "GET", null, "Alphabetical");
+        });
+
+
+        MenuItem noSortingOption = sortByButton.getItems().get(1);
+        noSortingOption.setOnAction(e -> {
+            recipeList.setSortMethod("None");
+            sortByButton.setText("Sort By (Currently Time Created)");
+            recipeList.getPerformRequest().performRequest("", "GET", null, "None");
+        });
+        
         
     }
 }

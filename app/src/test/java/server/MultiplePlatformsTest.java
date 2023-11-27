@@ -8,11 +8,15 @@ import server.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -46,27 +50,44 @@ public class MultiplePlatformsTest {
     String instructions3 = "\"Hope this encoding works . . .\"[[{}}]\\/\r\n" + //
             "";
 
-    ArrayList<Recipe> recipes;
+    RecipeList recipes;
 
     @BeforeEach
     public void addRecipes() {
-        this.recipes = new ArrayList<>();
+        /**
+         * Source: https://stackoverflow.com/questions/38425865/how-to-empty-file-content-without-deleting-the-file-in-java
+         * Title: How to empty file content without deleting the file in java? [duplicate]
+         * Date Accessed: 11/27/2023
+         * Use: Used to learn how to empty contents of file
+         */
+        File file = new File("StoredRecipe.csv");
+        if(file.exists()){
+            file.delete();
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        recipes = new RecipeList(new NoModification());
         recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1));
         recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2));
         recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3));
     }
 
+    
     @Test
     public void testHandlePost() {
-        ArrayList<Recipe> recipes = new ArrayList();
-        BaseHandler handler = new BaseHandler(new RecipeList(new NoModification()));
+        RecipeList recipes = new RecipeList(new NoModification());
+        BaseHandler handler = new BaseHandler(recipes);
 
         try {
             String title = "RecipeTitle";
             String type = "RecipeType";
             String ingredients = "RecipeIngredients";
             String instructions = "RecipeInstructions";
-            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions, ENCODING)));
+            handler.handlePut(new MockExchange("https://localhost/?=None", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions, ENCODING)));
             Recipe added = recipes.get(0);
             assertEquals(title, added.getTitle());
             assertEquals(type, added.getMealType());
@@ -115,7 +136,8 @@ public class MultiplePlatformsTest {
     @Test
     public void handlePostTest() {
         String newIngredients = "Woah new ingredients";
-        BaseHandler handler = new BaseHandler(new RecipeList(new NoModification()));
+        BaseHandler handler = new BaseHandler(recipes);
+
         try {
             handler.handlePost(new MockExchange("https://localhost/", 
                     URLEncoder.encode(title1 + ";" + type1 + ";" +  newIngredients + ";" + instructions1, ENCODING)));
@@ -152,8 +174,8 @@ public class MultiplePlatformsTest {
     @Test
     public void handleDeleteTest() {
         try {
-            BaseHandler handler = new BaseHandler(new RecipeList(new NoModification()));
-            handler.handlePost(new MockExchange("https://localhost/" + "?=" + 
+            BaseHandler handler = new BaseHandler(recipes);
+            handler.handleDelete(new MockExchange("https://localhost/" + "?=" + 
                     URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + instructions2, ENCODING), null));
             Recipe actual = recipes.get(0);
             assertEquals(title1, actual.getTitle());
@@ -161,7 +183,7 @@ public class MultiplePlatformsTest {
             assertEquals(ingredients1, actual.getIngredients());
             assertEquals(instructions1, actual.getSteps());
             
-            actual = recipes.get(1);
+            actual = recipes.get(1); // second recipe simply was not deleted
             assertEquals(title3, actual.getTitle());
             assertEquals(type3, actual.getMealType());
             assertEquals(ingredients3, actual.getIngredients());
@@ -185,11 +207,19 @@ public class MultiplePlatformsTest {
 
     @Test
     public void testHandleGet() {
-        BaseHandler handler = new BaseHandler(new RecipeList(new NoModification()));
+        System.err.println(recipes.size());
+        BaseHandler handler = new BaseHandler(recipes);
         String expected = title1 + ";" + type1 + ";" + ingredients1 + ";" + instructions1 + 
-                RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 
-                RECIPE_SEPARATOR + title3 + ";" + type3 + ";" + ingredients3 + ";" + instructions3;
-        String actual = handler.handleGet(null);
+                    RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 
+                    RECIPE_SEPARATOR + title3 + ";" + type3 + ";" + ingredients3 + ";" + instructions3 + RECIPE_SEPARATOR;
+        String actual = null;
+        try {
+            actual = URLDecoder.decode(handler.handleGet(new MockExchange("https://localhost/" + "?=None", null)), "US-ASCII");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(expected, actual);
     }
 
     @Test

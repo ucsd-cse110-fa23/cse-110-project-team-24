@@ -10,7 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class BaseHandler implements HttpHandler {
-    private RecipeList recipes;
+    RecipeList recipes;
     FileRecipesCoordinator coordinator;
     public BaseHandler(RecipeList recipes) {
         this.recipes = recipes;
@@ -132,9 +132,16 @@ public class BaseHandler implements HttpHandler {
         return -1;
     }
 
-    // return delimeter separated lists of formatted recipes
-    String handleGet(HttpExchange httpExchange) {
+    // return delimeter separated list of formatted recipes
+    String handleGet(HttpExchange httpExchange) throws UnsupportedEncodingException {
         String result = "";
+        URI uri = httpExchange.getRequestURI();
+        String query = uri.getRawQuery();
+        query = query.substring(query.indexOf("=") + 1);
+        query = URLDecoder.decode(query, "US-ASCII");
+        recipes.setListModifyingStrategy(query);
+        
+
         for (int i = 0; i < recipes.size(); i ++) {
             result += recipes.get(i).toString();
             result += "RECIPE_SEPARATOR";

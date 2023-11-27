@@ -120,7 +120,7 @@ public class PerformRequest implements Subject{
         }
         String delimeter = "RECIPE_SEPARATOR";
         String[] recipeArr = result.split(delimeter);
-
+        this.notifyAll("REMOVEALL", 0, null);
         for (int i = 0; i < recipeArr.length; i++) {
             String components = recipeArr[i];
             this.notifyAll("GET", i, Recipe.of(components));;
