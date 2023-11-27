@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="server.AccountInfoTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-11-26T23:46:02" hostname="Safias-MBP.attlocal.net" time="2.042">
+  <properties/>
+  <testcase name="testAccount()" classname="server.AccountInfoTest" time="2.042"/>
+  <system-out><![CDATA[{
+  "username": "admin",
+  "password": "pass",
+  "email": "admin@gmail.com"
+}
+
+{"_id": {"$oid": "6563d8bafd264403fb0408ba"}, "username": "admin", "password": "pass", "email": "admin@gmail.com"}
+]]></system-out>
+  <system-err><![CDATA[Nov 26, 2023 3:46:01 PM com.mongodb.internal.diagnostics.logging.Loggers shouldUseSLF4J
+WARNING: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+]]></system-err>
+</testsuite>

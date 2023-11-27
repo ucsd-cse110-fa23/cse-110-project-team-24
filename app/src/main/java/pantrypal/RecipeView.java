@@ -72,4 +72,18 @@ public class RecipeView extends HBox{
     public Recipe getRecipe() {
         return this.recipe;
     }
+
+    public Recipe deleteRecipe(){
+        return this.recipe;
+    }
+
+    public void setRecipeDeleteButton(boolean b) {
+        if (!b) {
+            this.recipeDeleteButton = false;
+        } 
+        else {
+            this.recipeDeleteButton = true;
+        }
+
+    }
 }

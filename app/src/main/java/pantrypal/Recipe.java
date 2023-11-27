@@ -16,6 +16,9 @@ public class Recipe {
         this.steps = steps;
     }
 
+    public Recipe(server.Recipe avocadoSalad) {
+    }
+
     // Static method to create a Recipe instance from a string representation
     // returns Recipe based on string representation with format title;mealType;ingredients;steps
     public static Recipe of (String representation) {

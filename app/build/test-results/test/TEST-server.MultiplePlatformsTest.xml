@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="server.MultiplePlatformsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-11-26T23:46:04" hostname="Safias-MBP.attlocal.net" time="0.02">
+  <properties/>
+  <testcase name="handleDeleteTest()" classname="server.MultiplePlatformsTest" time="0.005"/>
+  <testcase name="testGetParsedAndDecodedQuery()" classname="server.MultiplePlatformsTest" time="0.005"/>
+  <testcase name="testHandlePost()" classname="server.MultiplePlatformsTest" time="0.005"/>
+  <testcase name="handlePostTest()" classname="server.MultiplePlatformsTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

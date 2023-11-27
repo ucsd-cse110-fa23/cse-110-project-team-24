@@ -1,12 +1,6 @@
 package pantrypal;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -45,6 +39,7 @@ public class RecipeList extends VBox {
         // Remove all marked recipes from the VBox children
         this.getChildren().removeAll(recipesToDelete);
     }
+
     public void loadRecipe() throws IOException, CsvException{
         File file = new File("StoredRecipe.csv");
         FileReader filereader = new FileReader(file);
@@ -67,6 +62,24 @@ public class RecipeList extends VBox {
         csvReader.close();
     }
 
+
+// I just want to use it for the delete a recipe 
+    public void addRecipe(Recipe newRecipe) throws Exception {
+        // Check if a recipe with the same title already exists
+        for (Node node : this.getChildren()) {
+            if (node instanceof RecipeView) {
+                RecipeView view = (RecipeView) node;
+                if (view.getRecipe().getTitle().equalsIgnoreCase(newRecipe.getTitle())) {
+                    // Recipe title already exists, handle throw an exception
+                    throw new Exception("A recipe with that name already exists.");
+                }
+            }
+        }
+        RecipeView recipeView = new RecipeView(newRecipe);
+        this.getChildren().add(recipeView);
+    }
+
+
     public void saveRecipe() throws IOException{
         File file = new File("StoredRecipe.csv");
         String[] row = new String[4];
@@ -81,13 +94,85 @@ public class RecipeList extends VBox {
                 row[2] = recipe.getIngredients();
                 row[3] = recipe.getSteps();
                 csvWriter.writeNext(row);                
+            }
         }
+        csvWriter.close();
     }
-    csvWriter.close();
+
+   
+   // Assumption 
+   //there is only one recipe with this specific title
+    public void deleteRecipe(String recipeTitle) throws IOException {
+        // Step 1: Update RecipeList and RecipeView
+        for (int i = 0; i < this.getChildren().size(); i++) {
+            if (this.getChildren().get(i) instanceof RecipeView) {
+                RecipeView recipeView = (RecipeView) this.getChildren().get(i);
+                Recipe recipe = recipeView.getRecipe();
+                if (recipe.getTitle().equalsIgnoreCase(recipeTitle)) {
+                    this.getChildren().remove(i); // Remove from the view
+                    break; 
+                }
+            }
+        }
+       // Update the CSV file
+        updateCSV();    
     }
+
     // Method to send a request to the backend to delete a recipe
     private void DeleteBackendRecipe(Recipe toDelete) {
         PerformRequest.performRequest("", "DELETE", null,
                 toDelete.getTitle() + ";" + toDelete.getMealType() + ";" + toDelete.getIngredients() + ";" + toDelete.getSteps());
     }
+
+
+    private void updateCSV() throws IOException {
+        File file = new File("StoredRecipe.csv");
+        FileWriter fileWriter = new FileWriter(file);
+        CSVWriter csvWriter = new CSVWriter(fileWriter);
+
+        // Iterate over the children of this VBox and write each Recipe to the CSV file
+        for (Node node : this.getChildren()) {
+            if (node instanceof RecipeView) {
+                RecipeView recipeView = (RecipeView) node;
+                Recipe recipe = recipeView.getRecipe();
+                String[] row = new String[4];
+                row[0] = recipe.getTitle();
+                row[1] = recipe.getMealType();
+                row[2] = recipe.getIngredients();
+                row[3] = recipe.getSteps();
+                csvWriter.writeNext(row);
+            }
+        }
+
+        // Close the CSVWriter
+        csvWriter.close();
+    }
 }
+
+
+    /*
+     // Update the CSV file
+        File inputFile = new File("StoredRecipe.csv");
+        File tempFile = new File("tempStoredRecipe.csv");
+        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+        String currentLine;
+        String[] row;
+        while ((currentLine = reader.readLine()) != null) {
+            row = currentLine.split(","); // Assuming your CSV uses commas as a delimiter
+            if (!row[0].equalsIgnoreCase(recipeTitle)) {
+                writer.write(currentLine + System.getProperty("line.separator"));
+            }
+        }
+        writer.close();
+        reader.close();
+        // Delete the original file and rename the temp file to the original file name
+        if (!inputFile.delete()) {
+            System.out.println("Could not delete the original file");
+            return;
+        }
+        if (!tempFile.renameTo(inputFile)) {
+            System.out.println("Could not rename the temp file");
+            return;
+        }
+     */

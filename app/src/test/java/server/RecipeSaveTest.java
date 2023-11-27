@@ -66,5 +66,6 @@ public class RecipeSaveTest {
     assertEquals(responseIngredients, queriedIngredients);
     assertEquals(instructions,queriedInstruction);
     }
+    //System.out.println( queriedTitle);
 }
 }
