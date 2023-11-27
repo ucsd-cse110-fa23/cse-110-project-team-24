@@ -14,7 +14,6 @@ public class Main extends Application {
 
         // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
         AppFrame root = new AppFrame();
-
         // Set the title of the app
         primaryStage.setTitle("PantryPal");
         // Create scene of mentioned size with the border pane
@@ -23,6 +22,7 @@ public class Main extends Application {
         primaryStage.setResizable(true);
         // Show the app
         primaryStage.show();
+        LogInView.OpenLogInView();
     }
 
     public static void runApplication(String[] args) {
