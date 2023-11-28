@@ -11,7 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import org.bson.Document;
-
+import org.bson.conversions.Bson;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -97,8 +99,8 @@ public class BaseHandler implements HttpHandler {
         if (query != null) {
             String[] components = query.split(";");
             Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3]);
-                                
-            if (deleteRecipe(toDelete)) {
+            String RecipeID = components[4];                      
+            if (deleteRecipe(toDelete, RecipeID)) {
                 //return endcoded recipe
                 return URLEncoder.encode("Deleted recipe " + toDelete.toString(), "US-ASCII");
             }
@@ -107,7 +109,10 @@ public class BaseHandler implements HttpHandler {
         return response;
     }
 
-    boolean deleteRecipe(Recipe toDelete) throws IOException {
+    boolean deleteRecipe(Recipe toDelete, String ID) throws IOException {
+         MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(ID);
+         Bson Filter = eq("RecipeName", toDelete.getTitle());
+         RecipeCollection.findOneAndDelete(Filter);
         for (Recipe recipe:this.recipes) {
                 String t1 = recipe.getTitle();
                 String t2 = toDelete.getTitle();
@@ -131,9 +136,9 @@ public class BaseHandler implements HttpHandler {
 
         Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1], 
                 recipeComponents[2], recipeComponents[3]);
-        
+        String RecipeID = recipeComponents[4];
         // Update recipe
-        if (updateRecipe(toUpdate)) {
+        if (updateRecipe(toUpdate, RecipeID)) {
             return URLEncoder.encode("Updated recipe to " + toUpdate.toString(), "US-ASCII");
         }
 
@@ -143,7 +148,18 @@ public class BaseHandler implements HttpHandler {
 
     }
 
-    boolean updateRecipe(Recipe edited) throws IOException {
+    boolean updateRecipe(Recipe edited, String RecipeID) throws IOException {
+        MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(RecipeID);
+        List<Bson> updates = new ArrayList<>();
+        Bson filter = eq("RecipeName", edited.getTitle());
+        Bson update1 = set("MealType", edited.getMealType());
+        updates.add(update1);
+        Bson update2 = set("Ingredient List", edited.getIngredients());
+         updates.add(update2);
+        Bson update3 = set("Steps", edited.getSteps());
+         updates.add(update3);
+        RecipeCollection.findOneAndUpdate(filter, updates);
+
         for (int i = 0; i < recipes.size(); i++) {
             Recipe current = recipes.get(i);
             if (current.getTitle().equals(edited.getTitle())) {

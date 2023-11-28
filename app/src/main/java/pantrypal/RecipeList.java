@@ -96,6 +96,6 @@ public class RecipeList extends VBox {
     private void DeleteBackendRecipe(Recipe toDelete) {
         PerformRequest.performRequest("", "DELETE", null,
                 toDelete.getTitle() + ";" + toDelete.getMealType() + ";" + toDelete.getIngredients() + ";"
-                        + toDelete.getSteps());
+                        + toDelete.getSteps()+ ";" + this.RecipeID);
     }
 }
