@@ -1,24 +1,36 @@
 package server;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.sun.net.httpserver.*;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import org.bson.Document;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class BaseHandler implements HttpHandler {
+    String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
+    MongoClient mongoClient = MongoClients.create(uri);
+    MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
+    MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
+    MongoDatabase RecipeListDB = mongoClient.getDatabase("Recipe_db");
     private List<Recipe> recipes;
     FileRecipesCoordinator coordinator;
+     String response = "Request Received";
     public BaseHandler(List<Recipe> recipes) {
         this.recipes = recipes;
         this.coordinator = new FileRecipesCoordinator(recipes);
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
-        String response = "Request Received";
+        //String response = "Request Received";
         String method = httpExchange.getRequestMethod();
         try {
             if (method.equals("PUT")) {
@@ -35,6 +47,7 @@ public class BaseHandler implements HttpHandler {
             }
         } catch (Exception e) {
             System.out.println("An erroneous request");
+            System.out.println(response);
             response = e.toString();
             e.printStackTrace();
         }
@@ -57,15 +70,20 @@ public class BaseHandler implements HttpHandler {
         // Store recipe
         Recipe toAdd = new Recipe(recipeComponents[0], recipeComponents[1], 
                 recipeComponents[2], recipeComponents[3]);
-        addRecipe(toAdd);
+        String recipeID = recipeComponents[4];
+        addRecipe(toAdd, recipeID);
 
         scanner.close();
         return URLEncoder.encode("Added recipe " + toAdd.toString(), "US-ASCII");
     }
 
-    void addRecipe(Recipe toAdd) throws IOException {
+    void addRecipe(Recipe toAdd, String recipeID) throws IOException {
         recipes.add(0, toAdd);
         coordinator.updateRecipes();
+        Document toAddDocument = toAdd.toDocument();
+        MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(recipeID);
+        RecipeCollection.insertOne(toAddDocument);
+
     }
 
     // Delete recipe with componenets encoded in httpExchange URI query
@@ -139,18 +157,38 @@ public class BaseHandler implements HttpHandler {
     }
 
     // return delimeter separated lists of formatted recipes
-    String handleGet(HttpExchange httpExchange) {
+    String handleGet(HttpExchange httpExchange) throws UnsupportedEncodingException {
+        // String result = "";
+        // for (Recipe recipe:recipes){
+        //     result += recipe.toString();
+        //     result += "RECIPE_SEPARATOR";
+        // }
+        // try {
+        //     return URLEncoder.encode(result, "US-ASCII");
+        // } catch (UnsupportedEncodingException e) {
+        //     e.printStackTrace();
+        //     return null;
+        // }
         String result = "";
-        for (Recipe recipe:recipes){
-            result += recipe.toString();
-            result += "RECIPE_SEPARATOR";
+        URI uri = httpExchange.getRequestURI();
+        String query = uri.getRawQuery();
+        query = query.substring(query.indexOf("=") + 1);
+        query = URLDecoder.decode(query, "US-ASCII");
+        response = query;
+        if(query != null) {
+            MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(query);
+            List<Document> RecipesDocs =  RecipeCollection.find().into(new ArrayList<>());
+            for(Document recipe:RecipesDocs){
+                if(recipe.get("username") != null){
+                    continue;
+                }
+                Recipe recipes  = new Recipe((String) recipe.get("RecipeName"), (String) recipe.get("MealType"), (String) recipe.get("Ingredient List"), (String) recipe.get("Steps"));
+                result += recipes.toString();
+                result += "RECIPE_SEPARATOR";
+            }
         }
-        try {
-            return URLEncoder.encode(result, "US-ASCII");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
+        System.out.println(result);
+        return URLEncoder.encode(result, "US-ASCII");
     }
 
 }

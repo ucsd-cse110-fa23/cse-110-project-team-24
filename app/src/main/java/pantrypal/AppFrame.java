@@ -47,7 +47,7 @@ public class AppFrame extends BorderPane{
         this.Create = footer.getCreateButton();
         addListeners();
     }
-
+    
     // Method to add event listeners to components
     public RecipeList getRecipeList(){
         return this.taskList;

@@ -22,19 +22,21 @@ import java.net.URLEncoder;
 import java.net.URLDecoder;
 
 public class RecipeList extends VBox {
+    private String RecipeID;
     public RecipeList() {
         this.setSpacing(5); // sets spacing between tasks
         this.setPrefSize(500, 560);
         this.setStyle("-fx-background-color: #F0F8FF;");
-        try {
-            this.loadRecipes();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     //this.loadRecipes();
+        // } catch (UnsupportedEncodingException e) {
+        //     e.printStackTrace();
+        // }
     }
 
-    private void loadRecipes() throws UnsupportedEncodingException {
-        String recipes = PerformRequest.performRequest("", "GET", null, null);
+    public void loadRecipes() throws UnsupportedEncodingException {
+        String recipeId = this.getRecipeId();
+        String recipes = PerformRequest.performRequest("RecipeDataGet", "GET", null, recipeId);
         recipes = URLDecoder.decode(recipes, "US-ASCII");
         
         String[] recipeArr;
@@ -57,7 +59,13 @@ public class RecipeList extends VBox {
             this.getChildren().add(StoredView);
         }
     }
+    public String getRecipeId(){
+        return this.RecipeID;
+    }
 
+    public void setRecipeId(String ID){
+         this.RecipeID = ID;
+    }
 
     // Method to remove selected (deleted) recipes from the list
     public void removeSelectedRecipes() {

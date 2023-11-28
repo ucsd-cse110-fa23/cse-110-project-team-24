@@ -48,9 +48,9 @@ public class PerformRequest {
             return "Error: " + ex.getMessage();
         }
     }
-
+    
     // does not use US-ASCII encoding
-   public static String performTranscriptionRequest(String endpoint, String method, String data, String query) throws UnsupportedEncodingException {
+    public static String performTranscriptionRequest(String endpoint, String method, String data, String query) throws UnsupportedEncodingException {
         query = URLEncoder.encode(query, java.nio.charset.StandardCharsets.ISO_8859_1);
         try {
             String urlString = "http://localhost:8100/" + endpoint;

@@ -1,11 +1,11 @@
 package pantrypal;
 
+import java.util.ArrayList;
 
 public class Account implements SuperAccount{
     
     private String username;
     private String password;
-    
     public Account(String usr, String pass){
         username = usr;
         password = pass;
@@ -33,6 +33,9 @@ public class Account implements SuperAccount{
        String info = PerformRequest.performRequest("CheckAccountValid", "GET", null, username+";"+password);
        return info;
     }
-    
+    public void LoadRecipeList(AppFrame root, String username){
+        root.getRecipeList().setRecipeId(username);
+        
+    }
     
 }

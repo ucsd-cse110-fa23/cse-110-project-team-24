@@ -1,5 +1,7 @@
 package pantrypal;
 
+import java.io.UnsupportedEncodingException;
+
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -83,7 +85,7 @@ public class LogInView extends VBox {
         return secondScene;
     }
 
-    public static void OpenLogInView(){
+    public static void OpenLogInView(AppFrame root){
         LogInView Initial = new LogInView();
         Scene secondScene = CreateScene(Initial);
         // New window (Stage)
@@ -91,10 +93,19 @@ public class LogInView extends VBox {
         LogInViewWindow.setTitle("Log In Your PantryPal");
         LogInViewWindow.setScene(secondScene);
         Initial.getCreateAccountButton().setOnAction(e -> {
-            Initial.CreateAccount(LogInViewWindow);
+            try {
+                Initial.CreateAccount(LogInViewWindow, root);
+            } catch (UnsupportedEncodingException e1) {
+           
+                e1.printStackTrace();
+            }
         });
         Initial.getSignInButton().setOnAction(e -> {
-            Initial.SignInAccount(LogInViewWindow);
+            try {
+                Initial.SignInAccount(LogInViewWindow, root);
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
         });
         Initial.getAutomatically().setOnAction(e -> {
             Initial.AutomaticallyLogIn(LogInViewWindow);
@@ -102,24 +113,28 @@ public class LogInView extends VBox {
         LogInViewWindow.show();
 
     }
-    public void CreateAccount(Stage LogInViewWindow){
+    public void CreateAccount(Stage LogInViewWindow, AppFrame root) throws UnsupportedEncodingException{
         String username = this.getUsername().getText();
         String password = this.getPassword().getText();
         Account NewAccount = new Account(username, password);
         String feedback = NewAccount.InsertNewAccount();
         if(feedback.equals("Welcome to PantryPal! " + username)){
             ErrorMessageView.OpenErrorMessageView(feedback, true, LogInViewWindow);
+            NewAccount.LoadRecipeList(root, username);
+           
         }
-        ErrorMessageView.OpenErrorMessageView(feedback, false, LogInViewWindow);
+        else {ErrorMessageView.OpenErrorMessageView(feedback, false, LogInViewWindow);}
     }
 
-    public void SignInAccount(Stage LogInViewWindow){
+    public void SignInAccount(Stage LogInViewWindow, AppFrame root) throws UnsupportedEncodingException{
         String username = this.getUsername().getText();
         String password = this.getPassword().getText();
         Account ExistedAccount = new Account(username, password);
         String info = ExistedAccount.CheckAccountExisted();
         if(info.equals("1")){
             ErrorMessageView.OpenErrorMessageView("Welcome to Pantrypal! " + username, true, LogInViewWindow);
+            ExistedAccount.LoadRecipeList(root, username);
+            root.getRecipeList().loadRecipes();
         }
         if(info.equals("-1")){
             ErrorMessageView.OpenErrorMessageView("Failed to Sign In: Account not Existed", false, LogInViewWindow);

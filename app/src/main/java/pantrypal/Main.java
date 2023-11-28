@@ -22,7 +22,7 @@ public class Main extends Application {
         primaryStage.setResizable(true);
         // Show the app
         primaryStage.show();
-        LogInView.OpenLogInView();
+        LogInView.OpenLogInView(root);
     }
 
     public static void runApplication(String[] args) {

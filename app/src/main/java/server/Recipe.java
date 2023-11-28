@@ -1,4 +1,7 @@
 package server;
+
+import org.bson.Document;
+
 public class Recipe {
     String title;
     String mealType;
@@ -53,6 +56,12 @@ public class Recipe {
     public String toString() {
         return String.format("%s;%s;%s;%s", this.title, this.mealType, this.ingredients, this.steps);
     }
-
+    public Document toDocument(){
+        Document Recipe = new Document().append("RecipeName", this.title)
+        .append("MealType", this.mealType)
+        .append("Ingredient List", this.ingredients)
+        .append("Steps", this.steps);
+        return Recipe;
+    }
 }
 

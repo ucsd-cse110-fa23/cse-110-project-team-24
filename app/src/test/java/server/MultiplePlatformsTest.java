@@ -184,7 +184,7 @@ public class MultiplePlatformsTest {
     }
 
     @Test
-    public void testHandleGet() {
+    public void testHandleGet() throws UnsupportedEncodingException {
         BaseHandler handler = new BaseHandler(recipes);
         String expected = title1 + ";" + type1 + ";" + ingredients1 + ";" + instructions1 + 
                 RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 

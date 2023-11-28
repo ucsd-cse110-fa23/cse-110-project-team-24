@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import pantrypal.Account;
+import pantrypal.RecipeList;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -27,12 +28,15 @@ public class AccountHandler implements HttpHandler {
     MongoClient mongoClient = MongoClients.create(uri);
     MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
     MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
+    MongoDatabase RecipeListDB = mongoClient.getDatabase("Recipe_db");
+    MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection("initialize");
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String uri = "mongodb+srv://Robin:Ltq2021f123@cluster0.6iivynp.mongodb.net/?retryWrites=true&w=majority";
         MongoClient mongoClient = MongoClients.create(uri);
-        MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
-        MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
+        MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");        
+        MongoDatabase RecipeListDB = mongoClient.getDatabase("Recipe_db");
+        
         String response = "Request Received";
         String method = httpExchange.getRequestMethod();
         try {
@@ -40,7 +44,7 @@ public class AccountHandler implements HttpHandler {
                 response = handlePut(httpExchange);
             } else if (method.equals("GET")) {
                 response = handleGet(httpExchange);
-            }
+            } 
             else {
                 throw new Exception("Not Valid Request Method");
             }
@@ -51,11 +55,13 @@ public class AccountHandler implements HttpHandler {
         }
 
         // Sending back response to the client
+       
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream outStream = httpExchange.getResponseBody();
         outStream.write(response.getBytes());
         outStream.close();
     }
+    
     private Account ExtractAccount(HttpExchange httpExchange) throws UnsupportedEncodingException{
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
@@ -90,12 +96,15 @@ public class AccountHandler implements HttpHandler {
         Account Accountinfo = this.ExtractAccount(httpExchange);
 
         // Store recipe
-        Document Account = new Document("_id", new ObjectId());
+        Document Account = new Document("RecipeList_id", Accountinfo.GerUsername());
         Account.append("username", Accountinfo.GerUsername())
                .append("password", Accountinfo.GerPassword());
-        AccountCollection.insertOne(Account); 
+        AccountCollection.insertOne(Account);
+       // RecipeCollection = RecipeListDB.getCollection((String) Account.get("RecipeList_id"));
+        RecipeCollection = RecipeListDB.getCollection(Accountinfo.GerUsername());
+        RecipeCollection.insertOne(Account);
+        //RecipeListDB.createCollection(Accountinfo.GerUsername());
 
-        
         return URLEncoder.encode("Added Account " + Accountinfo.GerUsername(), "US-ASCII");
     }
     

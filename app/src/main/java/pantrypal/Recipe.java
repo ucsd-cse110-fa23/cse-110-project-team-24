@@ -1,5 +1,6 @@
 package pantrypal;
 
+import org.bson.Document;
 
 public class Recipe {
      // Class attributes for recipe details
