@@ -1,6 +1,7 @@
 package server;
 import static com.mongodb.client.model.Filters.eq;
 
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,28 +25,16 @@ import com.mongodb.client.model.*;
 import static com.mongodb.client.model.Updates.*;
 
 public class AcountInfo {
+
     //private String username, email, password;
-    
-    public static void main(String[] args){
-        String uri = "mongodb+srv://smahamed:Iqra2014.@cluster0.h8dtnf9.mongodb.net/?retryWrites=true&w=majority";
-        JsonWriterSettings prettyPrint = JsonWriterSettings.builder().indent(true).build();
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase recipeDB = mongoClient.getDatabase("recipes_db");
-            MongoCollection<Document> recipeCollection = recipeDB.getCollection("recipes");
-            insertManyDocuments(recipeCollection);
-            //recipeCollection.drop();
+    //String uri = "mongodb+srv://smahamed:Iqra2014.@cluster0.h8dtnf9.mongodb.net/?retryWrites=true&w=majority";
+    private MongoCollection<Document> accountCollection;
 
-            MongoDatabase database = mongoClient.getDatabase("accountInfo_db");
-            MongoCollection<Document> accountCollection = database.getCollection("accounts");
-            insertManyDocuments(accountCollection);
-            System.out.println(accountCollection.countDocuments());
-
-           accountCollection.drop();
-           recipeCollection.drop();
-
-        }  
+    public AcountInfo(MongoCollection<Document> accountCollection) {
+        this.accountCollection = accountCollection;
     }
-    private static void insertSingleAccount(MongoCollection<Document> accountCollection, String username, String password) {
+
+    public void insertSingleAccount(String username, String password) {
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
             System.out.println("Username and password cannot be empty");
             return;
@@ -57,19 +46,15 @@ public class AcountInfo {
             System.out.println("An account with this username already exists.");
             return;
         }
-        // Create a new account document
-        Document newAccount = new Document().append("username", username).append("password", password);
-        // Insert the new account into the accounts collection
-        accountCollection.insertOne(newAccount);
-        ObjectId id = newAccount.getObjectId("_id");
-        System.out.printf("Created account %s\n", id);
-        // Insert the new account into the collection
-        //accountCollection.insertOne(newAccount);
-        //System.out.println("Account created successfully for username: " + username);
-
+        else{
+            Document newAccount = new Document().append("username", username).append("password", password);
+            // Insert the new account into the accounts collection
+            accountCollection.insertOne(newAccount);
+           //System.out.println("Account created successfully for username: " + username);
+        }
     }
 
-    private static void insertManyDocuments(MongoCollection<Document> accountCollection) {
+    public void insertManyDocuments() {
         List<Document> accounts = new ArrayList<>();
         String line;
         try{
@@ -78,7 +63,7 @@ public class AcountInfo {
             FileReader filereader = new FileReader(csvfile);
             BufferedReader bufferedreader = new BufferedReader(filereader);
             while((line = bufferedreader.readLine())!=null){
-                String[] parts = line.split(";");// use semicolons as separator 
+                String[] parts = line.split("\",\"");// use semicolons as ","
                 //if(!parts[0].equalsIgnoreCase("")){
                     String accountUsername = parts[0];
                     String accountPassword = parts[1];
@@ -92,13 +77,13 @@ public class AcountInfo {
         }   
         accountCollection.insertMany(accounts, new InsertManyOptions().ordered(false));
     }
-    private static Document generateNewAccount(String username, String password, String accountEmail ) {  
+    private Document generateNewAccount(String username, String password, String accountEmail ) {  
         Document document = new Document("_id", new ObjectId()).append("username", username) .append("password", password).append("Email", accountEmail);                        
         return document;
     }
 
     //Update document
-    public static void updateDocument(String username,MongoCollection<Document> accountCollection ){
+    public void updateDocument(String username){
         UpdateOptions options=new UpdateOptions().upsert(true).bypassDocumentValidation(true);
         JsonWriterSettings prettyPrint = JsonWriterSettings.builder().indent(true).build();
         // update one document
@@ -111,7 +96,7 @@ public class AcountInfo {
 
     // Updates the email address of an account.
     
-    public static boolean updateAccountEmail(String username, String newEmailAddress, MongoCollection<Document> accountCollection) {
+    public boolean updateAccountEmail(String username, String newEmailAddress) {
         if (username == null || username.isEmpty() || newEmailAddress == null || newEmailAddress.isEmpty()) {
             System.out.println("Username and new email address cannot be empty");
             return false;
@@ -124,7 +109,7 @@ public class AcountInfo {
         return result.getModifiedCount() == 1;
     }
 
-    public static Document findAccountByUsername(MongoCollection<Document> accountCollection, String username) {
+    public Document findAccountByUsername(String username) {
         if (username == null || username.isEmpty()) {
             System.out.println("Username cannot be empty");
             return null;
@@ -133,7 +118,7 @@ public class AcountInfo {
         Document account = accountCollection.find(eq("username", username)).first();
         return account;
     }
-    public static List<Document> getAllAccounts(MongoCollection<Document> accountCollection) {
+    public List<Document> getAllAccounts(MongoCollection<Document> accountCollection) {
         List<Document> accounts = new ArrayList<>();
         try (MongoCursor<Document> cursor = accountCollection.find().iterator()) {
             while (cursor.hasNext()) {
@@ -145,7 +130,7 @@ public class AcountInfo {
      /**
      * Updates the password for an account.
      */
-    public static boolean updateAccountPassword(MongoCollection<Document> accountCollection, String username, String newPassword) {
+    public boolean updateAccountPassword(String username, String newPassword) {
         if (username == null || username.isEmpty() || newPassword == null || newPassword.isEmpty()) {
             System.out.println("Username and password cannot be empty");
             return false;
@@ -156,58 +141,63 @@ public class AcountInfo {
 
         return result.getModifiedCount() == 1;
     }
-
     
-    //Updates details of an account. field updates: is a Document containing the fields to update and their new values.
-    public static boolean updateAccountDetails(MongoCollection<Document> accountCollection, String username, Document updates) {
-        if (username == null || username.isEmpty() || updates == null) {
+    //Updates details of an account. field updatedDocument: is a Document containing the fields to update and their new values.
+    public boolean updateAccountDetails(String username, Document updatedDocument) {
+        if (username == null || username.isEmpty() || updatedDocument == null) {
             System.out.println("Username and updates cannot be empty");
             return false;
         }
 
         Bson filter = eq("username", username);
-        Bson updateOperation = new Document("set", updates);
+        Bson updateOperation = new Document("set", updatedDocument);
         UpdateResult result = accountCollection.updateOne(filter, updateOperation);
-
-        return result.getModifiedCount() == 1;
+        if(result.getModifiedCount() == 1){
+            return true;
+        }
+        return false;
     }
 
     //Deletes an account based on the username.
      
-    public static boolean deleteAccountByUsername(MongoCollection<Document> accountCollection, String username) {
+    public boolean deleteAccountByUsername(String username) {
         if (username == null || username.isEmpty()) {
+            //throw new Exception("Username cannot be empty");
             System.out.println("Username cannot be empty");
             return false;
         }
-
         DeleteResult result = accountCollection.deleteOne(eq("username", username));
-        return result.getDeletedCount() == 1;
-    }
-
-    public static void insertRecipe(MongoCollection<Document> recipeCollection, String username, String title, String mealType, String ingredients, String steps) {
-        // Links the recipe to the user AccountInfo
-        Document newRecipe = new Document()
-            .append("username", username)  
-            .append("title", title)
-            .append("mealType", mealType)
-            .append("ingredients", ingredients)
-            .append("steps", steps);
-    
-        recipeCollection.insertOne(newRecipe);
-    }
-
-    public static List<Document> getRecipesByUser(MongoCollection<Document> recipeCollection, String username) {
-        List<Document> userRecipes = new ArrayList<>();
-        FindIterable<Document> recipes = recipeCollection.find(eq("username", username));
-        for (Document recipe : recipes) {
-            userRecipes.add(recipe);
+        if(result.getDeletedCount() == 1){
+            return true;
         }
-        return userRecipes;
+        else{return false;}
+        
     }
 
+    //Need to check if the user login this the same 
+    public boolean authenticateUserInfo(String username, String password) {
+        Document userAccount = accountCollection.find(eq("username", username)).first();
+        if (userAccount == null) {
+            System.out.println("User not found.");
+            return false;
+        }
+        else{
+            String storedPassword = userAccount.getString("password");
+            if (!(password.equals(storedPassword))) {
+                return false; 
+            } else {
+                return true;
+            }
+        }   
+    }
 }
 
  /*
+     * 
+     *  
+     * 
+     * 
+     * 
      *  
      private static boolean delete1Document(String username,String password, MongoCollection<Document> accountCollection){
     //private static void delete1Document(String username,String password){
@@ -222,5 +212,30 @@ public class AcountInfo {
             System.out.println("Deleted "+result.toString()+"documents!");
             return true;
         } //return;
+    }
+
+
+
+
+
+     public static void insertRecipe(String username, String title, String mealType, String ingredients, String steps) {
+        // Links the recipe to the user AccountInfo
+        Document newRecipe = new Document()
+            .append("username", username)  
+            .append("title", title)
+            .append("mealType", mealType)
+            .append("ingredients", ingredients)
+            .append("steps", steps);
+    
+        recipeCollection.insertOne(newRecipe);
+    }
+
+    public static List<Document> getRecipesByUser(String username) {
+        List<Document> userRecipes = new ArrayList<>();
+        FindIterable<Document> recipes = recipeCollection.find(eq("username", username));
+        for (Document recipe : recipes) {
+            userRecipes.add(recipe);
+        }
+        return userRecipes;
     }
      */
