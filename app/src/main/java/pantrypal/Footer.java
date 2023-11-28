@@ -26,9 +26,7 @@ class Footer extends HBox {
         this.getChildren().add(Create);
         this.setAlignment(Pos.CENTER);
 
-        sortByButton = new MenuButton("Sort By");
-        sortByButton.getItems().addAll(
-                new MenuItem("Alphabetical"), new MenuItem("None"));
+        sortByButton = new MenuButton("Sort By (Currently Chronological)");
         this.getChildren().add(sortByButton);
     }
     

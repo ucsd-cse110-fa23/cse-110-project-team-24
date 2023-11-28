@@ -68,8 +68,14 @@ public class RecipeList {
             case "Alphabetical":
                 this.setListModifyingStrategy(new AlphabeticalSorter());
                 break;
-            case "None":
-                this.setListModifyingStrategy(new NoModification());
+            case "Chronological":
+                this.setListModifyingStrategy(new ChronologicalSorter());
+                break;
+            case "ReverseChronological":
+                this.setListModifyingStrategy(new ReverseChronologicalSorter());
+                break;
+            case "ReverseAlphabetical":
+                this.setListModifyingStrategy(new ReverseAlphabeticalSorter());
                 break;
         }
     }

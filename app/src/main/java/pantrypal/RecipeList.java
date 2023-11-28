@@ -26,7 +26,7 @@ public class RecipeList extends VBox implements Observer {
     private String sortMethod;
 
     public RecipeList(PerformRequest pr) {
-        this.sortMethod = "None";
+        this.sortMethod = "Chronological";
         this.pr = pr;
         pr.registerObserver(this);
         this.setSpacing(5); // sets spacing between tasks

@@ -18,7 +18,7 @@ public class ServerMain {
     ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
 
     // create a structure to store data
-    RecipeList recipes = new RecipeList(new NoModification());
+    RecipeList recipes = new RecipeList(new ChronologicalSorter());
 
     // create a server
     HttpServer server = HttpServer.create(
