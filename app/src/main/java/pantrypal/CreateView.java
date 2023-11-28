@@ -191,7 +191,7 @@ public class CreateView extends VBox {
          try {
 
              // Send a request to generate a recipe based on the provided meal type and recipe text
-            String recipe = PerformRequest.performRequest("generator/", "GET", null, mealType + ";" + recipeText);
+            String recipe = PerformRequest.performGenerationRequest("generator/", "GET", null, mealType + ";" + recipeText);
             // Convert the response to a Recipe object and return it
             return Recipe.of(recipe);
 
