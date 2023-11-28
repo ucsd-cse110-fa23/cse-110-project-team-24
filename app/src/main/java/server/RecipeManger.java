@@ -64,21 +64,50 @@ public class RecipeManger {
     //creating/inserting multiple recipes
     private void insertManyRecipes() {
         List<Document> recipes = new ArrayList<>();
-        String line;   
+        String line;
+        StringBuilder currentRecipe = new StringBuilder();   
         try {  //parsing a CSV file into BufferedReader class constructor 
             String path = "/Users/safiamahamed/Desktop/PROJECT CSE 110/cse-110-project-team-24/app/StoredRecipe.csv";
             File csvfile =new File(path);
             FileReader filereader = new FileReader(csvfile);
-            BufferedReader bufferedreader = new BufferedReader(filereader) ;
-            while ((line = bufferedreader.readLine()) != null) {  
-                String[] parts = line.split(";");// use semicolons as separator  
-                //Recipe,Description,Hours
-                String recipeTitle = parts[0];
-                String recipeMealType = parts[1];
-                String recipeIngredient = parts[2];
-                String recipeInstructions = parts[3];
-                recipes.add(generateNewRecipe(recipeTitle, recipeMealType, recipeIngredient,recipeInstructions));     
+            try (BufferedReader bufferedreader = new BufferedReader(filereader)) {
+                while ((line = bufferedreader.readLine()) != null) {  
+                    if (line.startsWith("\"")) { // the loop is structured to detect the start of a new recipe with "
+                        if (currentRecipe.length() > 0) {
+                            String recipeEntry = currentRecipe.toString();
+                           // use "," to sepereate the fields for a recipe
+                            String[] parts = recipeEntry.split("\",\"");
+                            //Title,mealType,Ingredients, Instructions
+                            if (parts.length >= 4){
+                                String recipeTitle = parts[0].replaceAll("^\"|\"$", "");
+                                String recipeMealType = parts[1].replaceAll("^\"|\"$", "");
+                                String recipeIngredient = parts[2].replaceAll("^\"|\"$", "");
+                                String recipeInstructions = parts[3].replaceAll("^\"|\"$", "").trim();
+                                recipes.add(generateNewRecipe(recipeTitle, recipeMealType, recipeIngredient,recipeInstructions));
+
+                            }
+                            // Reset for the next recipe
+                            currentRecipe.setLength(0); 
+                        }
+                    }
+                    currentRecipe.append(line).append("\n");
+                }
             }
+            // Process the last recipe
+            if (currentRecipe.length() > 0) {
+                String recipeEntry = currentRecipe.toString();
+                String[] parts = recipeEntry.split("\",\"");
+
+                if (parts.length >= 4) {
+                    String recipeTitle = parts[0].replaceAll("^\"|\"$", "");
+                    String recipeMealType = parts[1].replaceAll("^\"|\"$", "");
+                    String recipeIngredient = parts[2].replaceAll("^\"|\"$", "");
+                    String recipeInstructions = parts[3].replaceAll("^\"|\"$", "").trim();
+
+                    recipes.add(generateNewRecipe(recipeTitle, recipeMealType, recipeIngredient, recipeInstructions));
+                }
+            }    
+            
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -120,34 +149,4 @@ public class RecipeManger {
     }
 }
 
-
-  /* 
-        try{
-            // Create a new MongoDB client
-            MongoClient mongoClient = MongoClients.create(uri);
-            // Connect to the database named "recipes"
-            MongoDatabase recipeDB = mongoClient.getDatabase("recipes_db");
-            // Get the collection of documents within the "recipes" database called "recipes"
-            this.recipeCollection = recipeDB.getCollection("recipes");
-        } catch (Exception e){
-            System.out.println(e);
-        }
-        */
-
-
-  /*
-    * 
-     public static void main(String[] args) {
-        String uri = "mongodb+srv://smahamed:Iqra2014.@cluster0.h8dtnf9.mongodb.net/?retryWrites=true&w=majority";
-        JsonWriterSettings prettyPrint = JsonWriterSettings.builder().indent(true).build();
-        try (MongoClient mongoClient = MongoClients.create(uri)) {
-            MongoDatabase recipeDB = mongoClient.getDatabase("recipes_db");
-            MongoCollection<Document> recipeCollection = recipeDB.getCollection("recipes");
-            
-            insertManyDocuments(recipeCollection);
-            System.out.println(recipeCollection.countDocuments());
-
-            recipeCollection.drop();
-        }
-    }
-    */
+   
