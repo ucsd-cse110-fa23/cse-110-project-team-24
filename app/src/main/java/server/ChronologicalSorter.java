@@ -3,8 +3,13 @@ package server;
 import java.util.List;
 import java.util.ArrayList;
 
+
 public class ChronologicalSorter implements ListModifyingStrategy{
 
+
+    /**
+     * Assumes input recipe list is already sorted in chronological order
+     */
     @Override
     public List<Recipe> getModifiedList(List<Recipe> recipes) {
         List<Recipe> result = new ArrayList<Recipe>();

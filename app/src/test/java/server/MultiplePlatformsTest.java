@@ -70,7 +70,7 @@ public class MultiplePlatformsTest {
             e.printStackTrace();
         }
         
-        recipes = new RecipeList(new NoModification());
+        recipes = new RecipeList(new ChronologicalSorter());
         recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1));
         recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2));
         recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3));
@@ -79,7 +79,7 @@ public class MultiplePlatformsTest {
     
     @Test
     public void testHandlePost() {
-        RecipeList recipes = new RecipeList(new NoModification());
+        RecipeList recipes = new RecipeList(new ChronologicalSorter());
         BaseHandler handler = new BaseHandler(recipes);
 
         try {

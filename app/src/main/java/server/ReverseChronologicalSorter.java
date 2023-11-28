@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 public class ReverseChronologicalSorter implements ListModifyingStrategy{
 
+    /**
+     * Assumes argument already sorted in chronological order
+     */
     @Override
     public List<Recipe> getModifiedList(List<Recipe> recipes) {
         List<Recipe> result = new ArrayList<Recipe>();

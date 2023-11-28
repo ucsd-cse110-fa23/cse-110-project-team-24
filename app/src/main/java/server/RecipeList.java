@@ -33,7 +33,7 @@ public class RecipeList {
     }
 
 
-    public List<Recipe> getModifiedRecipes(ListModifyingStrategy lms) {
+    public List<Recipe> getModifiedRecipes() {
         return this.sortedRecipes;
     }
 
