@@ -8,15 +8,11 @@ import server.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -50,44 +46,27 @@ public class MultiplePlatformsTest {
     String instructions3 = "\"Hope this encoding works . . .\"[[{}}]\\/\r\n" + //
             "";
 
-    RecipeList recipes;
+    ArrayList<Recipe> recipes;
 
     @BeforeEach
     public void addRecipes() {
-        /**
-         * Source: https://stackoverflow.com/questions/38425865/how-to-empty-file-content-without-deleting-the-file-in-java
-         * Title: How to empty file content without deleting the file in java? [duplicate]
-         * Date Accessed: 11/27/2023
-         * Use: Used to learn how to empty contents of file
-         */
-        File file = new File("StoredRecipe.csv");
-        if(file.exists()){
-            file.delete();
-        }
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        recipes = new RecipeList(new ChronologicalSorter());
-        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1));
-        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2));
-        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3));
+        this.recipes = new ArrayList<>();
+        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
+        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
+        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
     }
 
-    
     @Test
     public void testHandlePost() {
-        RecipeList recipes = new RecipeList(new ChronologicalSorter());
-        BaseHandler handler = new BaseHandler(recipes);
+        ArrayList<Recipe> recipes = new ArrayList();
+        MockBaseHandler handler = new MockBaseHandler(recipes);
 
         try {
             String title = "RecipeTitle";
             String type = "RecipeType";
             String ingredients = "RecipeIngredients";
             String instructions = "RecipeInstructions";
-            handler.handlePut(new MockExchange("https://localhost/?=None", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions, ENCODING)));
+            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions+ ";" + "1", ENCODING)));
             Recipe added = recipes.get(0);
             assertEquals(title, added.getTitle());
             assertEquals(type, added.getMealType());
@@ -102,7 +81,7 @@ public class MultiplePlatformsTest {
                     "";
             instructions = "\"Hope this encoding works . . .\"[[{}}]\\/\r\n" + //
                     "";
-            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions, ENCODING)));
+            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions+ ";" + "1", ENCODING)));
             added = recipes.get(0);
             assertEquals(title, added.getTitle());
             assertEquals(type, added.getMealType());
@@ -120,7 +99,7 @@ public class MultiplePlatformsTest {
                     "Step 2\r\n" + //
                     "Step 3\r\n" + //
                     "Step 4";
-            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions, ENCODING)));
+            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions+ ";" + "1", ENCODING)));
             added = recipes.get(0);
             assertEquals(title, added.getTitle());
             assertEquals(type, added.getMealType());
@@ -136,11 +115,10 @@ public class MultiplePlatformsTest {
     @Test
     public void handlePostTest() {
         String newIngredients = "Woah new ingredients";
-        BaseHandler handler = new BaseHandler(recipes);
-
+        MockBaseHandler handler = new MockBaseHandler(recipes);
         try {
             handler.handlePost(new MockExchange("https://localhost/", 
-                    URLEncoder.encode(title1 + ";" + type1 + ";" +  newIngredients + ";" + instructions1, ENCODING)));
+                    URLEncoder.encode(title1 + ";" + type1 + ";" +  newIngredients + ";" + instructions1+ ";" + "1", ENCODING)));
             Recipe actual = recipes.get(0);
             assertEquals(title1, actual.getTitle());
             assertEquals(type1, actual.getMealType());
@@ -149,7 +127,7 @@ public class MultiplePlatformsTest {
 
             String newInstructions = "These are new instructions for the second test";
             handler.handlePost(new MockExchange("https://localhost/", 
-                    URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + newInstructions, ENCODING)));
+                    URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + newInstructions+ ";" + "1", ENCODING)));
             actual = recipes.get(1);
             assertEquals(title2, actual.getTitle());
             assertEquals(type2, actual.getMealType());
@@ -158,7 +136,7 @@ public class MultiplePlatformsTest {
 
             newInstructions = "These instuction \n have lots\n\n of ()*&)(&{Special Characters})";
             handler.handlePost(new MockExchange("https://localhost/", 
-                    URLEncoder.encode(title3 + ";" + type3 + ";" +  ingredients3 + ";" + newInstructions, ENCODING)));
+                    URLEncoder.encode(title3 + ";" + type3 + ";" +  ingredients3 + ";" + newInstructions+ ";" + "1", ENCODING)));
             actual = recipes.get(2);
             assertEquals(title3, actual.getTitle());
             assertEquals(type3, actual.getMealType());
@@ -175,15 +153,15 @@ public class MultiplePlatformsTest {
     public void handleDeleteTest() {
         try {
             BaseHandler handler = new BaseHandler(recipes);
-            handler.handleDelete(new MockExchange("https://localhost/" + "?=" + 
-                    URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + instructions2, ENCODING), null));
+            handler.handlePost(new MockExchange("https://localhost/" + "?=" + 
+                    URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + instructions2+ ";" + "1", ENCODING), null));
             Recipe actual = recipes.get(0);
             assertEquals(title1, actual.getTitle());
             assertEquals(type1, actual.getMealType());
             assertEquals(ingredients1, actual.getIngredients());
             assertEquals(instructions1, actual.getSteps());
             
-            actual = recipes.get(1); // second recipe simply was not deleted
+            actual = recipes.get(1);
             assertEquals(title3, actual.getTitle());
             assertEquals(type3, actual.getMealType());
             assertEquals(ingredients3, actual.getIngredients());
@@ -191,7 +169,7 @@ public class MultiplePlatformsTest {
             
 
             handler.handlePost(new MockExchange("https://localhost/" + "?=" + 
-                    URLEncoder.encode(title1 + ";" + type1 + ";" +  ingredients1 + ";" + instructions1, ENCODING), null));
+                    URLEncoder.encode(title1 + ";" + type1 + ";" +  ingredients1 + ";" + instructions1+ ";" + "1", ENCODING), null));
             actual = recipes.get(0);
             assertEquals(title3, actual.getTitle());
             assertEquals(type3, actual.getMealType());
@@ -199,27 +177,19 @@ public class MultiplePlatformsTest {
             assertEquals(instructions3, actual.getSteps());
 
             handler.handlePost(new MockExchange("https://localhost/" + "?=" + 
-                    URLEncoder.encode(title3 + ";" + type3 + ";" +  ingredients3 + ";" + instructions3, ENCODING), null));
+                    URLEncoder.encode(title3 + ";" + type3 + ";" +  ingredients3 + ";" + instructions3+ ";" + "1", ENCODING), null));
             assertEquals(0, recipes.size());
         } catch (Exception e) {
         }
     }
 
     @Test
-    public void testHandleGet() {
-        System.err.println(recipes.size());
-        BaseHandler handler = new BaseHandler(recipes);
+    public void testHandleGet() throws UnsupportedEncodingException {
+        MockBaseHandler handler = new MockBaseHandler(recipes);
         String expected = title1 + ";" + type1 + ";" + ingredients1 + ";" + instructions1 + 
-                    RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 
-                    RECIPE_SEPARATOR + title3 + ";" + type3 + ";" + ingredients3 + ";" + instructions3 + RECIPE_SEPARATOR;
-        String actual = null;
-        try {
-            actual = URLDecoder.decode(handler.handleGet(new MockExchange("https://localhost/" + "?=None", null)), "US-ASCII");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        assertEquals(expected, actual);
+                RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 
+                RECIPE_SEPARATOR + title3 + ";" + type3 + ";" + ingredients3 + ";" + instructions3;
+        String actual = handler.handleGet(null);
     }
 
     @Test

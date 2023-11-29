@@ -13,18 +13,16 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
-        
-        PerformRequest pr = new PerformRequest();
-        AppFrame root = new AppFrame(pr);
-
+        AppFrame root = new AppFrame();
         // Set the title of the app
         primaryStage.setTitle("PantryPal");
         // Create scene of mentioned size with the border pane
-        primaryStage.setScene(new Scene(root, 700, 560));
+        primaryStage.setScene(new Scene(root, 1400, 800));
         // Make window non-resizable
         primaryStage.setResizable(true);
         // Show the app
         primaryStage.show();
+        LogInView.OpenLogInView(root);
     }
 
     public static void runApplication(String[] args) {

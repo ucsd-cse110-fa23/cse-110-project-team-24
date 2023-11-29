@@ -16,9 +16,9 @@ import javafx.scene.control.Button;
 import pantrypal.RecipeView;
 
 public class FileRecipesCoordinator {
-    RecipeList recipes;
+    List<Recipe> recipes;
 
-    FileRecipesCoordinator(RecipeList coordinatedRecipes) {
+    FileRecipesCoordinator(List<Recipe> coordinatedRecipes) {
         this.recipes = coordinatedRecipes;
         try {
             this.recipes.addAll(this.readRecipes());
@@ -36,7 +36,7 @@ public class FileRecipesCoordinator {
         CSVReader csvReader = new CSVReader(filereader);
         List<String[]> allRows = csvReader.readAll();
         for (String[] row : allRows) {
-            Recipe stored = new Recipe(row[0], row[1], row[2], row[3]);
+            Recipe stored = new Recipe(row[0], row[1], row[2], row[3], row[4]);
             result.add(result.size(), stored);
         }
         csvReader.close();
@@ -49,11 +49,12 @@ public class FileRecipesCoordinator {
         String[] row = new String[4];
         FileWriter fileWriter = new FileWriter(file);
         CSVWriter csvWriter = new CSVWriter(fileWriter);
-        for (Recipe recipe:recipes.getList()) {
+        for (Recipe recipe:recipes) {
             row[0] = recipe.getTitle();
             row[1] = recipe.getMealType();
             row[2] = recipe.getIngredients();
             row[3] = recipe.getSteps();
+            row[4] = recipe.getDate();
             csvWriter.writeNext(row);
         }
         csvWriter.close();
