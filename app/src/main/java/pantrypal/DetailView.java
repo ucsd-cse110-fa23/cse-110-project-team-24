@@ -105,7 +105,7 @@ public class DetailView extends VBox {
     // Toggles the editability of the recipe details and updates the UI accordingly
     // Toggle edit mode and update component styles and editability
     // Update the recipe on server after editing
-    public void SetEditable(RecipeView currentRecipe) {
+    public void SetEditable(RecipeView currentRecipe, RecipeList taskList) {
         if (editing == false) {
             this.EditButton.setText("Editing");
             this.EditButton.setStyle("-fx-background-color: #DE3163; -fx-border-width: 0;");
@@ -132,19 +132,18 @@ public class DetailView extends VBox {
         StepInstruction.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         type.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         
-        this.updateRecipe(currentRecipe, IngredientList.getText(), StepInstruction.getText());
+        this.updateRecipe(currentRecipe, IngredientList.getText(), StepInstruction.getText(), taskList);
 
     }
 
     // Update RecipeView for edited recipe and change recipe on server
-    private void updateRecipe(RecipeView rv, String updatedIngredients, String updatedInstructions) {
+    private void updateRecipe(RecipeView rv, String updatedIngredients, String updatedInstructions, RecipeList taskList) {
         // Update the recipe and send a POST request with the new details
         Recipe originalRecipe = rv.getRecipe();
         originalRecipe.setIngredients(updatedIngredients);
         originalRecipe.setSteps(updatedInstructions);
 
-        RecipeList parent = (RecipeList) rv.getParent();
-        parent.getPerformRequest().performRequest("", "POST", rv.getRecipe().toString(), null);
+        PerformRequest.performRequest("", "POST", rv.getRecipe().toString()+ ";" + taskList.getRecipeId(), null);
     }
 
     // Creates a new Scene with the DetailView instance
@@ -167,7 +166,7 @@ public class DetailView extends VBox {
 
         // Set action for EditButton to enable editing mode
         this.EditButton.setOnAction(e -> {
-            this.SetEditable(recipeView);
+            this.SetEditable(recipeView, recipeList);
         });
 
          // Set action for BackButton to close the detail view 

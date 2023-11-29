@@ -135,7 +135,7 @@ public class RecipeCreationTest {
         String expectedIngredients = EXPECTED_INGREDIENTS;
         String expectedSteps = EXPECTED_STEPS;
 
-        Recipe expected = new Recipe(expectedTitle, "breakfast", expectedIngredients, expectedSteps);
+        Recipe expected = new Recipe(expectedTitle, "breakfast", expectedIngredients, expectedSteps, "1");
         Recipe result = generator.generateRecipe("breakfast", null);
 
         assertEquals(expected.ingredients, result.ingredients);

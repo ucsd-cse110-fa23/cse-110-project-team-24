@@ -180,6 +180,7 @@ public class CreateView extends VBox {
         this.StartFinding.setOnAction(e -> {
             Recipe generatedRecipe = GetGeneratedRecipe(this.getTypeArea().getText(), 
                     this.getIngredientList().getText());
+            generatedRecipe.setDate(java.time.ZonedDateTime.now().toString());
             GeneratedView CreatedViews = new GeneratedView();
             CreatedViews.OpenGeneratedView(generatedRecipe, createViewWindow, taskList);
         });
@@ -191,7 +192,7 @@ public class CreateView extends VBox {
          try {
 
              // Send a request to generate a recipe based on the provided meal type and recipe text
-            String recipe = PerformRequest.performGenerationRequest("generator/", "GET", null, mealType + ";" + recipeText);
+            String recipe = PerformRequest.performRequest("generator/", "GET", null, mealType + ";" + recipeText);
             // Convert the response to a Recipe object and return it
             return Recipe.of(recipe);
 
