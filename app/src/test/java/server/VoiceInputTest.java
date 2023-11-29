@@ -27,7 +27,7 @@ public class VoiceInputTest {
         RecipeGenerator generator = new ChatGPTGenerator(new MockAPIResponse(transcription));
         server.Recipe result = generator.generateRecipe(mealType, transcription);
 
-        Recipe expected = new Recipe(title, mealType, ingredients, instructions);
+        Recipe expected = new Recipe(title, mealType, ingredients, instructions, "1");
         assertEquals(true, expected.equals(result));
     }
 }

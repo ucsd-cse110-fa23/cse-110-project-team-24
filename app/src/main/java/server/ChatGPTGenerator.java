@@ -14,7 +14,7 @@ public class ChatGPTGenerator implements RecipeGenerator{
         String responseIngredients = getIngredients(response);
         String instructions = getInstructions(response);
 
-        Recipe recipe = new Recipe(title, mealType, responseIngredients, instructions);
+        Recipe recipe = new Recipe(title, mealType, responseIngredients, instructions, "");
 
         return recipe;
     }

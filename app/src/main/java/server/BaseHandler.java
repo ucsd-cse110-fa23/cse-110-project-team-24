@@ -71,8 +71,8 @@ public class BaseHandler implements HttpHandler {
 
         // Store recipe
         Recipe toAdd = new Recipe(recipeComponents[0], recipeComponents[1], 
-                recipeComponents[2], recipeComponents[3]);
-        String recipeID = recipeComponents[4];
+                recipeComponents[2], recipeComponents[3], recipeComponents[4]);
+        String recipeID = recipeComponents[5];
         addRecipe(toAdd, recipeID);
 
         scanner.close();
@@ -81,7 +81,7 @@ public class BaseHandler implements HttpHandler {
 
     void addRecipe(Recipe toAdd, String recipeID) throws IOException {
         recipes.add(0, toAdd);
-        coordinator.updateRecipes();
+        //coordinator.updateRecipes();
         Document toAddDocument = toAdd.toDocument();
         MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(recipeID);
         RecipeCollection.insertOne(toAddDocument);
@@ -98,8 +98,8 @@ public class BaseHandler implements HttpHandler {
     
         if (query != null) {
             String[] components = query.split(";");
-            Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3]);
-            String RecipeID = components[4];                      
+            Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3], components[4]);
+            String RecipeID = components[5];                      
             if (deleteRecipe(toDelete, RecipeID)) {
                 //return endcoded recipe
                 return URLEncoder.encode("Deleted recipe " + toDelete.toString(), "US-ASCII");
@@ -135,8 +135,8 @@ public class BaseHandler implements HttpHandler {
         String[] recipeComponents = postData.split(";");
 
         Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1], 
-                recipeComponents[2], recipeComponents[3]);
-        String RecipeID = recipeComponents[4];
+                recipeComponents[2], recipeComponents[3], recipeComponents[4]);
+        String RecipeID = recipeComponents[5];
         // Update recipe
         if (updateRecipe(toUpdate, RecipeID)) {
             return URLEncoder.encode("Updated recipe to " + toUpdate.toString(), "US-ASCII");
@@ -198,7 +198,7 @@ public class BaseHandler implements HttpHandler {
                 if(recipe.get("username") != null){
                     continue;
                 }
-                Recipe recipes  = new Recipe((String) recipe.get("RecipeName"), (String) recipe.get("MealType"), (String) recipe.get("Ingredient List"), (String) recipe.get("Steps"));
+                Recipe recipes  = new Recipe((String) recipe.get("RecipeName"), (String) recipe.get("MealType"), (String) recipe.get("Ingredient List"), (String) recipe.get("Steps"), (String) recipe.get("Date"));
                 result += recipes.toString();
                 result += "RECIPE_SEPARATOR";
             }

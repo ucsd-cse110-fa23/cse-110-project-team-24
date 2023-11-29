@@ -36,7 +36,7 @@ public class FileRecipesCoordinator {
         CSVReader csvReader = new CSVReader(filereader);
         List<String[]> allRows = csvReader.readAll();
         for (String[] row : allRows) {
-            Recipe stored = new Recipe(row[0], row[1], row[2], row[3]);
+            Recipe stored = new Recipe(row[0], row[1], row[2], row[3], row[4]);
             result.add(result.size(), stored);
         }
         csvReader.close();
@@ -54,6 +54,7 @@ public class FileRecipesCoordinator {
             row[1] = recipe.getMealType();
             row[2] = recipe.getIngredients();
             row[3] = recipe.getSteps();
+            row[4] = recipe.getDate();
             csvWriter.writeNext(row);
         }
         csvWriter.close();

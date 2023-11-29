@@ -180,6 +180,7 @@ public class CreateView extends VBox {
         this.StartFinding.setOnAction(e -> {
             Recipe generatedRecipe = GetGeneratedRecipe(this.getTypeArea().getText(), 
                     this.getIngredientList().getText());
+            generatedRecipe.setDate(java.time.ZonedDateTime.now().toString());
             GeneratedView CreatedViews = new GeneratedView();
             CreatedViews.OpenGeneratedView(generatedRecipe, createViewWindow, taskList);
         });

@@ -30,7 +30,7 @@ public class AppFrame extends BorderPane{
         // Create a tasklist Object to hold the tasks
         taskList = new RecipeList();
         // Initialise the Footer Object
-        footer = new Footer();
+        footer = new Footer(taskList);
 
          // Setting up a ScrollPane for the taskList for scroll function
         ScrollPane s1 = new ScrollPane(taskList);

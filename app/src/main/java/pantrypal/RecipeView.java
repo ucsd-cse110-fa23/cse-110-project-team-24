@@ -36,7 +36,7 @@ public class RecipeView extends HBox{
     public Stage getStage(){
         return this.stage;
     }
-
+   
     // Getter for the title button
     public Button getTitle(){
         return this.titleButton;
@@ -71,5 +71,9 @@ public class RecipeView extends HBox{
     // Getter for the recipe
     public Recipe getRecipe() {
         return this.recipe;
+    }
+    public RecipeView copy(){
+        RecipeView recipes = new RecipeView(recipe);
+        return recipes;
     }
 }

@@ -51,9 +51,9 @@ public class MultiplePlatformsTest {
     @BeforeEach
     public void addRecipes() {
         this.recipes = new ArrayList<>();
-        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1));
-        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2));
-        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3));
+        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
+        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
+        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class MultiplePlatformsTest {
             String type = "RecipeType";
             String ingredients = "RecipeIngredients";
             String instructions = "RecipeInstructions";
-            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions, ENCODING)));
+            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions+ ";" + "1", ENCODING)));
             Recipe added = recipes.get(0);
             assertEquals(title, added.getTitle());
             assertEquals(type, added.getMealType());
@@ -81,7 +81,7 @@ public class MultiplePlatformsTest {
                     "";
             instructions = "\"Hope this encoding works . . .\"[[{}}]\\/\r\n" + //
                     "";
-            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions, ENCODING)));
+            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions+ ";" + "1", ENCODING)));
             added = recipes.get(0);
             assertEquals(title, added.getTitle());
             assertEquals(type, added.getMealType());
@@ -99,7 +99,7 @@ public class MultiplePlatformsTest {
                     "Step 2\r\n" + //
                     "Step 3\r\n" + //
                     "Step 4";
-            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions, ENCODING)));
+            handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions+ ";" + "1", ENCODING)));
             added = recipes.get(0);
             assertEquals(title, added.getTitle());
             assertEquals(type, added.getMealType());
@@ -118,7 +118,7 @@ public class MultiplePlatformsTest {
         MockBaseHandler handler = new MockBaseHandler(recipes);
         try {
             handler.handlePost(new MockExchange("https://localhost/", 
-                    URLEncoder.encode(title1 + ";" + type1 + ";" +  newIngredients + ";" + instructions1, ENCODING)));
+                    URLEncoder.encode(title1 + ";" + type1 + ";" +  newIngredients + ";" + instructions1+ ";" + "1", ENCODING)));
             Recipe actual = recipes.get(0);
             assertEquals(title1, actual.getTitle());
             assertEquals(type1, actual.getMealType());
@@ -127,7 +127,7 @@ public class MultiplePlatformsTest {
 
             String newInstructions = "These are new instructions for the second test";
             handler.handlePost(new MockExchange("https://localhost/", 
-                    URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + newInstructions, ENCODING)));
+                    URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + newInstructions+ ";" + "1", ENCODING)));
             actual = recipes.get(1);
             assertEquals(title2, actual.getTitle());
             assertEquals(type2, actual.getMealType());
@@ -136,7 +136,7 @@ public class MultiplePlatformsTest {
 
             newInstructions = "These instuction \n have lots\n\n of ()*&)(&{Special Characters})";
             handler.handlePost(new MockExchange("https://localhost/", 
-                    URLEncoder.encode(title3 + ";" + type3 + ";" +  ingredients3 + ";" + newInstructions, ENCODING)));
+                    URLEncoder.encode(title3 + ";" + type3 + ";" +  ingredients3 + ";" + newInstructions+ ";" + "1", ENCODING)));
             actual = recipes.get(2);
             assertEquals(title3, actual.getTitle());
             assertEquals(type3, actual.getMealType());
@@ -154,7 +154,7 @@ public class MultiplePlatformsTest {
         try {
             BaseHandler handler = new BaseHandler(recipes);
             handler.handlePost(new MockExchange("https://localhost/" + "?=" + 
-                    URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + instructions2, ENCODING), null));
+                    URLEncoder.encode(title2 + ";" + type2 + ";" +  ingredients2 + ";" + instructions2+ ";" + "1", ENCODING), null));
             Recipe actual = recipes.get(0);
             assertEquals(title1, actual.getTitle());
             assertEquals(type1, actual.getMealType());
@@ -169,7 +169,7 @@ public class MultiplePlatformsTest {
             
 
             handler.handlePost(new MockExchange("https://localhost/" + "?=" + 
-                    URLEncoder.encode(title1 + ";" + type1 + ";" +  ingredients1 + ";" + instructions1, ENCODING), null));
+                    URLEncoder.encode(title1 + ";" + type1 + ";" +  ingredients1 + ";" + instructions1+ ";" + "1", ENCODING), null));
             actual = recipes.get(0);
             assertEquals(title3, actual.getTitle());
             assertEquals(type3, actual.getMealType());
@@ -177,7 +177,7 @@ public class MultiplePlatformsTest {
             assertEquals(instructions3, actual.getSteps());
 
             handler.handlePost(new MockExchange("https://localhost/" + "?=" + 
-                    URLEncoder.encode(title3 + ";" + type3 + ";" +  ingredients3 + ";" + instructions3, ENCODING), null));
+                    URLEncoder.encode(title3 + ";" + type3 + ";" +  ingredients3 + ";" + instructions3+ ";" + "1", ENCODING), null));
             assertEquals(0, recipes.size());
         } catch (Exception e) {
         }

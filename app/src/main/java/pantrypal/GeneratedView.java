@@ -109,9 +109,9 @@ public class GeneratedView extends VBox{
                 }
             });
             Recipe receipetoAdd = newrecipe.getRecipe();
-
+            
             // Perform a PUT request to save the recipe on the server
-            PerformRequest.performRequest("", "PUT", receipetoAdd.getTitle() + ";" + receipetoAdd.getMealType() + ";" + receipetoAdd.getIngredients() + ";" + receipetoAdd.getSteps() + ";" + taskList.getRecipeId(), null);
+            PerformRequest.performRequest("", "PUT", receipetoAdd.getTitle() + ";" + receipetoAdd.getMealType() + ";" + receipetoAdd.getIngredients() + ";" + receipetoAdd.getSteps() + ";" + receipetoAdd.getDate() + ";" +taskList.getRecipeId(), null);
 
             // Add the new recipe to the task list and close the windows
             taskList.getChildren().add(0, newrecipe);

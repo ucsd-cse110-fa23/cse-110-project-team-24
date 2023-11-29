@@ -52,7 +52,7 @@ public class MockBaseHandler implements HttpHandler {
 
         // Store recipe
         Recipe toAdd = new Recipe(recipeComponents[0], recipeComponents[1], 
-                recipeComponents[2], recipeComponents[3]);
+                recipeComponents[2], recipeComponents[3], recipeComponents[4]);
         recipes.add(0, toAdd);
 
         scanner.close();
@@ -68,7 +68,7 @@ public class MockBaseHandler implements HttpHandler {
 
         if (query != null) {
             String[] components = query.split(";");
-            Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3]);
+            Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3], components[4]);
             for (Recipe recipe:this.recipes) {
                 String t1 = recipe.getTitle();
                 String t2 = toDelete.getTitle();
@@ -91,7 +91,7 @@ public class MockBaseHandler implements HttpHandler {
         String[] recipeComponents = postData.split(";");
 
         Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1], 
-                recipeComponents[2], recipeComponents[3]);
+                recipeComponents[2], recipeComponents[3], recipeComponents[4]);
         // Update recipe
         for (int i = 0; i < recipes.size(); i++) {
             Recipe current = recipes.get(i);
