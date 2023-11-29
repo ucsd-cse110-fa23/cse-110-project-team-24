@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
@@ -23,14 +24,17 @@ import com.mongodb.client.result.UpdateResult;
 
 public class RecipeManger {
 
-    //public  String uri = "mongodb+srv://smahamed:Iqra2014.@cluster0.h8dtnf9.mongodb.net/?retryWrites=true&w=majority";
-    private MongoCollection<Document> recipeCollection;
-
+    public  String uri = "mongodb+srv://smahamed:Iqra2014.@cluster0.h8dtnf9.mongodb.net/?retryWrites=true&w=majority";
+    JsonWriterSettings settings = JsonWriterSettings.builder().indent(true).build();
+    //private MongoCollection<Document> recipeCollection;
+    
+    private MongoClient mongoClient = MongoClients.create(uri);
+    MongoDatabase recipeDB = mongoClient.getDatabase("recipes_db");
+    MongoCollection<Document> recipeCollection = recipeDB.getCollection("recipes");
 
     public RecipeManger(MongoCollection<Document> recipeCollection){
         //RecipeManger.recipeCollection = recipeCollection;
-        this.recipeCollection = recipeCollection;
-      
+        this.recipeCollection = recipeCollection;   
    }
 
    private Document generateNewRecipe(String recipeTitle, String mealType, String recipeIngredient, String recipeInstructions) {

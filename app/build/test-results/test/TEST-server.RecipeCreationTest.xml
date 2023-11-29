@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="server.RecipeCreationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-11-26T23:46:04" hostname="Safias-MBP.attlocal.net" time="0.004">
+<testsuite name="server.RecipeCreationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-11-29T00:25:32" hostname="Safias-MacBook-Pro.local" time="0.003">
   <properties/>
   <testcase name="getTitleTest()" classname="server.RecipeCreationTest" time="0.001"/>
   <testcase name="getIngredientsTest()" classname="server.RecipeCreationTest" time="0.001"/>
   <testcase name="getInstructionsTest()" classname="server.RecipeCreationTest" time="0.0"/>
-  <testcase name="testGenerator()" classname="server.RecipeCreationTest" time="0.0"/>
+  <testcase name="testGenerator()" classname="server.RecipeCreationTest" time="0.001"/>
   <testcase name="storyTest()" classname="server.RecipeCreationTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

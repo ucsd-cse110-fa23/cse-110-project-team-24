@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="server.RecipeDeletionTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2023-11-26T23:46:01" hostname="Safias-MBP.attlocal.net" time="0.133">
+<testsuite name="server.RecipeDeletionTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2023-11-29T00:25:32" hostname="Safias-MacBook-Pro.local" time="0.142">
   <properties/>
-  <testcase name="testRemoveSelectedRecipes()" classname="server.RecipeDeletionTest" time="0.133">
+  <testcase name="testRemoveSelectedRecipes()" classname="server.RecipeDeletionTest" time="0.142">
     <failure message="java.lang.ExceptionInInitializerError" type="java.lang.ExceptionInInitializerError">java.lang.ExceptionInInitializerError
 	at javafx.stage.Window.&lt;init&gt;(Window.java:1455)
 	at javafx.stage.Stage.&lt;init&gt;(Stage.java:252)
