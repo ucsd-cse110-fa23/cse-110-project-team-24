@@ -138,17 +138,18 @@ public class DetailView extends VBox {
 
     // Update RecipeView for edited recipe and change recipe on server
     private void updateRecipe(RecipeView rv, String updatedIngredients, String updatedInstructions, RecipeList taskList) {
-        // Update the recipe and send a POST request with the new details
         Recipe originalRecipe = rv.getRecipe();
         originalRecipe.setIngredients(updatedIngredients);
         originalRecipe.setSteps(updatedInstructions);
 
-        PerformRequest.performRequest("", "POST", rv.getRecipe().toString()+ ";" + taskList.getRecipeId(), null);
+        RecipeList parent = (RecipeList) rv.getParent();
+        parent.getPerformRequest().performRequest("", "POST", 
+                rv.getRecipe().toString()+ ";" + taskList.getRecipeId(), null);
     }
 
     // Creates a new Scene with the DetailView instance
     public static Scene CreateScene(DetailView d) {
-        Scene secondScene = new Scene(d, 1000, 600);
+        Scene secondScene = new Scene(d, 500, 300);
         return secondScene;
     }
 
