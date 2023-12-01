@@ -51,9 +51,15 @@ public class MultiplePlatformsTest {
     @BeforeEach
     public void addRecipes() {
         this.recipes = new RecipeList(new ChronologicalSorter());
-        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
-        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
-        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
+        /**
+        * Source: https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html
+        * Title: Class ZonedDateTime
+        * Date Accessed: 11/30/2024
+        * Use: used to get example of ZonedDateTime.toString() method
+         */
+        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "2007-12-03T10:15:30+01:00[Europe/Paris]"));
+        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"2006-12-03T10:15:30+01:00[Europe/Paris]"));
+        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"2006-11-03T10:15:30+01:00[Europe/Paris]"));
     }
 
     @Test
