@@ -46,11 +46,11 @@ public class MultiplePlatformsTest {
     String instructions3 = "\"Hope this encoding works . . .\"[[{}}]\\/\r\n" + //
             "";
 
-    ArrayList<Recipe> recipes;
+    RecipeList recipes;
 
     @BeforeEach
     public void addRecipes() {
-        this.recipes = new ArrayList<>();
+        this.recipes = new RecipeList(new ChronologicalSorter());
         recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
         recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
         recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
@@ -115,6 +115,10 @@ public class MultiplePlatformsTest {
     @Test
     public void handlePostTest() {
         String newIngredients = "Woah new ingredients";
+        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
+        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
+        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
         MockBaseHandler handler = new MockBaseHandler(recipes);
         try {
             handler.handlePost(new MockExchange("https://localhost/", 
@@ -185,6 +189,10 @@ public class MultiplePlatformsTest {
 
     @Test
     public void testHandleGet() throws UnsupportedEncodingException {
+        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
+        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
+        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
         MockBaseHandler handler = new MockBaseHandler(recipes);
         String expected = title1 + ";" + type1 + ";" + ingredients1 + ";" + instructions1 + 
                 RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 

@@ -30,6 +30,8 @@ public class CreateView extends VBox {
     private Button StartFinding;
     private Button EditButton;
 
+
+
     // Flag to toggle editing state
     private boolean editing = false;
 
@@ -124,13 +126,13 @@ public class CreateView extends VBox {
 
      // Creates a new Scene with the provided CreateView instance
     public static Scene CreateScene(CreateView d) {
-        Scene secondScene = new Scene(d, 600, 800);
+        Scene secondScene = new Scene(d, 300, 400);
         return secondScene;
     }
 
     // Creates a new Scene with the provided AudioRecorder instance
     public static Scene CreateScene(AudioRecorder auidos) {
-        Scene thirdScene = new Scene(auidos, 800, 200);
+        Scene thirdScene = new Scene(auidos, 400, 200);
         return thirdScene;
     }
 
@@ -192,7 +194,7 @@ public class CreateView extends VBox {
          try {
 
              // Send a request to generate a recipe based on the provided meal type and recipe text
-            String recipe = PerformRequest.performRequest("generator/", "GET", null, mealType + ";" + recipeText);
+            String recipe = PerformRequest.performDefaultRequest("generator/", "GET", null, mealType + ";" + recipeText);
             // Convert the response to a Recipe object and return it
             return Recipe.of(recipe);
 

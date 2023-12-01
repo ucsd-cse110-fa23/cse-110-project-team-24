@@ -5,6 +5,8 @@ import java.io.IOException;
 import com.opencsv.exceptions.CsvException;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 
@@ -18,22 +20,25 @@ public class AppFrame extends BorderPane{
     // Footer component of the app
     private Footer footer;
     // List to display recipes or tasks
-    private RecipeList taskList; 
+    private RecipeList recipeList; 
     // Button to initiate creation of a new recipe or task
     private Button Create; 
     
+    PerformRequest pr;
+    private MenuButton sortByButton;
 
     // Constructor for AppFrame
-    AppFrame(){
+    AppFrame(PerformRequest pr){
+        this.pr = pr;
         header = new Header();
 
         // Create a tasklist Object to hold the tasks
-        taskList = new RecipeList();
+        recipeList = new RecipeList(pr);
         // Initialise the Footer Object
-        footer = new Footer(taskList);
+        footer = new Footer();
 
          // Setting up a ScrollPane for the taskList for scroll function
-        ScrollPane s1 = new ScrollPane(taskList);
+        ScrollPane s1 = new ScrollPane(recipeList);
         s1.setFitToWidth(true);
         s1.setFitToHeight(true);
 
@@ -43,22 +48,59 @@ public class AppFrame extends BorderPane{
         this.setCenter(s1);
         // Add footer to the bottom of the BorderPane
         this.setBottom(footer);
-
+        this.sortByButton = footer.getSortByButton();
+        
         this.Create = footer.getCreateButton();
         addListeners();
     }
     
     // Method to add event listeners to components
     public RecipeList getRecipeList(){
-        return this.taskList;
+        return this.recipeList;
     }
     public void addListeners(){
         Create.setOnAction(e -> {
 
             //creates a new CreateView instance and opens it
             CreateView createView = new CreateView();
-            createView.OpenCreateView(taskList);
+            createView.OpenCreateView(recipeList);
         });
+
+        MenuItem chronologicalSortingOption = new MenuItem("Chonological");
+        sortByButton.getItems().add(chronologicalSortingOption);
+        chronologicalSortingOption.setOnAction(e -> {
+            recipeList.setSortMethod("Chronological");
+            sortByButton.setText("Sort By (Currently Chronological)");
+            recipeList.getPerformRequest().performRequest("", "GET", 
+                    null, "Chronological" + ";" + recipeList.getRecipeId());
+        });
+
+
+        MenuItem alphabeticalSortingOption = new MenuItem("Alphabetical");
+        sortByButton.getItems().add(alphabeticalSortingOption);
+        alphabeticalSortingOption.setOnAction(e -> {
+            recipeList.setSortMethod("Alphabetical");
+            sortByButton.setText("Sort By (Currently Alphabetical)");
+            recipeList.getPerformRequest().performRequest("", "GET", null, "Alphabetical"+ ";" + recipeList.getRecipeId());
+        });
+
+        MenuItem reverseChronologicalSortingOption = new MenuItem("Reverse Chronological");
+        sortByButton.getItems().add(reverseChronologicalSortingOption);
+        reverseChronologicalSortingOption.setOnAction(e -> {
+            recipeList.setSortMethod("ReverseChronological");
+            sortByButton.setText("Sort By (Currently Reverse Chronological)");
+            recipeList.getPerformRequest().performRequest("", "GET", null, "ReverseChronological"+ ";" + recipeList.getRecipeId());
+        });
+
+
+        MenuItem reverseAlphabeticalSortingOption = new MenuItem("Reverse Alphabetical");
+        sortByButton.getItems().add(reverseAlphabeticalSortingOption);
+        reverseAlphabeticalSortingOption.setOnAction(e -> {
+            recipeList.setSortMethod("ReverseAlphabetical");
+            sortByButton.setText("Sort By (Currently Reverse Alphabetical)");
+            recipeList.getPerformRequest().performRequest("", "GET", null, "ReverseAlphabetical"+ ";" + recipeList.getRecipeId());
+        });
+        
         
     }
 }

@@ -67,7 +67,7 @@ public class GeneratedView extends VBox{
         return this.IngredientList;
     }
     public static Scene CreateScene(GeneratedView d){
-        Scene secondScene = new Scene(d, 600, 800);
+        Scene secondScene = new Scene(d, 300, 400);
         return secondScene;
     }
 
@@ -104,17 +104,18 @@ public class GeneratedView extends VBox{
                 try {
                     newrecipe.OpenDetailView(newrecipe.getStage(), taskList);
                 } catch (Exception e2) {
-                    // TODO Auto-generated catch block
                     e2.printStackTrace();
                 }
             });
-            Recipe receipetoAdd = newrecipe.getRecipe();
+
+            Recipe recipeToAdd = newrecipe.getRecipe();
             
             // Perform a PUT request to save the recipe on the server
-            PerformRequest.performRequest("", "PUT", receipetoAdd.getTitle() + ";" + receipetoAdd.getMealType() + ";" + receipetoAdd.getIngredients() + ";" + receipetoAdd.getSteps() + ";" + receipetoAdd.getDate() + ";" +taskList.getRecipeId(), null);
+            taskList.getPerformRequest().performRequest("", "PUT", 
+                    recipeToAdd.toString() 
+                    + ";" + taskList.getRecipeId(), null);
 
-            // Add the new recipe to the task list and close the windows
-            taskList.getChildren().add(0, newrecipe);
+
             original.close();
             newWindow.close();
         });
