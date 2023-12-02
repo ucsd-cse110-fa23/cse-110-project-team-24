@@ -102,7 +102,7 @@ public class AppFrame extends BorderPane{
 
         MenuItem noFilteringOption = new MenuItem("None");
         filterByButton.getItems().add(noFilteringOption);
-        chronologicalSortingOption.setOnAction(e -> {
+        noFilteringOption.setOnAction(e -> {
             filterByButton.setText("Filter By (Currently no filter)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "NoFilter" + ";" + recipeList.getRecipeId());

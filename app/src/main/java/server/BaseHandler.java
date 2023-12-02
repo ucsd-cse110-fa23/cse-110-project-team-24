@@ -178,8 +178,9 @@ public class BaseHandler implements HttpHandler {
         if(query != null) {
             MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(userID);
             List<Document> RecipesDocs =  RecipeCollection.find().into(new ArrayList<>());
+
             this.recipes.removeAll();
-            this.recipes.setListModifyingStrategy(modification);
+
             for(Document recipe:RecipesDocs){
                 if(recipe.get("username") != null){
                     continue;
@@ -192,6 +193,7 @@ public class BaseHandler implements HttpHandler {
             }
 
             
+            this.recipes.setListModifyingStrategy(modification);
             for (int i = 0; i < this.recipes.size(); i++) {
                 result += recipes.get(i).toString();
                 result += "RECIPE_SEPARATOR";
