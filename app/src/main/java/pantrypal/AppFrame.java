@@ -69,7 +69,6 @@ public class AppFrame extends BorderPane{
         MenuItem chronologicalSortingOption = new MenuItem("Chonological");
         sortByButton.getItems().add(chronologicalSortingOption);
         chronologicalSortingOption.setOnAction(e -> {
-            recipeList.setSortMethod("Chronological");
             sortByButton.setText("Sort By (Currently Chronological)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "Chronological" + ";" + recipeList.getRecipeId());
@@ -79,7 +78,6 @@ public class AppFrame extends BorderPane{
         MenuItem alphabeticalSortingOption = new MenuItem("Alphabetical");
         sortByButton.getItems().add(alphabeticalSortingOption);
         alphabeticalSortingOption.setOnAction(e -> {
-            recipeList.setSortMethod("Alphabetical");
             sortByButton.setText("Sort By (Currently Alphabetical)");
             recipeList.getPerformRequest().performRequest("", "GET", null, "Alphabetical"+ ";" + recipeList.getRecipeId());
         });
@@ -87,7 +85,6 @@ public class AppFrame extends BorderPane{
         MenuItem reverseChronologicalSortingOption = new MenuItem("Reverse Chronological");
         sortByButton.getItems().add(reverseChronologicalSortingOption);
         reverseChronologicalSortingOption.setOnAction(e -> {
-            recipeList.setSortMethod("ReverseChronological");
             sortByButton.setText("Sort By (Currently Reverse Chronological)");
             recipeList.getPerformRequest().performRequest("", "GET", null, "ReverseChronological"+ ";" + recipeList.getRecipeId());
         });
@@ -96,9 +93,43 @@ public class AppFrame extends BorderPane{
         MenuItem reverseAlphabeticalSortingOption = new MenuItem("Reverse Alphabetical");
         sortByButton.getItems().add(reverseAlphabeticalSortingOption);
         reverseAlphabeticalSortingOption.setOnAction(e -> {
-            recipeList.setSortMethod("ReverseAlphabetical");
             sortByButton.setText("Sort By (Currently Reverse Alphabetical)");
             recipeList.getPerformRequest().performRequest("", "GET", null, "ReverseAlphabetical"+ ";" + recipeList.getRecipeId());
+        });
+
+
+        MenuItem noFilteringOption = new MenuItem("None");
+        sortByButton.getItems().add(noFilteringOption);
+        chronologicalSortingOption.setOnAction(e -> {
+            sortByButton.setText("Filter By (Currently no filter)");
+            recipeList.getPerformRequest().performRequest("", "GET", 
+                    null, "NoFilter" + ";" + recipeList.getRecipeId());
+        });
+
+
+        MenuItem breakfastFilteringOption = new MenuItem("Breakfast");
+        sortByButton.getItems().add(breakfastFilteringOption);
+        breakfastFilteringOption.setOnAction(e -> {
+            sortByButton.setText("Filter By (Currently Breakfast)");
+            recipeList.getPerformRequest().performRequest("", "GET", 
+                    null, "Breakfast" + ";" + recipeList.getRecipeId());
+        });
+
+        MenuItem lunchFilteringOption = new MenuItem("Lunch");
+        sortByButton.getItems().add(lunchFilteringOption);
+        lunchFilteringOption.setOnAction(e -> {
+            sortByButton.setText("Filter By (Currently Lunch)");
+            recipeList.getPerformRequest().performRequest("", "GET", 
+                    null, "Lunch" + ";" + recipeList.getRecipeId());
+        });
+
+
+        MenuItem dinnerFilteringOption = new MenuItem("Dinner");
+        sortByButton.getItems().add(dinnerFilteringOption);
+        dinnerFilteringOption.setOnAction(e -> {
+            sortByButton.setText("Filter By (Currently Dinner)");
+            recipeList.getPerformRequest().performRequest("", "GET", 
+                    null, "Dinner" + ";" + recipeList.getRecipeId());
         });
         
         
