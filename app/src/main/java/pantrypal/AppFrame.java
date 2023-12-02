@@ -26,6 +26,7 @@ public class AppFrame extends BorderPane{
     
     PerformRequest pr;
     private MenuButton sortByButton;
+    private MenuButton filterByButton;
 
     // Constructor for AppFrame
     AppFrame(PerformRequest pr){
@@ -49,6 +50,7 @@ public class AppFrame extends BorderPane{
         // Add footer to the bottom of the BorderPane
         this.setBottom(footer);
         this.sortByButton = footer.getSortByButton();
+        this.filterByButton = footer.getFilterByButton();
         
         this.Create = footer.getCreateButton();
         addListeners();
@@ -99,35 +101,35 @@ public class AppFrame extends BorderPane{
 
 
         MenuItem noFilteringOption = new MenuItem("None");
-        sortByButton.getItems().add(noFilteringOption);
+        filterByButton.getItems().add(noFilteringOption);
         chronologicalSortingOption.setOnAction(e -> {
-            sortByButton.setText("Filter By (Currently no filter)");
+            filterByButton.setText("Filter By (Currently no filter)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "NoFilter" + ";" + recipeList.getRecipeId());
         });
 
 
         MenuItem breakfastFilteringOption = new MenuItem("Breakfast");
-        sortByButton.getItems().add(breakfastFilteringOption);
+        filterByButton.getItems().add(breakfastFilteringOption);
         breakfastFilteringOption.setOnAction(e -> {
-            sortByButton.setText("Filter By (Currently Breakfast)");
+            filterByButton.setText("Filter By (Currently Breakfast)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "Breakfast" + ";" + recipeList.getRecipeId());
         });
 
         MenuItem lunchFilteringOption = new MenuItem("Lunch");
-        sortByButton.getItems().add(lunchFilteringOption);
+        filterByButton.getItems().add(lunchFilteringOption);
         lunchFilteringOption.setOnAction(e -> {
-            sortByButton.setText("Filter By (Currently Lunch)");
+            filterByButton.setText("Filter By (Currently Lunch)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "Lunch" + ";" + recipeList.getRecipeId());
         });
 
 
         MenuItem dinnerFilteringOption = new MenuItem("Dinner");
-        sortByButton.getItems().add(dinnerFilteringOption);
+        filterByButton.getItems().add(dinnerFilteringOption);
         dinnerFilteringOption.setOnAction(e -> {
-            sortByButton.setText("Filter By (Currently Dinner)");
+            filterByButton.setText("Filter By (Currently Dinner)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "Dinner" + ";" + recipeList.getRecipeId());
         });

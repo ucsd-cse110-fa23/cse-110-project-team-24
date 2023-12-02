@@ -49,6 +49,6 @@ class Footer extends HBox {
     }
 
     public MenuButton getFilterByButton() {
-        return this.filterByButton();
+        return this.filterByButton;
     }
 }
