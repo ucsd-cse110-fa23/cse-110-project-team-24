@@ -37,12 +37,16 @@ public class Recipe {
 
     // return true if meal type is most likely Lunch
     private static boolean isLunch(String mealType) {
+        if (mealType == null)
+            return false;
         return mealType.contains("un") || mealType.contains("ch")
                 || mealType.contains("UN") || mealType.contains("CH");
     }
 
     // return true if meal type is most likely breakfast
     private static boolean isBreakfast(String mealType) {
+        if (mealType == null)
+            return false;
         return mealType.contains("eak") || mealType.contains("ast") 
                 || mealType.contains("br") || mealType.contains("est")
                 || mealType.contains("EAK") || mealType.contains("AST") 

@@ -21,7 +21,7 @@ public class MultiplePlatformsTest {
     private final String RECIPE_SEPARATOR = "RECIPE_SEPARATOR";
     // Basic case
     String title1 = "RecipeTitle";
-    String type1 = "RecipeType";
+    String type1 = "Breakfast";
     String ingredients1 = "RecipeIngredients";
     String instructions1 = "RecipeInstructions";
 
@@ -69,7 +69,7 @@ public class MultiplePlatformsTest {
 
         try {
             String title = "RecipeTitle";
-            String type = "RecipeType";
+            String type = "Dinner";
             String ingredients = "RecipeIngredients";
             String instructions = "RecipeInstructions";
             handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions+ ";" + "1", ENCODING)));
