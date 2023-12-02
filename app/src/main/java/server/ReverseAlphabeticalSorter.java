@@ -26,5 +26,10 @@ public class ReverseAlphabeticalSorter implements ListModifyingStrategy{
         }
         recipes.add(recipes.size(), recipe);
     }
+
+    @Override
+    public boolean isSortingStrategy() {
+        return true;
+    }
     
 }

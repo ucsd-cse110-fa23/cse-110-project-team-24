@@ -7,34 +7,55 @@ import java.util.ArrayList;
 public class RecipeList {
 
     List<Recipe> recipes;
-    ListModifyingStrategy lms;
-    List<Recipe> sortedRecipes; // up to date modified list (according to lms)
+    ListModifyingStrategy sortStrategy;
+    ListModifyingStrategy filterStrategy;
+    List<Recipe> modifiedRecipes; // up to date modified list (according to lms)
 
-    RecipeList (ListModifyingStrategy lms) {
-        this.lms = lms;
+
+
+    RecipeList () {
+        this.sortStrategy = new ChronologicalSorter();
+        this.filterStrategy = new NoFilter();
         this.recipes = new ArrayList<Recipe>();
-        sortedRecipes = new ArrayList<Recipe>();
+        modifiedRecipes = new ArrayList<Recipe>();
+    }
+    RecipeList (ListModifyingStrategy sortStrategy, ListModifyingStrategy filterStrategy) {
+        this.sortStrategy = sortStrategy;
+        this.filterStrategy = filterStrategy;
+        this.recipes = new ArrayList<Recipe>();
+        modifiedRecipes = new ArrayList<Recipe>();
     }
 
     public void setListModifyingStrategy(ListModifyingStrategy newStrategy) {
-        lms = newStrategy;
-        sortedRecipes = lms.getModifiedList(recipes);
+        if (newStrategy.isSortingStrategy()) {
+            this.sortStrategy = newStrategy;
+        }
+        else {
+            this.filterStrategy = newStrategy;
+        }
+
+        this.updateModifiedRecipes();
     }
 
     
+    private void updateModifiedRecipes() {
+        this.modifiedRecipes = sortStrategy.getModifiedList(recipes);
+        this.modifiedRecipes = filterStrategy.getModifiedList(modifiedRecipes);
+    }
+
     public void add (Recipe r) {
         this.recipes.add(0, r);
-        sortedRecipes = lms.getModifiedList(recipes);
+        this.updateModifiedRecipes();
     }
 
     public void add (int i, Recipe r) {
         this.recipes.add(i, r);
-        sortedRecipes = lms.getModifiedList(recipes);
+        this.updateModifiedRecipes();
     }
 
 
     public List<Recipe> getModifiedRecipes() {
-        return this.sortedRecipes;
+        return this.modifiedRecipes;
     }
 
     public List<Recipe> getList() {
@@ -42,32 +63,28 @@ public class RecipeList {
     }
 
     public int size() {
-        return this.sortedRecipes.size();
+        return this.modifiedRecipes.size();
     }
 
     public Recipe get(int i) {
-        return this.sortedRecipes.get(i);
+        return this.modifiedRecipes.get(i);
     }
 
     public void remove(Recipe recipe) {
         this.recipes.remove(recipe);
-        this.updateSortedRecipes();
+        this.updateModifiedRecipes();
     }
 
     public void removeAll() {
         while (this.recipes.size() > 0) {
             this.recipes.remove(this.recipes.size() -1);
         }
-        this.updateSortedRecipes();
-    }
-
-    private void updateSortedRecipes() {
-        sortedRecipes = lms.getModifiedList(this.recipes);
+        this.updateModifiedRecipes();
     }
 
     public void addAll(List<Recipe> recipesToAdd) {
         this.recipes.addAll(recipesToAdd);
-        this.sortedRecipes = lms.getModifiedList(recipes);
+        this.updateModifiedRecipes();
     }
 
     public void setListModifyingStrategy(String query) {
@@ -83,6 +100,18 @@ public class RecipeList {
                 break;
             case "ReverseAlphabetical":
                 this.setListModifyingStrategy(new ReverseAlphabeticalSorter());
+                break;
+            case "NoFilter":
+                this.setListModifyingStrategy(new NoFilter());
+                break;
+            case "Breakfast":
+                this.setListModifyingStrategy(new BreakfastFilter());
+                break;
+            case "Lunch":
+                this.setListModifyingStrategy(new LunchFilter());
+                break;
+            case "Dinner":
+                this.setListModifyingStrategy(new DinnerFilter());
                 break;
         }
     }

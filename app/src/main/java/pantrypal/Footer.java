@@ -12,6 +12,8 @@ import javafx.geometry.Pos;
 class Footer extends HBox {
     private Button Create;
     private MenuButton sortByButton;
+    private MenuButton filterByButton;
+
     // Constructor for Footer
     Footer() {
         this.setPrefSize(500, 60);
@@ -31,6 +33,9 @@ class Footer extends HBox {
         sortByButton = new MenuButton("Sort By (Currently Chronological)");
         this.getChildren().add(sortByButton);
 
+        filterByButton = new MenuButton("Filter By (Currently No Filter)");
+        this.getChildren().add(filterByButton);
+
         this.setAlignment(Pos.CENTER);
     }
     
@@ -41,5 +46,9 @@ class Footer extends HBox {
 
     public MenuButton getSortByButton() {
         return this.sortByButton;
+    }
+
+    public MenuButton getFilterByButton() {
+        return this.filterByButton;
     }
 }

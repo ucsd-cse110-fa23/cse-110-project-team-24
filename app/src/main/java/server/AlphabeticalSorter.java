@@ -26,5 +26,10 @@ public class AlphabeticalSorter implements ListModifyingStrategy{
         }
         recipes.add(recipes.size(), recipe);
     }
+
+    @Override
+    public boolean isSortingStrategy() {
+        return true;
+    }
     
 }

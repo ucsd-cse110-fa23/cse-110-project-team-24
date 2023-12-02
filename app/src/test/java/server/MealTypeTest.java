@@ -56,7 +56,7 @@ public class MealTypeTest {
 	// Expected Output: 
 	// 	Tag “Breakfast” next to “Tofu Scramble”, 
 	// 	Tag “Lunch” next to “Chickpea Sandwich”
-        RecipeList rl = new RecipeList(new AlphabeticalSorter());
+        RecipeList rl = new RecipeList(new AlphabeticalSorter(), new NoFilter());
         Recipe r0 = new Recipe("Tofu Scramble", "BREAKFSAST.", null, null, "2020-12-03T10:15:30+01:00[Europe/Paris]");
         Recipe r1 = new Recipe("Chickpea Sandwich", "lunch", null, null, "2020-12-03T10:15:30+01:00[Europe/Paris]");
 

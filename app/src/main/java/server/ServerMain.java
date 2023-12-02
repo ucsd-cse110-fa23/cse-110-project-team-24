@@ -31,7 +31,7 @@ public class ServerMain {
     MongoCollection<Document> RecipeCollection = sampleTrainingDB.getCollection("Intialize");
     
     // create a structure to store data
-    RecipeList recipes = new RecipeList(new ChronologicalSorter());
+    RecipeList recipes = new RecipeList(new ChronologicalSorter(), new NoFilter());
 
     // create a server
     HttpServer server = HttpServer.create(

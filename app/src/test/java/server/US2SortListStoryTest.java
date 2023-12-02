@@ -24,7 +24,7 @@ public class US2SortListStoryTest {
         // “American Burger” should be the first,
         // “Fries” is the second, 
         // “Tofu with soy sauce” is the third.
-        RecipeList recipeList = new RecipeList(new ChronologicalSorter());
+        RecipeList recipeList = new RecipeList(new ChronologicalSorter(), new NoFilter());
         Recipe r0 = new Recipe("American Burger", null, null, null, "2020-12-03T10:15:30+01:00[Europe/Paris]");
         Recipe r1 = new Recipe("Tofu with soy sauce", null, null, null, "2000-12-03T10:15:30+01:00[Europe/Paris]");
         Recipe r2 = new Recipe("Fries", null, null, null,  "1999-12-03T10:15:30+01:00[Europe/Paris]");
@@ -55,7 +55,7 @@ public class US2SortListStoryTest {
         // “Tofu with soy sauce” is the second,
         // “American Burger” is the third.
 
-        RecipeList recipeList = new RecipeList(new ChronologicalSorter());
+        RecipeList recipeList = new RecipeList(new ChronologicalSorter(), new NoFilter());
         Recipe r0 = new Recipe("American Burger", null, null, null, "2020-11-19T10:15:30+01:00[Europe/Paris]");
         Recipe r1 = new Recipe("Tofu with soy sauce", null, null, null, "2000-11-18T10:15:30+01:00[Europe/Paris]");
         Recipe r2 = new Recipe("Fries", null, null, null,  "1999-11-10T10:15:30+01:00[Europe/Paris]");
@@ -88,7 +88,7 @@ public class US2SortListStoryTest {
         // “Tofu with soy sauce” is the second,
         //  “Fries” is the third.
 
-        RecipeList recipeList = new RecipeList(new ChronologicalSorter());
+        RecipeList recipeList = new RecipeList(new ChronologicalSorter(), new NoFilter());
         Recipe r0 = new Recipe("American Burger", null, null, null, "2020-11-19T10:15:30+01:00[Europe/Paris]");
         Recipe r1 = new Recipe("Tofu with soy sauce", null, null, null, "2000-11-18T10:15:30+01:00[Europe/Paris]");
         Recipe r2 = new Recipe("Fries", null, null, null,  "1999-11-10T10:15:30+01:00[Europe/Paris]");

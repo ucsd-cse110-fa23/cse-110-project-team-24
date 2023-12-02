@@ -133,7 +133,7 @@ public class AlphabeticalSortTest {
 
     @Test
     public void testSetListModifyingStrategy() {
-        RecipeList recipes = new RecipeList(new ChronologicalSorter());
+        RecipeList recipes = new RecipeList(new ChronologicalSorter(), new NoFilter());
 
         Recipe r0 = new Recipe ("D", null, null, null, "2007-12-03T10:15:30+01:00[Europe/Paris]");
         Recipe r1 = new Recipe ("A", null, null, null, "2007-12-03T10:15:30+01:00[Europe/Paris]");

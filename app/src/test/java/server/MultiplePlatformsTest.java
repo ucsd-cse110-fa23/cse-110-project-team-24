@@ -50,7 +50,7 @@ public class MultiplePlatformsTest {
 
     @BeforeEach
     public void addRecipes() {
-        this.recipes = new RecipeList(new ChronologicalSorter());
+        this.recipes = new RecipeList(new ChronologicalSorter(), new NoFilter());
         /**
         * Source: https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html
         * Title: Class ZonedDateTime

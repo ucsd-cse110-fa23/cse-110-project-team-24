@@ -24,10 +24,8 @@ import java.net.URLDecoder;
 
 public class RecipeList extends VBox implements Observer{
     private String RecipeID;
-    private String sortMethod;
     PerformRequest pr;
     public RecipeList(PerformRequest pr) {
-        this.sortMethod = "Chronological";
         this.pr = pr;
         pr.registerObserver(this);
         this.setSpacing(5); // sets spacing between tasks
@@ -44,7 +42,7 @@ public class RecipeList extends VBox implements Observer{
         String recipeId = this.getRecipeId();
         pr.performRequest(                         
             "RecipeDataGet", "GET", 
-            null, this.sortMethod + ";" + recipeId);
+            null, "Chronological" + ";" + recipeId);
         
     }
 
@@ -56,9 +54,6 @@ public class RecipeList extends VBox implements Observer{
         this.RecipeID = ID;
     }
     
-    public void setSortMethod(String text) {
-        this.sortMethod = text;
-    }
 
     public PerformRequest getPerformRequest() {
         return pr;

@@ -65,7 +65,7 @@ public class PerformRequest implements Subject{
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response = in.readLine();
             if (response == null) {
-                return;
+                response = "";
             }
             in.close();
 
@@ -114,15 +114,20 @@ public class PerformRequest implements Subject{
     }
 
     private void addAllRecipes(String result) {
-        if (result == null || result.equals("")) {
-            return;
+        if (result == null) {
+            result = "";
         }
+        
+        this.notifyAll("REMOVEALL", 0, null);
         String delimeter = "RECIPE_SEPARATOR";
         String[] recipeArr = result.split(delimeter);
-        this.notifyAll("REMOVEALL", 0, null);
+        
         for (int i = 0; i < recipeArr.length; i++) {
             String components = recipeArr[i];
-            this.notifyAll("GET", i, Recipe.of(components));;
+            if (components == null || components.equals("")) {
+                continue;
+            }
+            this.notifyAll("GET", i, Recipe.of(components));
         }
     }
 

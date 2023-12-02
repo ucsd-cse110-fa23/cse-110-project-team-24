@@ -36,5 +36,10 @@ public class ChronologicalSorter implements ListModifyingStrategy{
         recipes.add(recipes.size(), r);
         return recipes;
     }
+
+    @Override
+    public boolean isSortingStrategy() {
+        return true;
+    }
     
 }
