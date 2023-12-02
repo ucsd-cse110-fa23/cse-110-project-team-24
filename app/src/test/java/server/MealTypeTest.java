@@ -44,6 +44,30 @@ public class MealTypeTest {
         assertEquals(DINNER, Recipe.getMealType("Something"));
     }
 
+    @Test
+    public void scenario1Test() {
+    // Scenario 1: See Meal Types
+	// Given that I am logged out and have created 1 “Breakfast” recipe named “Tofu Scramble” and 1 “Lunch” recipe named “Chickpea Sandwich”
+	// When I login
+	// Then I see two recipes in the list, with a “Breakfast” tag next to “Tofu Scramble” and a “Lunch” tag next to “Chickpea Sandwich”
+	// Input: 	Recipe List with 2 recipes,
+	// 	a breakfast called “Tofu Scramble”,
+	// 	a lunch called “Chickpea Sandwich”
+	// Expected Output: 
+	// 	Tag “Breakfast” next to “Tofu Scramble”, 
+	// 	Tag “Lunch” next to “Chickpea Sandwich”
+        RecipeList rl = new RecipeList(new AlphabeticalSorter());
+        Recipe r0 = new Recipe("Tofu Scramble", "BREAKFSAST.", null, null, "2020-12-03T10:15:30+01:00[Europe/Paris]");
+        Recipe r1 = new Recipe("Chickpea Sandwich", "lunch", null, null, "2020-12-03T10:15:30+01:00[Europe/Paris]");
+
+        rl.add(r0);
+        rl.add(r1);
+
+        assertEquals(Recipe.LUNCH, rl.get(0).getMealType());
+        assertEquals(Recipe.BREAKFAST, rl.get(1).getMealType());
+
+    }
+
 
 
 

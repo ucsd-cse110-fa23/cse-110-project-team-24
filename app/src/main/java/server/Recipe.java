@@ -3,9 +3,9 @@ package server;
 import org.bson.Document;
 
 public class Recipe {
-    private static final String BREAKFAST = "Breakfast";
-    private static final String LUNCH = "Lunch";
-    private static final String DINNER = "Dinner";
+    public static final String BREAKFAST = "Breakfast";
+    public static final String LUNCH = "Lunch";
+    public static final String DINNER = "Dinner";
 
     String title;
     String mealType;
