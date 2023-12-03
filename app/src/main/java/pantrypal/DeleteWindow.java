@@ -53,7 +53,7 @@ public class DeleteWindow extends VBox{
 
     // Static method to create a Scene with the DeleteWindow
     public static Scene CreateScene(DeleteWindow d){
-        Scene secondScene = new Scene(d, 250, 125);
+        Scene secondScene = new Scene(d, 500, 250);
         return secondScene;
     }
 
@@ -73,8 +73,8 @@ public class DeleteWindow extends VBox{
 
          // Set action for Deleteit button to delete the recipe and close windows
         Deleteit.setOnAction(e -> {
-            recipeList.getPerformRequest().performRequest("", "DELETE", null,
-                recipe.getRecipe().toString() + ";" + recipeList.getRecipeId());
+            recipe.setRecipeDeleteButton();
+            recipeList.removeSelectedRecipes();
             dv.close();
             newWindow.close();
                         

@@ -23,11 +23,12 @@ public class BaseHandler implements HttpHandler {
     MongoDatabase sampleTrainingDB = mongoClient.getDatabase("Account_db");
     MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
     MongoDatabase RecipeListDB = mongoClient.getDatabase("Recipe_db");
-    RecipeList recipes;
-
+    private List<Recipe> recipes;
+    FileRecipesCoordinator coordinator;
      String response = "Request Received";
-    public BaseHandler(RecipeList recipes) {
+    public BaseHandler(List<Recipe> recipes) {
         this.recipes = recipes;
+        this.coordinator = new FileRecipesCoordinator(recipes);
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -75,7 +76,7 @@ public class BaseHandler implements HttpHandler {
         addRecipe(toAdd, recipeID);
 
         scanner.close();
-        return URLEncoder.encode(String.format("%d%s", 0, toAdd.toString()), "US-ASCII");
+        return URLEncoder.encode("Added recipe " + toAdd.toString(), "US-ASCII");
     }
 
     void addRecipe(Recipe toAdd, String recipeID) throws IOException {
@@ -98,29 +99,30 @@ public class BaseHandler implements HttpHandler {
         if (query != null) {
             String[] components = query.split(";");
             Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3], components[4]);
-            String RecipeID = components[5]; 
-            int pos = deleteRecipe(toDelete, RecipeID);
-            //return endcoded recipe
-            return URLEncoder.encode(String.format("%d%s", pos, toDelete.toString()), "US-ASCII");
-
+            String RecipeID = components[5];                      
+            if (deleteRecipe(toDelete, RecipeID)) {
+                //return endcoded recipe
+                return URLEncoder.encode("Deleted recipe " + toDelete.toString(), "US-ASCII");
+            }
+            response = URLEncoder.encode("Unable to find recipe " + toDelete.toString(), "US-ASCII");
         }
         return response;
     }
 
-    int deleteRecipe(Recipe toDelete, String ID) throws IOException {
-        MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(ID);
-        Bson Filter = eq("RecipeName", toDelete.getTitle());
-        RecipeCollection.findOneAndDelete(Filter);
-        for (int i = 0; i < this.recipes.size(); i++){
-            Recipe recipe = this.recipes.get(i);
-            String t1 = recipe.getTitle();
-            String t2 = toDelete.getTitle();
-            if (t1.equals(t2)) {
-                this.recipes.remove(recipe);
-                return i;
-            }
+    boolean deleteRecipe(Recipe toDelete, String ID) throws IOException {
+         MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(ID);
+         Bson Filter = eq("RecipeName", toDelete.getTitle());
+         RecipeCollection.findOneAndDelete(Filter);
+        for (Recipe recipe:this.recipes) {
+                String t1 = recipe.getTitle();
+                String t2 = toDelete.getTitle();
+                if (t1.equals(t2)) {
+                    this.recipes.remove(recipe);
+                    coordinator.updateRecipes();
+                    return true;
+                }
         }
-        return -1;
+        return false;
     }
 
     // update recipe with information encoded in request body 
@@ -134,15 +136,19 @@ public class BaseHandler implements HttpHandler {
 
         Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1], 
                 recipeComponents[2], recipeComponents[3], recipeComponents[4]);
-        String userID = recipeComponents[5];
+        String RecipeID = recipeComponents[5];
         // Update recipe
-        return URLEncoder.encode(String.format("%d%s", updateRecipe(toUpdate, userID), toUpdate.toString()), "US-ASCII");
+        if (updateRecipe(toUpdate, RecipeID)) {
+            return URLEncoder.encode("Updated recipe to " + toUpdate.toString(), "US-ASCII");
+        }
 
+        scanner.close();
+        return URLEncoder.encode("Could not find recipe " + toUpdate.toString(), "US-ASCII");
 
 
     }
 
-    int updateRecipe(Recipe edited, String RecipeID) throws IOException {
+    boolean updateRecipe(Recipe edited, String RecipeID) throws IOException {
         MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(RecipeID);
         List<Bson> updates = new ArrayList<>();
         Bson filter = eq("RecipeName", edited.getTitle());
@@ -159,46 +165,45 @@ public class BaseHandler implements HttpHandler {
             if (current.getTitle().equals(edited.getTitle())) {
                 current.setIngredients(edited.getIngredients());
                 current.setSteps(edited.getSteps());
-                return i;
+                coordinator.updateRecipes();
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 
     // return delimeter separated lists of formatted recipes
     String handleGet(HttpExchange httpExchange) throws UnsupportedEncodingException {
+        // String result = "";
+        // for (Recipe recipe:recipes){
+        //     result += recipe.toString();
+        //     result += "RECIPE_SEPARATOR";
+        // }
+        // try {
+        //     return URLEncoder.encode(result, "US-ASCII");
+        // } catch (UnsupportedEncodingException e) {
+        //     e.printStackTrace();
+        //     return null;
+        // }
         String result = "";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
         query = query.substring(query.indexOf("=") + 1);
         query = URLDecoder.decode(query, "US-ASCII");
-        String modification = (query.split(";"))[0];
-        String userID = (query.split(";"))[1];
-    
+        response = query;
         if(query != null) {
-            MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(userID);
+            MongoCollection<Document> RecipeCollection = RecipeListDB.getCollection(query);
             List<Document> RecipesDocs =  RecipeCollection.find().into(new ArrayList<>());
-
-            this.recipes.removeAll();
-
             for(Document recipe:RecipesDocs){
                 if(recipe.get("username") != null){
                     continue;
                 }
-
-                Recipe parsedRecipe  = new Recipe((String) recipe.get("RecipeName"), 
-                        (String) recipe.get("MealType"), (String) recipe.get("Ingredient List"), 
-                        (String) recipe.get("Steps"), (String) recipe.get("Date"));
-                this.recipes.add(parsedRecipe);
-            }
-
-            
-            this.recipes.setListModifyingStrategy(modification);
-            for (int i = 0; i < this.recipes.size(); i++) {
-                result += recipes.get(i).toString();
+                Recipe recipes  = new Recipe((String) recipe.get("RecipeName"), (String) recipe.get("MealType"), (String) recipe.get("Ingredient List"), (String) recipe.get("Steps"), (String) recipe.get("Date"));
+                result += recipes.toString();
                 result += "RECIPE_SEPARATOR";
             }
         }
+        System.out.println(result);
         return URLEncoder.encode(result, "US-ASCII");
     }
 

@@ -81,7 +81,7 @@ public class LogInView extends VBox {
         return this.AutomaticallyLogIn;
     }
     public static Scene CreateScene(LogInView d) {
-        Scene secondScene = new Scene(d, 300, 225);
+        Scene secondScene = new Scene(d, 600, 550);
         return secondScene;
     }
 

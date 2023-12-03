@@ -36,7 +36,7 @@ public class ErrorMessageView extends VBox {
     }
 
     public static Scene CreateScene(ErrorMessageView d) {
-        Scene secondScene = new Scene(d, 200, 125);
+        Scene secondScene = new Scene(d, 400, 250);
         return secondScene;
     }
 

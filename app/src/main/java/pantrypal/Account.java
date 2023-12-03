@@ -26,11 +26,11 @@ public class Account implements SuperAccount{
             //Add error message in UI
             return "Error, Account existed but with an incorrect password, please Sign In with correct Password";
         }
-        PerformRequest.performDefaultRequest("CreateAccount", "PUT", username + ";" + password, null);
+        PerformRequest.performRequest("CreateAccount", "PUT", username + ";" + password, null);
         return "Welcome to PantryPal! " + username;
     }
     public String CheckAccountExisted(){
-       String info = PerformRequest.performDefaultRequest("CheckAccountValid", "GET", null, username+";"+password);
+       String info = PerformRequest.performRequest("CheckAccountValid", "GET", null, username+";"+password);
        return info;
     }
     public void LoadRecipeList(AppFrame root, String username){

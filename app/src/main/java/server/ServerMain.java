@@ -29,9 +29,8 @@ public class ServerMain {
     MongoCollection<Document> AccountCollection = sampleTrainingDB.getCollection("Account");
     MongoDatabase RecipeListDB = mongoClient.getDatabase("Recipe_db");
     MongoCollection<Document> RecipeCollection = sampleTrainingDB.getCollection("Intialize");
-    
-    // create a structure to store data
-    RecipeList recipes = new RecipeList(new ChronologicalSorter(), new NoFilter());
+    // create a map to store data
+    List<Recipe> recipes = new ArrayList<>();
 
     // create a server
     HttpServer server = HttpServer.create(
@@ -41,10 +40,8 @@ public class ServerMain {
     server.createContext("/generator/", new GenerationHandler(recipes));
     server.createContext("/transcript/", new TranscriptionHandler(recipes));
     server.createContext("/", new BaseHandler(recipes));
-    
     server.createContext("/CreateAccount", new AccountHandler());
     server.createContext("/CheckAccountValid", new AccountHandler());
-
     server.createContext("/RecipeDataGet", new BaseHandler(recipes));
     server.setExecutor(threadPoolExecutor);
     server.start();

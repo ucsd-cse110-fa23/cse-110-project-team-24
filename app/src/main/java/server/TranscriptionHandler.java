@@ -10,9 +10,9 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 public class TranscriptionHandler implements HttpHandler {
-    private RecipeList recipes;
+    private List<Recipe> recipes;
 
-    public TranscriptionHandler(RecipeList recipes) {
+    public TranscriptionHandler(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 

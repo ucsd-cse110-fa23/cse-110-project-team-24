@@ -5,9 +5,6 @@ import java.time.ZonedDateTime;
 import org.bson.Document;
 
 public class Recipe {
-    private final String BREAKFAST = "Breakfast";
-    private final String LUNCH = "Lunch";
-    private final String DINNER = "Dinner";
      // Class attributes for recipe details
     String title;
     String mealType;
