@@ -2,6 +2,8 @@ package pantrypal;
 
 import javafx.scene.layout.VBox;
 
+import java.io.UnsupportedEncodingException;
+
 // import org.hamcrest.Condition.Step;
 
 import javafx.geometry.Insets;
@@ -11,7 +13,18 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.awt.image.*;
+import javax.imageio.ImageIO;
 
 // GeneratedView class for displaying and interacting with generated recipes
 public class GeneratedView extends VBox{
@@ -20,7 +33,7 @@ public class GeneratedView extends VBox{
     private TextArea Instruction;
     private TextArea IngredientList;
     private Button SaveButton;
-
+    private ImageView Image;
     GeneratedView(){
 
         Createlabel = new Label();
@@ -42,6 +55,9 @@ public class GeneratedView extends VBox{
         Instruction.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
         Instruction.setPadding(new Insets(10,0,10,0));
         this.getChildren().add(Instruction);
+        Image = new ImageView();
+
+        this.getChildren().add(Image);
 
         CancelButton = new Button("Back");
         CancelButton.setPrefSize(600, 50);
@@ -67,12 +83,14 @@ public class GeneratedView extends VBox{
         return this.IngredientList;
     }
     public static Scene CreateScene(GeneratedView d){
-        Scene secondScene = new Scene(d, 300, 400);
+        Scene secondScene = new Scene(d, 500, 800);
         return secondScene;
     }
-
+    public ImageView getImageView(){
+        return this.Image;
+    }
      // Method to open and display the generated recipe view
-    public void OpenGeneratedView(Recipe generatedRecipe, Stage original, RecipeList taskList){
+    public void OpenGeneratedView(Recipe generatedRecipe, Stage original, RecipeList taskList) throws IOException{
          // Create a new scene and window for the generated view
         Scene secondScene = CreateScene(this);
 		// New window (Stage)
@@ -87,7 +105,9 @@ public class GeneratedView extends VBox{
         this.getCreatedLabel().setText(name);
         this.getIngredientList().setText(IngredientLists);
         this.getInstruction().setText(StepbyStep);
-
+        byte[] Ans = generatedRecipe.getImage().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+        this.getImageView().setImage(this.ByteArrayToImage(Ans));
+        this.
          // Set action for CancelButton to close the view
         CancelButton.setOnAction(e -> {
             original.close();
@@ -114,13 +134,38 @@ public class GeneratedView extends VBox{
             taskList.getPerformRequest().performRequest("", "PUT", 
                     recipeToAdd.toString() 
                     + ";" + taskList.getRecipeId(), null);
-
-
+            PerformRequest.performImageRequest("Image", "PUT", null, recipeToAdd.getImage() + "IMAGE_SEP" + recipeToAdd.getTitle()+ "IMAGE_SEP" + taskList.getRecipeId());
+            for(int i = 0; i< taskList.getChildren().size(); i++){
+                if(taskList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) taskList.getChildren().get(i);
+                    if(intask.getRecipe().getTitle().equals(recipeToAdd.getTitle())){
+                        intask.getRecipe().setImage(recipeToAdd.getImage());
+                    }
+                    titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), taskList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
             original.close();
             newWindow.close();
         });
 
         newWindow.show();
+    }
+    public Image ByteArrayToImage(byte[] Ans) throws IOException{
+        OutputStream os = new FileOutputStream("response.jpg"); 
+        // Starting writing the bytes in it
+        os.write(Ans);
+        os.close();
+        File pic = new File("response.jpg");
+        Image images = new Image(pic.toURI().toString());
+        pic.delete();
+        return images;
     }
 }
 

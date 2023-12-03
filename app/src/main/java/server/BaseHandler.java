@@ -189,6 +189,7 @@ public class BaseHandler implements HttpHandler {
                 Recipe parsedRecipe  = new Recipe((String) recipe.get("RecipeName"), 
                         (String) recipe.get("MealType"), (String) recipe.get("Ingredient List"), 
                         (String) recipe.get("Steps"), (String) recipe.get("Date"));
+                        parsedRecipe.setImage((String) recipe.get("Image"));
                 this.recipes.add(parsedRecipe);
             }
 

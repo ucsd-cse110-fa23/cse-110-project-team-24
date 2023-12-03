@@ -1,6 +1,8 @@
 package server;
 
 import com.sun.net.httpserver.*;
+import com.sun.prism.Image;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -18,7 +20,7 @@ public class GenerationHandler implements HttpHandler {
         String method = httpExchange.getRequestMethod();
         try {
             if (method.equals("GET")) {
-                response = handleGet(httpExchange, new ChatGPTGenerator(new ChatGPTResponse()));
+                response = handleGet(httpExchange, new ChatGPTGenerator(new ChatGPTResponse()), new DallE());
             } 
             // else if (method.equals("POST")) {
             //     response = handlePost(httpExchange);
@@ -39,12 +41,12 @@ public class GenerationHandler implements HttpHandler {
         // Sending back response to the client
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream outStream = httpExchange.getResponseBody();
-        outStream.write(response.getBytes());
+        outStream.write(response.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1));
         outStream.close();
 
     }
 
-    private String handleGet(HttpExchange httpExchange, RecipeGenerator generator) throws IOException {
+    private String handleGet(HttpExchange httpExchange, RecipeGenerator generator, DallE ImageGenerator) throws IOException, InterruptedException, URISyntaxException {
         String response = "Invalid GET request";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
@@ -54,8 +56,18 @@ public class GenerationHandler implements HttpHandler {
             String mealType = components[0]; // Retrieve data from hashmap
             String ingredients = components[1];
             Recipe result = generator.generateRecipe(mealType, ingredients);
-            String recipe = result.toString();
-            return URLEncoder.encode(recipe, "US-ASCII");
+        //     byte[] image = DallE.GeneratedImage(result.getTitle());
+           
+        //     String ans = new String(image, java.nio.charset.StandardCharsets.ISO_8859_1);
+        //     result.setImage(ans);
+        //     System.out.println(ans.length());
+        //     byte[] decode = ans.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+        //     OutputStream os = new FileOutputStream("responseInServer.jpg"); 
+        // // Starting writing the bytes in it
+        //     os.write(decode);
+        //     os.close();
+            //return result.toString();
+            return URLEncoder.encode(result.toString(), "US-ASCII");
         }
         return response;
     }

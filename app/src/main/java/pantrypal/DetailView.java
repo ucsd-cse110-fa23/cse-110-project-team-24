@@ -1,6 +1,11 @@
 package pantrypal;
 
+import java.io.File;
+
 //(import statements)
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,6 +13,8 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
@@ -24,8 +31,8 @@ public class DetailView extends VBox {
     private Button BackButton;
     private Button DeleteButton;
     private boolean editing = false;
-
-    public DetailView(Recipe expected){
+    private ImageView RecipeImage;
+    public DetailView(Recipe expected) throws IOException{
 
          // Initialize and style UI components
           // Add components to the VBox
@@ -72,6 +79,11 @@ public class DetailView extends VBox {
         StepInstruction.setPadding(new Insets(10, 0, 10, 0));
         StepInstruction.setEditable(false);
         this.getChildren().add(StepInstruction);
+        
+        RecipeImage = new ImageView();
+        byte[] Ans = expected.getImage().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+        RecipeImage.setImage(this.ByteArrayToImage(Ans));
+        this.getChildren().add(RecipeImage);
 
         EditButton = new Button("Edit");
         EditButton.setPrefSize(1400, 50);
@@ -149,7 +161,7 @@ public class DetailView extends VBox {
 
     // Creates a new Scene with the DetailView instance
     public static Scene CreateScene(DetailView d) {
-        Scene secondScene = new Scene(d, 500, 300);
+        Scene secondScene = new Scene(d, 500, 800);
         return secondScene;
     }
 
@@ -215,5 +227,15 @@ public class DetailView extends VBox {
             }
         }));
 
+    }
+    public Image ByteArrayToImage(byte[] Ans) throws IOException{
+        OutputStream os = new FileOutputStream("response.jpg"); 
+        // Starting writing the bytes in it
+        os.write(Ans);
+        os.close();
+        File pic = new File("response.jpg");
+        Image images = new Image(pic.toURI().toString());
+        pic.delete();
+        return images;
     }
 }

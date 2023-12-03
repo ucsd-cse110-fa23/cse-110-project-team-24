@@ -1,6 +1,8 @@
 package pantrypal;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import com.opencsv.exceptions.CsvException;
 
@@ -74,6 +76,22 @@ public class AppFrame extends BorderPane{
             sortByButton.setText("Sort By (Currently Chronological)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "Chronological" + ";" + recipeList.getRecipeId());
+            for(int i = 0; i< recipeList.getChildren().size(); i++){
+                if(recipeList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) recipeList.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + recipeList.getRecipeId());
+                    inside.setImage(Image);
+                    Button titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), recipeList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
         });
 
 
@@ -82,6 +100,22 @@ public class AppFrame extends BorderPane{
         alphabeticalSortingOption.setOnAction(e -> {
             sortByButton.setText("Sort By (Currently Alphabetical)");
             recipeList.getPerformRequest().performRequest("", "GET", null, "Alphabetical"+ ";" + recipeList.getRecipeId());
+            for(int i = 0; i< recipeList.getChildren().size(); i++){
+                if(recipeList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) recipeList.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + recipeList.getRecipeId());
+                    inside.setImage(Image);
+                    Button titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), recipeList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
         });
 
         MenuItem reverseChronologicalSortingOption = new MenuItem("Reverse Chronological");
@@ -89,6 +123,22 @@ public class AppFrame extends BorderPane{
         reverseChronologicalSortingOption.setOnAction(e -> {
             sortByButton.setText("Sort By (Currently Reverse Chronological)");
             recipeList.getPerformRequest().performRequest("", "GET", null, "ReverseChronological"+ ";" + recipeList.getRecipeId());
+            for(int i = 0; i< recipeList.getChildren().size(); i++){
+                if(recipeList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) recipeList.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + recipeList.getRecipeId());
+                    inside.setImage(Image);
+                    Button titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), recipeList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
         });
 
 
@@ -97,6 +147,22 @@ public class AppFrame extends BorderPane{
         reverseAlphabeticalSortingOption.setOnAction(e -> {
             sortByButton.setText("Sort By (Currently Reverse Alphabetical)");
             recipeList.getPerformRequest().performRequest("", "GET", null, "ReverseAlphabetical"+ ";" + recipeList.getRecipeId());
+            for(int i = 0; i< recipeList.getChildren().size(); i++){
+                if(recipeList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) recipeList.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + recipeList.getRecipeId());
+                    inside.setImage(Image);
+                    Button titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), recipeList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
         });
 
 
@@ -106,6 +172,22 @@ public class AppFrame extends BorderPane{
             filterByButton.setText("Filter By (Currently no filter)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "NoFilter" + ";" + recipeList.getRecipeId());
+            for(int i = 0; i< recipeList.getChildren().size(); i++){
+                if(recipeList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) recipeList.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + recipeList.getRecipeId());
+                    inside.setImage(Image);
+                    Button titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), recipeList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
         });
 
 
@@ -115,6 +197,22 @@ public class AppFrame extends BorderPane{
             filterByButton.setText("Filter By (Currently Breakfast)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "Breakfast" + ";" + recipeList.getRecipeId());
+            for(int i = 0; i< recipeList.getChildren().size(); i++){
+                if(recipeList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) recipeList.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + recipeList.getRecipeId());
+                    inside.setImage(Image);
+                    Button titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), recipeList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
         });
 
         MenuItem lunchFilteringOption = new MenuItem("Lunch");
@@ -123,6 +221,22 @@ public class AppFrame extends BorderPane{
             filterByButton.setText("Filter By (Currently Lunch)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "Lunch" + ";" + recipeList.getRecipeId());
+            for(int i = 0; i< recipeList.getChildren().size(); i++){
+                if(recipeList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) recipeList.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + recipeList.getRecipeId());
+                    inside.setImage(Image);
+                    Button titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), recipeList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
         });
 
 
@@ -132,7 +246,24 @@ public class AppFrame extends BorderPane{
             filterByButton.setText("Filter By (Currently Dinner)");
             recipeList.getPerformRequest().performRequest("", "GET", 
                     null, "Dinner" + ";" + recipeList.getRecipeId());
+            for(int i = 0; i< recipeList.getChildren().size(); i++){
+                if(recipeList.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) recipeList.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + recipeList.getRecipeId());
+                    inside.setImage(Image);
+                    Button titleButton = intask.getTitle();
+                    titleButton.setOnAction(e3 -> {
+                        try {
+                    intask.OpenDetailView(intask.getStage(), recipeList);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+                    });
+                }
+            }
         });
+
         
         
     }

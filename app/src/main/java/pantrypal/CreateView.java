@@ -1,7 +1,11 @@
 package pantrypal;
 
+import java.io.File;
+import java.io.FileOutputStream;
 // (import statements)
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 
 
@@ -183,8 +188,22 @@ public class CreateView extends VBox {
             Recipe generatedRecipe = GetGeneratedRecipe(this.getTypeArea().getText(), 
                     this.getIngredientList().getText());
             generatedRecipe.setDate(java.time.ZonedDateTime.now().toString());
+            try {
+                String image = PerformRequest.performImageRequest("Image", "GET", null, generatedRecipe.getTitle());
+                byte[] imagearray = image.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+                this.ByteArrayToImage(imagearray);
+                generatedRecipe.setImage(image);
+            } catch (IOException e1) {
+                
+                e1.printStackTrace();
+            }
             GeneratedView CreatedViews = new GeneratedView();
-            CreatedViews.OpenGeneratedView(generatedRecipe, createViewWindow, taskList);
+            try {
+                CreatedViews.OpenGeneratedView(generatedRecipe, createViewWindow, taskList);
+            } catch (IOException e1) {
+                
+                e1.printStackTrace();
+            }
         });
         createViewWindow.show();
     }
@@ -207,7 +226,16 @@ public class CreateView extends VBox {
     
     }
     
-
+    public Image ByteArrayToImage(byte[] Ans) throws IOException{
+        OutputStream os = new FileOutputStream("responseInClient.jpg"); 
+        // Starting writing the bytes in it
+        os.write(Ans);
+        os.close();
+        File pic = new File("responseInClient.jpg");
+        Image images = new Image(pic.toURI().toString());
+        pic.delete();
+        return images;
+    }
 
 
 

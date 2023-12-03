@@ -41,7 +41,7 @@ public class ServerMain {
     server.createContext("/generator/", new GenerationHandler(recipes));
     server.createContext("/transcript/", new TranscriptionHandler(recipes));
     server.createContext("/", new BaseHandler(recipes));
-    
+    server.createContext("/Image", new ImageHandler());
     server.createContext("/CreateAccount", new AccountHandler());
     server.createContext("/CheckAccountValid", new AccountHandler());
 
