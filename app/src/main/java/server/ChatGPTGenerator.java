@@ -1,5 +1,7 @@
 package server;
 
+import java.time.ZonedDateTime;
+
 public class ChatGPTGenerator implements RecipeGenerator{
     APIResponse api;
     
@@ -14,7 +16,7 @@ public class ChatGPTGenerator implements RecipeGenerator{
         String responseIngredients = getIngredients(response);
         String instructions = getInstructions(response);
 
-        Recipe recipe = new Recipe(title, mealType, responseIngredients, instructions, "");
+        Recipe recipe = new Recipe(title, mealType, responseIngredients, instructions, ZonedDateTime.now().toString());
 
         return recipe;
     }

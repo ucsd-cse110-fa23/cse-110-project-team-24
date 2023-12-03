@@ -7,9 +7,9 @@ import java.util.*;
 
 public class GenerationHandler implements HttpHandler {
 
-    private List<Recipe> recipes;
+    private RecipeList recipes;
 
-    public GenerationHandler(List<Recipe> recipes) {
+    public GenerationHandler(RecipeList recipes) {
         this.recipes = recipes;
     }
 
@@ -53,7 +53,8 @@ public class GenerationHandler implements HttpHandler {
             String[] components = decodedQuery.split(";");
             String mealType = components[0]; // Retrieve data from hashmap
             String ingredients = components[1];
-            String recipe = generator.generateRecipe(mealType, ingredients).toString();
+            Recipe result = generator.generateRecipe(mealType, ingredients);
+            String recipe = result.toString();
             return URLEncoder.encode(recipe, "US-ASCII");
         }
         return response;

@@ -21,7 +21,7 @@ public class MultiplePlatformsTest {
     private final String RECIPE_SEPARATOR = "RECIPE_SEPARATOR";
     // Basic case
     String title1 = "RecipeTitle";
-    String type1 = "RecipeType";
+    String type1 = "Breakfast";
     String ingredients1 = "RecipeIngredients";
     String instructions1 = "RecipeInstructions";
 
@@ -46,14 +46,20 @@ public class MultiplePlatformsTest {
     String instructions3 = "\"Hope this encoding works . . .\"[[{}}]\\/\r\n" + //
             "";
 
-    ArrayList<Recipe> recipes;
+    RecipeList recipes;
 
     @BeforeEach
     public void addRecipes() {
-        this.recipes = new ArrayList<>();
-        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
-        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
-        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
+        this.recipes = new RecipeList(new ChronologicalSorter(), new NoFilter());
+        /**
+        * Source: https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html
+        * Title: Class ZonedDateTime
+        * Date Accessed: 11/30/2024
+        * Use: used to get example of ZonedDateTime.toString() method
+         */
+        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "2007-12-03T10:15:30+01:00[Europe/Paris]"));
+        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"2006-12-03T10:15:30+01:00[Europe/Paris]"));
+        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"2006-11-03T10:15:30+01:00[Europe/Paris]"));
     }
 
     @Test
@@ -63,7 +69,7 @@ public class MultiplePlatformsTest {
 
         try {
             String title = "RecipeTitle";
-            String type = "RecipeType";
+            String type = "Dinner";
             String ingredients = "RecipeIngredients";
             String instructions = "RecipeInstructions";
             handler.handlePut(new MockExchange("https://localhost/", URLEncoder.encode(title + ";" + type + ";" + ingredients + ";" + instructions+ ";" + "1", ENCODING)));
@@ -115,6 +121,10 @@ public class MultiplePlatformsTest {
     @Test
     public void handlePostTest() {
         String newIngredients = "Woah new ingredients";
+        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
+        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
+        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
         MockBaseHandler handler = new MockBaseHandler(recipes);
         try {
             handler.handlePost(new MockExchange("https://localhost/", 
@@ -185,6 +195,10 @@ public class MultiplePlatformsTest {
 
     @Test
     public void testHandleGet() throws UnsupportedEncodingException {
+        ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+        recipes.add(0, new Recipe(title1, type1, ingredients1, instructions1, "1"));
+        recipes.add(1, new Recipe(title2, type2, ingredients2, instructions2,"1"));
+        recipes.add(2, new Recipe(title3, type3, ingredients3, instructions3,"1"));
         MockBaseHandler handler = new MockBaseHandler(recipes);
         String expected = title1 + ";" + type1 + ";" + ingredients1 + ";" + instructions1 + 
                 RECIPE_SEPARATOR + title2 + ";" + type2 + ";" + ingredients2 + ";" + instructions2 + 

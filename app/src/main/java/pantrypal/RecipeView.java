@@ -1,21 +1,25 @@
 package pantrypal;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.layout.*;
 
 
 //For US 4-3
 // RecipeView class for displaying a single recipe in the UI
-public class RecipeView extends HBox{
+public class RecipeView extends StackPane{
     // Flag to track if the recipe is marked for deletion
     private Boolean recipeDeleteButton = false;
     private Button titleButton;
     private Stage stage;
     private Recipe recipe;
+    private Label mealTypeLabel;
 
     public RecipeView(Recipe recipe) {
         this.recipe = recipe;
-
+        this.setAlignment(Pos.BOTTOM_RIGHT);
         stage = new Stage();       
         this.setPrefSize(1400, 100); // sets size of contact
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of task
@@ -24,7 +28,13 @@ public class RecipeView extends HBox{
         titleButton = new Button(recipe.getTitle());
         titleButton.setPrefSize(1400, 100);      
         titleButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
+
+        mealTypeLabel = new Label(recipe.getMealType());
+        mealTypeLabel.setPadding(new Insets(10, 10, 10, 10));
+        String kellyGreen = "rgb(102, 204, 0)";
+        mealTypeLabel.setStyle("-fx-background-color:" + kellyGreen + "; -fx-fill:" + kellyGreen +";");
         this.getChildren().add(titleButton);
+        this.getChildren().add(mealTypeLabel); // there. but not visible
     }
 
     // Method to check if the recipe is marked for deletion
@@ -75,5 +85,10 @@ public class RecipeView extends HBox{
     public RecipeView copy(){
         RecipeView recipes = new RecipeView(recipe);
         return recipes;
+    }
+
+    public void update(Recipe r) {
+        this.recipe = r;
+        this.setTitleName(r.getTitle());
     }
 }
