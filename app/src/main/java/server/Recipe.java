@@ -21,6 +21,15 @@ public class Recipe {
         this.Date = Date;
     }
 
+    // Static method to create a Recipe instance from a string representation
+    // returns Recipe based on string representation with format title;mealType;ingredients;steps
+    public static Recipe of (String representation) {
+        // Split the string representation into its components
+        String[] components = representation.split(";");
+        // Create and return a new Recipe object
+        return new Recipe(components[0], components[1], components[2], components[3], components[4]);
+    }
+
     /**
      * Decides which meal type parameter is most likely to be. Defaults to "Dinner".
      * 
