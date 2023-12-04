@@ -190,7 +190,7 @@ public class CreateView extends VBox {
     }
 
      // Generates a Recipe object from provided meal type and recipe text
-    private static Recipe GetGeneratedRecipe(String mealType, String recipeText) { 
+    public static Recipe GetGeneratedRecipe(String mealType, String recipeText) { 
          try {
 
              // Send a request to generate a recipe based on the provided meal type and recipe text

@@ -20,6 +20,7 @@ public class GeneratedView extends VBox{
     private TextArea Instruction;
     private TextArea IngredientList;
     private Button SaveButton;
+    private Button refreshButton;
 
     GeneratedView(){
 
@@ -54,6 +55,12 @@ public class GeneratedView extends VBox{
         SaveButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
         SaveButton.setAlignment(Pos.CENTER);
         this.getChildren().add(SaveButton);
+
+        refreshButton = new Button("Refresh");
+        refreshButton.setPrefSize(600, 50);
+        refreshButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
+        refreshButton.setAlignment(Pos.CENTER);
+        this.getChildren().add(refreshButton);
 
     }
      // Getter methods for UI components
@@ -120,7 +127,22 @@ public class GeneratedView extends VBox{
             newWindow.close();
         });
 
+        refreshButton.setOnAction(e-> {
+            refreshButtonAction(generatedRecipe, newWindow, original, taskList);
+        });
+
         newWindow.show();
+    }
+    private void refreshButtonAction(Recipe oldRecipe, Stage oldWindow, Stage originalCreateWindow, RecipeList recipeList) {
+        oldWindow.close();
+       
+        String mealType = oldRecipe.getMealType();
+        String ingredients = oldRecipe.getIngredients();
+        
+        Recipe refreshedRecipe  = CreateView.GetGeneratedRecipe(mealType, ingredients);
+        
+         GeneratedView newView = new GeneratedView();
+         newView.OpenGeneratedView(refreshedRecipe, originalCreateWindow, recipeList);
     }
 }
 
