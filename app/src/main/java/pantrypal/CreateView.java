@@ -188,15 +188,9 @@ public class CreateView extends VBox {
             Recipe generatedRecipe = GetGeneratedRecipe(this.getTypeArea().getText(), 
                     this.getIngredientList().getText());
             generatedRecipe.setDate(java.time.ZonedDateTime.now().toString());
-            try {
-                String image = PerformRequest.performImageRequest("Image", "GET", null, generatedRecipe.getTitle());
-                byte[] imagearray = image.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
-                this.ByteArrayToImage(imagearray);
-                generatedRecipe.setImage(image);
-            } catch (IOException e1) {
-                
-                e1.printStackTrace();
-            }
+            String imageURL = PerformRequest.performImageRequest("Image", "GET", null, generatedRecipe.getTitle());
+             
+            generatedRecipe.setImage(imageURL);
             GeneratedView CreatedViews = new GeneratedView();
             try {
                 CreatedViews.OpenGeneratedView(generatedRecipe, createViewWindow, taskList);

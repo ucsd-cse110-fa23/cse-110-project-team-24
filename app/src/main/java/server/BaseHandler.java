@@ -25,13 +25,15 @@ public class BaseHandler implements HttpHandler {
     MongoDatabase RecipeListDB = mongoClient.getDatabase("Recipe_db");
     RecipeList recipes;
 
-     String response = "Request Received";
+     String response = "BaseHandler Request Received";
     public BaseHandler(RecipeList recipes) {
         this.recipes = recipes;
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
         //String response = "Request Received";
+        response += httpExchange.getRequestMethod();
+        System.out.println(response);
         String method = httpExchange.getRequestMethod();
         try {
             if (method.equals("PUT")) {

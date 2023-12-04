@@ -7,15 +7,16 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 
 public class ErrorMessageView extends VBox {
-    private Label ErrorMessage;
+    private TextField ErrorMessage;
     private Button CloseButton;
 
     ErrorMessageView(){
-        ErrorMessage = new Label();
+        ErrorMessage = new TextField();
         ErrorMessage.setPrefSize(400, 200);
         ErrorMessage.setAlignment(Pos.CENTER);
         ErrorMessage.setPadding(new Insets(10, 0, 10, 0));
@@ -27,7 +28,7 @@ public class ErrorMessageView extends VBox {
         CloseButton.setAlignment(Pos.CENTER);
         this.getChildren().add(CloseButton);
     }
-    public Label getErrorMessage(){
+    public TextField getErrorMessage(){
         return this.ErrorMessage;
     }
 
@@ -36,7 +37,7 @@ public class ErrorMessageView extends VBox {
     }
 
     public static Scene CreateScene(ErrorMessageView d) {
-        Scene secondScene = new Scene(d, 200, 125);
+        Scene secondScene = new Scene(d, 400, 225);
         return secondScene;
     }
 
@@ -46,7 +47,7 @@ public class ErrorMessageView extends VBox {
         Scene secondScene = CreateScene(errorMessageView);
         // New window (Stage)
         Stage ErrorMessageViewWindow = new Stage();
-        ErrorMessageViewWindow.setTitle("Error ocurred!");
+        ErrorMessageViewWindow.setTitle("Attention!");
         ErrorMessageViewWindow.setScene(secondScene);
         if(success){
              errorMessageView.getCloseButton().setOnAction(e -> {

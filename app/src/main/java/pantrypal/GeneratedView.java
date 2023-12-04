@@ -105,8 +105,8 @@ public class GeneratedView extends VBox{
         this.getCreatedLabel().setText(name);
         this.getIngredientList().setText(IngredientLists);
         this.getInstruction().setText(StepbyStep);
-        byte[] Ans = generatedRecipe.getImage().getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
-        this.getImageView().setImage(this.ByteArrayToImage(Ans));
+        Image image = new Image(generatedRecipe.getImage());
+        this.getImageView().setImage(image);
         this.
          // Set action for CancelButton to close the view
         CancelButton.setOnAction(e -> {

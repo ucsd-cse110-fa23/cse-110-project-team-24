@@ -63,18 +63,8 @@ public class ImageHandler implements HttpHandler {
         if (query != null) {
             String decodedQuery = getParsedAndDecodedQuery(query);
            
-            byte[] image = DallE.GeneratedImage(decodedQuery);
-            
-            String ans = new String(image, java.nio.charset.StandardCharsets.ISO_8859_1);
-            ImageStore.put(query, ans);
-            System.out.println(ans.length());
-            byte[] decode = ans.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
-            OutputStream os = new FileOutputStream("responseInServer.jpg"); 
-        // Starting writing the bytes in it
-            os.write(decode);
-            os.close();
-            //return result.toString();
-            return URLEncoder.encode(ans, java.nio.charset.StandardCharsets.ISO_8859_1);
+            String ImageURL = DallE.GeneratedImage(decodedQuery);
+            return URLEncoder.encode(ImageURL, java.nio.charset.StandardCharsets.ISO_8859_1);
         }
         return response;
     }

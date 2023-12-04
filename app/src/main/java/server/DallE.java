@@ -23,7 +23,7 @@ public class DallE {
  private static final String API_KEY = "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";
 
  private static final String MODEL = "dall-e-2";
- public static byte[] GeneratedImage(String InputPrompt) throws IOException, InterruptedException, URISyntaxException {
+ public static String GeneratedImage(String InputPrompt) throws IOException, InterruptedException, URISyntaxException {
     // Set request parameters
     String prompt = InputPrompt;
     int n = 1;
@@ -55,22 +55,22 @@ public class DallE {
    
    System.out.println("DALL-E Response:");
    System.out.println(generatedImageURL);
-
+    return generatedImageURL;
 
    // Download the Generated Image to Current Directory
-   try(
-       InputStream in = new URI(generatedImageURL).toURL().openStream();
+//    try(
+//        InputStream in = new URI(generatedImageURL).toURL().openStream();
         
-   )
-   {
-       //Files.copy(in, Paths.get("image.jpg"));
-       byte[] Ans = in.readAllBytes();
-       OutputStream os = new FileOutputStream("Response.jpg"); 
-        // Starting writing the bytes in it
-            os.write(Ans);
-            os.close();
-       return Ans;
-   }
+//    )
+//    {
+//        //Files.copy(in, Paths.get("image.jpg"));
+//        byte[] Ans = in.readAllBytes();
+//        OutputStream os = new FileOutputStream("Response.jpg"); 
+//         // Starting writing the bytes in it
+//             os.write(Ans);
+//             os.close();
+//        return Ans;
+//    }
  }
 
 }

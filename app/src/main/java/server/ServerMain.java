@@ -44,7 +44,7 @@ public class ServerMain {
     server.createContext("/Image", new ImageHandler());
     server.createContext("/CreateAccount", new AccountHandler());
     server.createContext("/CheckAccountValid", new AccountHandler());
-
+    server.createContext("/Share", new ShareHandler());
     server.createContext("/RecipeDataGet", new BaseHandler(recipes));
     server.setExecutor(threadPoolExecutor);
     server.start();
