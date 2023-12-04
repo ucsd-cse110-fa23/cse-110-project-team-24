@@ -33,7 +33,13 @@ public class BaseHandler implements HttpHandler {
     public void handle(HttpExchange httpExchange) throws IOException {
         //String response = "Request Received";
         String method = httpExchange.getRequestMethod();
+        // get the URI path
+        String path = httpExchange.getRequestURI().getPath();
         try {
+            if (path.equals("/status")) {
+                handleStatusCheck(httpExchange);
+                return; 
+            }
             if (method.equals("PUT")) {
                 response = handlePut(httpExchange);
             } else if (method.equals("DELETE")) {
@@ -59,6 +65,16 @@ public class BaseHandler implements HttpHandler {
         outStream.write(response.getBytes());
         outStream.close();
     }
+
+     private void handleStatusCheck(HttpExchange httpExchange) throws IOException{
+        response = "Server is up and running!";
+        //URI uri = httpExchange.getRequestURI();
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
+    }
+
 
     // Add new recipe with components encoded in httpExchange request body
      String handlePut(HttpExchange httpExchange) throws IOException {

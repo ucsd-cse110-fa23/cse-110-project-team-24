@@ -11,7 +11,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
+        //check if the service is available
+        if (!ServerStatusCheck.isServerAvailable()) {
+            //if Server is unavailable, show error message
+            ServerErrorView.display();
+            return;
+        }
         // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
         PerformRequest pr = new PerformRequest();
         AppFrame root = new AppFrame(pr);
