@@ -193,10 +193,16 @@ public class GeneratedView extends VBox{
         String mealType = oldRecipe.getMealType();
         String ingredients = oldRecipe.getIngredients();
         
-        Recipe refreshedRecipe  = CreateView.GetGeneratedRecipe(mealType, ingredients);
-        
-         GeneratedView newView = new GeneratedView();
-         newView.OpenGeneratedView(refreshedRecipe, originalCreateWindow, recipeList);
-
+        Recipe refreshedRecipe  = CreateView.GetGeneratedRecipe(mealType, ingredients);      
+        refreshedRecipe.setDate(java.time.ZonedDateTime.now().toString());
+        String imageURL = PerformRequest.performImageRequest("Image", "GET", null, refreshedRecipe.getTitle());
+        refreshedRecipe.setImage(imageURL);
+        GeneratedView CreatedViews = new GeneratedView();
+            try {
+                CreatedViews.OpenGeneratedView(refreshedRecipe, originalCreateWindow, recipeList);
+            } catch (IOException e1) {
+                
+                e1.printStackTrace();
+            }
     }
 }

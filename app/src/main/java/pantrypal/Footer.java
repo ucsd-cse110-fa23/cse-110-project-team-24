@@ -13,18 +13,20 @@ class Footer extends HBox {
     private Button Create;
     private MenuButton sortByButton;
     private MenuButton filterByButton;
-
+    private Button LogOut;
     // Constructor for Footer
     Footer() {
+        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
         this.setPrefSize(500, 60);
         this.setStyle("-fx-background-color: #F0F8FF;");
         this.setSpacing(15);
 
-        
-        
+        LogOut = new Button("LogOut this Account");
+        LogOut.setStyle(defaultButtonStyle);
+        this.getChildren().add(LogOut);
         
         // Style string for the button
-        String defaultButtonStyle = "-fx-font-style: italic; -fx-background-color: #FFFFFF;  -fx-font-weight: bold; -fx-font: 11 arial;";
+        
 
          // Initialize the 'Create New Recipe' button and apply style
         Create = new Button("Create New Recipe");
@@ -43,7 +45,9 @@ class Footer extends HBox {
     public Button getCreateButton(){
         return this.Create;
     }
-
+    public Button getLogOutButton(){
+        return this.LogOut;
+    }
     public MenuButton getSortByButton() {
         return this.sortByButton;
     }

@@ -1,5 +1,7 @@
 package pantrypal;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -15,6 +17,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 import javafx.beans.binding.DoubleBinding;
+import com.opencsv.*; 
 
 public class LogInView extends VBox {
     private Button CreateAccountButton;
@@ -109,7 +112,12 @@ public class LogInView extends VBox {
             }
         });
         Initial.getAutomatically().setOnAction(e -> {
-            Initial.AutomaticallyLogIn(LogInViewWindow);
+            try {
+                Initial.AutomaticallyLogIn(LogInViewWindow, root);
+            } catch (IOException e1) {
+               
+                e1.printStackTrace();
+            }
         });
         LogInViewWindow.show();
 
@@ -145,13 +153,22 @@ public class LogInView extends VBox {
         }
     }
 
-    public void AutomaticallyLogIn(Stage LogInViewWindow){
+    public void AutomaticallyLogIn(Stage LogInViewWindow, AppFrame root) throws IOException{
+        
         String username = this.getUsername().getText();
         String password = this.getPassword().getText();
         Account ExistedAccount = new Account(username, password);
         String info = ExistedAccount.CheckAccountExisted();
         if(info.equals("1")){
             ErrorMessageView.OpenErrorMessageView("Welcome to Pantrypal!" + username + " You will be Automatically logged in next time!", true, LogInViewWindow);
+            ExistedAccount.LoadRecipeList(root, username);
+            root.getRecipeList().loadRecipes();
+            File file = new File("AutoLogIn.csv");
+            FileWriter outputfile = new FileWriter(file); 
+            CSVWriter writer = new CSVWriter(outputfile); 
+            String[] account = {username, password};
+            writer.writeNext(account);
+            writer.close();
         }
         if(info.equals("-1")){
             ErrorMessageView.OpenErrorMessageView("Failed to log in Automatically: Account not Existed", false, LogInViewWindow);

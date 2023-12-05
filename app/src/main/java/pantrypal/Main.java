@@ -1,6 +1,13 @@
 package pantrypal;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.opencsv.CSVReader;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -21,7 +28,7 @@ public class Main extends Application {
         else{
             // Setting the Layout of the Window- Should contain a Header, Footer and the TaskList
             PerformRequest pr = new PerformRequest();
-            AppFrame root = new AppFrame(pr);
+            AppFrame root = new AppFrame(pr, primaryStage);
             // Set the title of the app
             primaryStage.setTitle("PantryPal");
             // Create scene of mentioned size with the border pane
@@ -30,7 +37,19 @@ public class Main extends Application {
             primaryStage.setResizable(true);
             // Show the app
             primaryStage.show();
+            Path storedUser = Paths.get("AutoLogIn.csv");
+            if(!Files.exists(storedUser)){
             LogInView.OpenLogInView(root);
+        }
+        else{
+            FileReader reader = new FileReader("AutoLogIn.csv");
+            CSVReader csvReader = new CSVReader(reader);
+            String[] line = csvReader.readNext();
+            Account ExistedAccount = new Account(line[0], line[1]);
+            ExistedAccount.LoadRecipeList(root, line[0]);
+            root.getRecipeList().loadRecipes();
+            csvReader.close();
+        }
 
         }
         
