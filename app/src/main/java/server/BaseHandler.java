@@ -25,7 +25,7 @@ public class BaseHandler implements HttpHandler {
     MongoDatabase RecipeListDB = mongoClient.getDatabase("Recipe_db");
     RecipeList recipes;
 
-     String response = "Request Received";
+    String response = "Request Received";
     public BaseHandler(RecipeList recipes) {
         this.recipes = recipes;
     }
@@ -34,12 +34,14 @@ public class BaseHandler implements HttpHandler {
         //String response = "Request Received";
         String method = httpExchange.getRequestMethod();
         // get the URI path
-        String path = httpExchange.getRequestURI().getPath();
+        //String path = httpExchange.getRequestURI().getPath();
         try {
+            /*
             if (path.equals("/status")) {
                 handleStatusCheck(httpExchange);
-                return; 
+                return;
             }
+            */
             if (method.equals("PUT")) {
                 response = handlePut(httpExchange);
             } else if (method.equals("DELETE")) {
@@ -65,8 +67,8 @@ public class BaseHandler implements HttpHandler {
         outStream.write(response.getBytes());
         outStream.close();
     }
-
-     private void handleStatusCheck(HttpExchange httpExchange) throws IOException{
+/*
+    private void handleStatusCheck(HttpExchange httpExchange) throws IOException{
         response = "Server is up and running!";
         //URI uri = httpExchange.getRequestURI();
         httpExchange.sendResponseHeaders(200, response.length());
@@ -75,9 +77,10 @@ public class BaseHandler implements HttpHandler {
         os.close();
     }
 
+*/
 
     // Add new recipe with components encoded in httpExchange request body
-     String handlePut(HttpExchange httpExchange) throws IOException {
+    String handlePut(HttpExchange httpExchange) throws IOException {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
@@ -85,7 +88,7 @@ public class BaseHandler implements HttpHandler {
         String[] recipeComponents = postData.split(";");
 
         // Store recipe
-        Recipe toAdd = new Recipe(recipeComponents[0], recipeComponents[1], 
+        Recipe toAdd = new Recipe(recipeComponents[0], recipeComponents[1],
                 recipeComponents[2], recipeComponents[3], recipeComponents[4]);
         String recipeID = recipeComponents[5];
         addRecipe(toAdd, recipeID);
@@ -104,7 +107,7 @@ public class BaseHandler implements HttpHandler {
     }
 
     // Delete recipe with componenets encoded in httpExchange URI query
-     String handleDelete(HttpExchange httpExchange) throws IOException {
+    String handleDelete(HttpExchange httpExchange) throws IOException {
         String response = "Invalid DELETE Request";
         URI uri = httpExchange.getRequestURI();
         String query = uri.getRawQuery();
@@ -114,7 +117,7 @@ public class BaseHandler implements HttpHandler {
         if (query != null) {
             String[] components = query.split(";");
             Recipe toDelete = new Recipe(components[0], components[1], components[2], components[3], components[4]);
-            String RecipeID = components[5]; 
+            String RecipeID = components[5];
             int pos = deleteRecipe(toDelete, RecipeID);
             //return endcoded recipe
             return URLEncoder.encode(String.format("%d%s", pos, toDelete.toString()), "US-ASCII");
@@ -139,8 +142,8 @@ public class BaseHandler implements HttpHandler {
         return -1;
     }
 
-    // update recipe with information encoded in request body 
-     String handlePost(HttpExchange httpExchange) throws IOException {
+    // update recipe with information encoded in request body
+    String handlePost(HttpExchange httpExchange) throws IOException {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
         String postData = scanner.nextLine();
@@ -148,7 +151,7 @@ public class BaseHandler implements HttpHandler {
         postData = URLDecoder.decode(postData, "US-ASCII");
         String[] recipeComponents = postData.split(";");
 
-        Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1], 
+        Recipe toUpdate = new Recipe(recipeComponents[0], recipeComponents[1],
                 recipeComponents[2], recipeComponents[3], recipeComponents[4]);
         String userID = recipeComponents[5];
         // Update recipe
@@ -165,9 +168,9 @@ public class BaseHandler implements HttpHandler {
         Bson update1 = set("MealType", edited.getMealType());
         updates.add(update1);
         Bson update2 = set("Ingredient List", edited.getIngredients());
-         updates.add(update2);
+        updates.add(update2);
         Bson update3 = set("Steps", edited.getSteps());
-         updates.add(update3);
+        updates.add(update3);
         RecipeCollection.findOneAndUpdate(filter, updates);
 
         for (int i = 0; i < recipes.size(); i++) {
