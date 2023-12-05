@@ -20,13 +20,13 @@ public class RecipeView extends StackPane{
     public RecipeView(Recipe recipe) {
         this.recipe = recipe;
         this.setAlignment(Pos.BOTTOM_RIGHT);
-        stage = new Stage();       
+        stage = new Stage();
         this.setPrefSize(1400, 100); // sets size of contact
         this.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0; -fx-font-weight: bold;"); // sets background color of task
         
 
         titleButton = new Button(recipe.getTitle());
-        titleButton.setPrefSize(1400, 100);      
+        titleButton.setPrefSize(1400, 100);
         titleButton.setStyle("-fx-background-color: #DAE5EA; -fx-border-width: 0;");
 
         mealTypeLabel = new Label(recipe.getMealType());
@@ -40,13 +40,12 @@ public class RecipeView extends StackPane{
     // Method to check if the recipe is marked for deletion
     public boolean hasBeenDeleted(){
         return this.recipeDeleteButton;
-    }    
+    }
 
     // Getter for the associated stage
     public Stage getStage(){
         return this.stage;
     }
-   
     // Getter for the title button
     public Button getTitle(){
         return this.titleButton;
