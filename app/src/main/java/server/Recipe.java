@@ -12,15 +12,18 @@ public class Recipe {
     String ingredients;
     String steps;
     String Date;
-
+    String Image;
     Recipe (String title, String mealType, String ingredients, String steps, String Date) {
         this.title = title;
         this.mealType = getMealType(mealType);
         this.ingredients = ingredients;
         this.steps = steps;
         this.Date = Date;
-    }
 
+    }
+    public void setImage(String imageString){
+        this.Image = imageString;
+    }
     /**
      * Decides which meal type parameter is most likely to be. Defaults to "Dinner".
      * 
@@ -102,7 +105,8 @@ public class Recipe {
         .append("MealType", this.mealType)
         .append("Ingredient List", this.ingredients)
         .append("Steps", this.steps)
-        .append("Date", this.Date);
+        .append("Date", this.Date)
+        .append("Image", null);
         return Recipe;
     }
 }

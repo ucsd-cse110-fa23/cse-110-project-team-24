@@ -2,9 +2,11 @@ package pantrypal;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,12 +40,25 @@ public class RecipeList extends VBox implements Observer{
         // }
     }
 
-    public void loadRecipes() throws UnsupportedEncodingException {
+    public void loadRecipes() throws IOException {
         String recipeId = this.getRecipeId();
         pr.performRequest(                         
             "RecipeDataGet", "GET", 
             null, "Chronological" + ";" + recipeId);
-        
+            for(int i = 0; i< this.getChildren().size(); i++){
+                if(this.getChildren().get(i) instanceof RecipeView){
+                    RecipeView intask = (RecipeView) this.getChildren().get(i);
+                    Recipe inside = intask.getRecipe();
+                    String Image = PerformRequest.performImageRequest("Image", "POST", null, inside.getTitle()+ "IMAGE_SEP" + this.getRecipeId());
+                    OutputStream os = new FileOutputStream("response.jpg"); 
+                    byte[] Ans = Image.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+        // Starting writing the bytes in it
+                    os.write(Ans);
+                    os.close();
+                    inside.setImage(Image);
+
+                }
+            }
     }
 
     public String getRecipeId(){
@@ -67,6 +82,7 @@ public class RecipeList extends VBox implements Observer{
                 break;
             case "GET":
                 RecipeView newView = new RecipeView(r);
+                
                 Button titleButton = newView.getTitle();
                 titleButton.setOnAction(e1 -> {
                     try {
