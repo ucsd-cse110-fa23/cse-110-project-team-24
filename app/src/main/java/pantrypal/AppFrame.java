@@ -1,8 +1,12 @@
 package pantrypal;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.opencsv.exceptions.CsvException;
 
@@ -11,6 +15,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 
 // Class AppFrame extends BorderPane to create a layout for the app
@@ -29,9 +34,11 @@ public class AppFrame extends BorderPane{
     PerformRequest pr;
     private MenuButton sortByButton;
     private MenuButton filterByButton;
-
+    private Button LogOut;
+    private Stage primaryStage;
     // Constructor for AppFrame
-    AppFrame(PerformRequest pr){
+    AppFrame(PerformRequest pr, Stage primaryStage){
+        this.primaryStage = primaryStage;
         this.pr = pr;
         header = new Header();
 
@@ -53,7 +60,7 @@ public class AppFrame extends BorderPane{
         this.setBottom(footer);
         this.sortByButton = footer.getSortByButton();
         this.filterByButton = footer.getFilterByButton();
-        
+        this.LogOut = footer.getLogOutButton();
         this.Create = footer.getCreateButton();
         addListeners();
     }
@@ -63,6 +70,14 @@ public class AppFrame extends BorderPane{
         return this.recipeList;
     }
     public void addListeners(){
+        LogOut.setOnAction(e2 -> {
+            Path path = Paths.get("AutoLogIn.csv");
+            if(Files.exists(path)){
+                File storeduser = new File("AutoLogIn.csv");
+                storeduser.delete();
+                ErrorMessageView.OpenErrorMessageView("You are logged out, need to log in next time", true, this.primaryStage);
+            }
+        });
         Create.setOnAction(e -> {
 
             //creates a new CreateView instance and opens it
