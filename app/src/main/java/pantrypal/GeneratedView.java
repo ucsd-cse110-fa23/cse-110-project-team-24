@@ -33,7 +33,11 @@ public class GeneratedView extends VBox{
     private TextArea Instruction;
     private TextArea IngredientList;
     private Button SaveButton;
+
     private ImageView Image;
+
+    private Button refreshButton;
+
     GeneratedView(){
 
         Createlabel = new Label();
@@ -70,6 +74,12 @@ public class GeneratedView extends VBox{
         SaveButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
         SaveButton.setAlignment(Pos.CENTER);
         this.getChildren().add(SaveButton);
+
+        refreshButton = new Button("Refresh");
+        refreshButton.setPrefSize(600, 50);
+        refreshButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
+        refreshButton.setAlignment(Pos.CENTER);
+        this.getChildren().add(refreshButton);
 
     }
      // Getter methods for UI components
@@ -155,8 +165,18 @@ public class GeneratedView extends VBox{
             newWindow.close();
         });
 
+        refreshButton.setOnAction(e-> {
+            try {
+                refreshButtonAction(generatedRecipe, newWindow, original, taskList);
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
+
         newWindow.show();
     }
+
     public Image ByteArrayToImage(byte[] Ans) throws IOException{
         OutputStream os = new FileOutputStream("response.jpg"); 
         // Starting writing the bytes in it
@@ -167,46 +187,16 @@ public class GeneratedView extends VBox{
         pic.delete();
         return images;
     }
+    private void refreshButtonAction(Recipe oldRecipe, Stage oldWindow, Stage originalCreateWindow, RecipeList recipeList) throws IOException {
+        oldWindow.close();
+       
+        String mealType = oldRecipe.getMealType();
+        String ingredients = oldRecipe.getIngredients();
+        
+        Recipe refreshedRecipe  = CreateView.GetGeneratedRecipe(mealType, ingredients);
+        
+         GeneratedView newView = new GeneratedView();
+         newView.OpenGeneratedView(refreshedRecipe, originalCreateWindow, recipeList);
+
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//---------------- alternative approaches ----------------- //
-// ---------------- saved here in case we need it -----------------//
-
-    // public String GetName(String ans){
-    //     if(ans.contains("name")){
-    //         String Name = ans.substring(ans.indexOf("name: ")+4, ans.indexOf("\n", ans.indexOf("name")+4));
-    //         return Name;
-    //     }
-    //     return "Failed to Get Name from GPT ANSWER";
-    // }
-
-    // public String GetingredientList(String ans){
-    //     if(ans.contains("ingredient")){
-    //         String List = ans.substring(ans.indexOf("ingredient"), ans.indexOf("instruction"));
-    //         return List;
-    //     }
-    //     return "Failed to Get ingredient List from GPT ANSWER";
-    // }
-
-    // public String GetInstruction(String ans){
-    //     if(ans.contains("instruction")){
-    //         String Instruction = ans.substring(ans.indexOf("instruction"));
-    //         return Instruction;
-    //     }
-    //     return "Failed to Get Instruction from GPT ANSWER";
-    // }
