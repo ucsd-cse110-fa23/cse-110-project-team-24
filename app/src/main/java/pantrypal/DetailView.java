@@ -1,6 +1,13 @@
 package pantrypal;
 
+import java.io.File;
+
 //(import statements)
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.io.FileOutputStream;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,6 +15,8 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 
@@ -24,8 +33,9 @@ public class DetailView extends VBox {
     private Button BackButton;
     private Button DeleteButton;
     private boolean editing = false;
-
-    public DetailView(Recipe expected){
+    private ImageView RecipeImage;
+    private Button ShareButton;
+    public DetailView(Recipe expected) throws IOException{
 
          // Initialize and style UI components
           // Add components to the VBox
@@ -72,6 +82,11 @@ public class DetailView extends VBox {
         StepInstruction.setPadding(new Insets(10, 0, 10, 0));
         StepInstruction.setEditable(false);
         this.getChildren().add(StepInstruction);
+        
+        RecipeImage = new ImageView();
+        
+        RecipeImage.setImage(new Image(recipe.getImage()));
+        this.getChildren().add(RecipeImage);
 
         EditButton = new Button("Edit");
         EditButton.setPrefSize(1400, 50);
@@ -86,6 +101,13 @@ public class DetailView extends VBox {
         // DeleteButton.setPadding(new Insets(10, 0, 10, 0));
         DeleteButton.setAlignment(Pos.CENTER);
         this.getChildren().addAll(EditButton, DeleteButton);
+
+        ShareButton = new Button("Share This Recipe");
+        ShareButton.setPrefSize(1400, 50);
+        ShareButton.setStyle("-fx-background-color: #6495ED; -fx-border-width: 0;");
+        ShareButton.setPadding(new Insets(0, 10, 0, 10));
+        ShareButton.setAlignment(Pos.CENTER);
+        this.getChildren().add(ShareButton);
     }
     public TextArea getType(){
         return this.type;
@@ -149,7 +171,7 @@ public class DetailView extends VBox {
 
     // Creates a new Scene with the DetailView instance
     public static Scene CreateScene(DetailView d) {
-        Scene secondScene = new Scene(d, 500, 300);
+        Scene secondScene = new Scene(d, 500, 850);
         return secondScene;
     }
 
@@ -164,7 +186,14 @@ public class DetailView extends VBox {
         Stage newWindow = new Stage();
         newWindow.setTitle(recipe.getTitle());
         newWindow.setScene(secondScene);
-
+        this.ShareButton.setOnAction(e -> {
+            try {
+                this.OpenShareView(recipeView, recipeList);
+            } catch (UnsupportedEncodingException e1) {
+               
+                e1.printStackTrace();
+            }
+        });
         // Set action for EditButton to enable editing mode
         this.EditButton.setOnAction(e -> {
             this.SetEditable(recipeView, recipeList);
@@ -215,5 +244,22 @@ public class DetailView extends VBox {
             }
         }));
 
+    }
+    public void OpenShareView(RecipeView recipeView, RecipeList taskList) throws UnsupportedEncodingException{
+        Recipe recipe = recipeView.getRecipe();
+        
+        String Link = "http://localhost:8100/Share/?=" + URLEncoder.encode(recipe.toString() + ";" + taskList.getRecipeId(), "US-ASCII");
+        
+        ErrorMessageView.OpenErrorMessageView(Link, false, null);
+    }
+    public Image ByteArrayToImage(byte[] Ans) throws IOException{
+        OutputStream os = new FileOutputStream("response.jpg"); 
+        // Starting writing the bytes in it
+        os.write(Ans);
+        os.close();
+        File pic = new File("response.jpg");
+        Image images = new Image(pic.toURI().toString());
+        pic.delete();
+        return images;
     }
 }

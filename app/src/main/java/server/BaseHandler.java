@@ -25,13 +25,17 @@ public class BaseHandler implements HttpHandler {
     MongoDatabase RecipeListDB = mongoClient.getDatabase("Recipe_db");
     RecipeList recipes;
 
-    String response = "Request Received";
+
+     String response = "BaseHandler Request Received";
+
     public BaseHandler(RecipeList recipes) {
         this.recipes = recipes;
     }
 
     public void handle(HttpExchange httpExchange) throws IOException {
         //String response = "Request Received";
+        response += httpExchange.getRequestMethod();
+        System.out.println(response);
         String method = httpExchange.getRequestMethod();
         // get the URI path
         //String path = httpExchange.getRequestURI().getPath();
@@ -208,6 +212,7 @@ public class BaseHandler implements HttpHandler {
                 Recipe parsedRecipe  = new Recipe((String) recipe.get("RecipeName"), 
                         (String) recipe.get("MealType"), (String) recipe.get("Ingredient List"), 
                         (String) recipe.get("Steps"), (String) recipe.get("Date"));
+                        parsedRecipe.setImage((String) recipe.get("Image"));
                 this.recipes.add(parsedRecipe);
             }
 

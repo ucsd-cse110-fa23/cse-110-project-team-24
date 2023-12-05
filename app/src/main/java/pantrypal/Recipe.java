@@ -14,16 +14,28 @@ public class Recipe {
     String ingredients;
     String steps;
     String  datetime;
+    String image;
     // Constructor to create a new Recipe instance
+    public Recipe (String title, String mealType, String ingredients, String steps, String Date, String imageString) {
+        this.title = title;
+        this.mealType = mealType;
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.datetime = Date;
+        this.image = imageString;
+    }  
     public Recipe (String title, String mealType, String ingredients, String steps, String Date) {
         this.title = title;
         this.mealType = mealType;
         this.ingredients = ingredients;
         this.steps = steps;
         this.datetime = Date;
-    }
+    }  
     public void setDate(String Date){
         this.datetime = Date;
+    }
+    public void setImage(String imageString){
+        this.image = imageString;
     }
     public String getDate(){
         return this.datetime;
@@ -36,7 +48,9 @@ public class Recipe {
         // Create and return a new Recipe object
         return new Recipe(components[0], components[1], components[2], components[3], components[4]);
     }
-
+    public String getImage(){
+        return this.image;
+    }
      // Getters and setters for each attribute
     public String getTitle() {
         return this.title;

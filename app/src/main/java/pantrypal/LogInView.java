@@ -1,5 +1,6 @@
 package pantrypal;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javafx.beans.binding.DoubleBinding;
@@ -103,7 +104,7 @@ public class LogInView extends VBox {
         Initial.getSignInButton().setOnAction(e -> {
             try {
                 Initial.SignInAccount(LogInViewWindow, root);
-            } catch (UnsupportedEncodingException e1) {
+            } catch (IOException e1) {
                 e1.printStackTrace();
             }
         });
@@ -126,7 +127,7 @@ public class LogInView extends VBox {
         else {ErrorMessageView.OpenErrorMessageView(feedback, false, LogInViewWindow);}
     }
 
-    public void SignInAccount(Stage LogInViewWindow, AppFrame root) throws UnsupportedEncodingException{
+    public void SignInAccount(Stage LogInViewWindow, AppFrame root) throws IOException{
         String username = this.getUsername().getText();
         String password = this.getPassword().getText();
         Account ExistedAccount = new Account(username, password);
