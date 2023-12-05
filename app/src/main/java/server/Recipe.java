@@ -13,8 +13,10 @@ public class Recipe {
     String steps;
     String Date;
     String Image;
+    //Constructor for Recipe
     Recipe (String title, String mealType, String ingredients, String steps, String Date) {
         this.title = title;
+        //For purpose of tagging Breakfast, Lunch or Dinner
         this.mealType = getMealType(mealType);
         this.ingredients = ingredients;
         this.steps = steps;
@@ -67,7 +69,7 @@ public class Recipe {
                 || mealType.contains("EAK") || mealType.contains("AST") 
                 || mealType.contains("BR") || mealType.contains("EST");
     }
-
+    //Getters for private variables
     public String getDate(){
         return this.Date;
     }
@@ -75,30 +77,28 @@ public class Recipe {
         return this.title;
     }
 
-    public void setTitle(String text) {
-        this.title = text;
-    }
-
     public String getMealType() {
         return this.mealType;
-    }
-
-    public void setMealType(String type) {
-        this.mealType = type;
     }
 
     public String getIngredients() {
         return this.ingredients;
     }
-
-    public void setIngredients(String text) {
-        this.ingredients = text;
-    }
-
     public String getSteps() {
         return this.steps;
     }
-    
+
+    //Setters for private variables
+    public void setTitle(String text) {
+        this.title = text;
+    }
+    public void setIngredients(String text) {
+        this.ingredients = text;
+    }
+    public void setMealType(String type) {
+        this.mealType = type;
+    }
+
     public void setSteps(String text) {
         this.steps = text;
     }
@@ -112,6 +112,7 @@ public class Recipe {
     public String toString() {
         return String.format("%s;%s;%s;%s;%s", this.title, this.mealType, this.ingredients, this.steps, this.Date);
     }
+    //Return recipe as a document
     public Document toDocument(){
         Document Recipe = new Document().append("RecipeName", this.title)
         .append("MealType", this.mealType)
