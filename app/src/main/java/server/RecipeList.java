@@ -7,9 +7,9 @@ import java.util.ArrayList;
 public class RecipeList {
 
     List<Recipe> recipes;
-    ListModifyingStrategy sortStrategy;
+    ListModifyingStrategy sortStrategy; 
     ListModifyingStrategy filterStrategy;
-    List<Recipe> modifiedRecipes; // up to date modified list (according to lms)
+    List<Recipe> modifiedRecipes; // up to date modified list (according to sorting and filter strategies)
 
     RecipeList () {
         this.sortStrategy = new ChronologicalSorter();
@@ -24,6 +24,7 @@ public class RecipeList {
         this.recipes = new ArrayList<Recipe>();
         modifiedRecipes = new ArrayList<Recipe>();
     }
+
     // Set a new sorting or filtering strategy
     public void setListModifyingStrategy(ListModifyingStrategy newStrategy) {
         if (newStrategy.isSortingStrategy()) {
@@ -61,17 +62,22 @@ public class RecipeList {
         return this.modifiedRecipes;
     }
 
+    // return unsorted and unfiltered list
     public List<Recipe> getList() {
         return this.recipes;
     }
+
+    // get recipe from sorted and filtered list
     public Recipe get(int i) {
         return this.modifiedRecipes.get(i);
     }
 
+    // get sorted and filtered list size
     public int size() {
         return this.modifiedRecipes.size();
     }
 
+   
     public void remove(Recipe recipe) {
         this.recipes.remove(recipe);
         this.updateModifiedRecipes();

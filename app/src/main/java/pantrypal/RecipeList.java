@@ -74,6 +74,7 @@ public class RecipeList extends VBox implements Observer{
         return pr;
     }
 
+    // updates UI recipes
     @Override
     public void update(String method, int pos, Recipe r) {
         switch (method) {

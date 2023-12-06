@@ -10,7 +10,7 @@ public class BreakfastFilter implements ListModifyingStrategy{
         List<Recipe> result = new ArrayList<Recipe>();
         for (Recipe recipe: recipes) {
             if (recipe.getMealType().equals(Recipe.BREAKFAST)) {
-                result.add(result.size(), recipe);
+                result.add(result.size(), recipe); // add recipe if meal type is breakfast
             }
         }
         return result;
