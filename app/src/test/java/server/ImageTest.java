@@ -21,27 +21,37 @@ import org.junit.jupiter.api.Test;
 public class ImageTest {
     MockDallE dallE = new MockDallE();
     File image = new File("response.jpg");
+    @BeforeEach
+    public void initializeImage(){
+       try (FileWriter Writer = new FileWriter("response2.jpg")) {
+        try {
+            Writer.write("This is a response.jpg file");
+            Writer.close(); 
+        } catch (IOException e) {
+           
+            e.printStackTrace();
+        }
+    } catch (IOException e) {
+        
+        e.printStackTrace();
+    }
+       
+    }
     @Test
     public void testReturnImage() throws IOException{
-        File image = new File("response.jpg");
-        FileWriter Writer = new FileWriter("response.jpg");
-        Writer.write("This is a image file");
-        Writer.close();
+       
         String FileReturned = MockDallE.GeneratedImage("response.jpg");
         assertTrue(Files.exists(Paths.get(FileReturned)));
     }
 
     @Test
     public void testImageRead() throws IOException{
-        File image = new File("response.jpg");
-        FileWriter Writer = new FileWriter("response.jpg");
-        Writer.write("This is a image file");
-        Writer.close();
+   
         String FileReturned = MockDallE.GeneratedImage("response.jpg");
         FileReader Reader = new FileReader(FileReturned);
         BufferedReader bufferedReader = new BufferedReader(Reader);
         String Content = bufferedReader.readLine();
-        assertEquals("This is a image file", Content);
+        assertEquals("This is a response.jpg file", Content);
         bufferedReader.close();
 
     }
