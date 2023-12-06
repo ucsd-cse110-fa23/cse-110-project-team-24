@@ -16,13 +16,13 @@ public class AppFrame extends BorderPane{
 
     // Instance variables for different components of the app
     // Header component of the app
-    private Header header; 
+    private Header header;
     // Footer component of the app
     private Footer footer;
     // List to display recipes or tasks
-    private RecipeList recipeList; 
+    private RecipeList recipeList;
     // Button to initiate creation of a new recipe or task
-    private Button Create; 
+    private Button Create;
     
     PerformRequest pr;
     private MenuButton sortByButton;
@@ -121,7 +121,7 @@ public class AppFrame extends BorderPane{
         filterByButton.getItems().add(lunchFilteringOption);
         lunchFilteringOption.setOnAction(e -> {
             filterByButton.setText("Filter By (Currently Lunch)");
-            recipeList.getPerformRequest().performRequest("", "GET", 
+            recipeList.getPerformRequest().performRequest("", "GET",
                     null, "Lunch" + ";" + recipeList.getRecipeId());
         });
 
@@ -130,7 +130,7 @@ public class AppFrame extends BorderPane{
         filterByButton.getItems().add(dinnerFilteringOption);
         dinnerFilteringOption.setOnAction(e -> {
             filterByButton.setText("Filter By (Currently Dinner)");
-            recipeList.getPerformRequest().performRequest("", "GET", 
+            recipeList.getPerformRequest().performRequest("", "GET",
                     null, "Dinner" + ";" + recipeList.getRecipeId());
         });
         

@@ -14,7 +14,7 @@ public class Main extends Application {
         //check if the service is available
         boolean serverAvailable = ServerStatusCheck.isServerAvailable();
         if (!serverAvailable) {
-            //if Server is unavailable, show error message
+            //if Server is unavailable, show server error message
             ServerErrorView.display();
             return;
         }

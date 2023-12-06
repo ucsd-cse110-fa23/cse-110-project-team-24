@@ -26,3 +26,9 @@ public class ServerStatusCheck {
         }
     }
 }
+
+ // private static String STATUS_CHECK_ENDPOINT = "http://localhost:8100/status";
+
+    // public static void setEndpoint(String endpoint) {
+    //     STATUS_CHECK_ENDPOINT = endpoint;
+    // }

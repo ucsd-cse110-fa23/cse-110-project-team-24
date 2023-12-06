@@ -30,8 +30,8 @@ public class Account implements SuperAccount{
         return "Welcome to PantryPal! " + username;
     }
     public String CheckAccountExisted(){
-       String info = PerformRequest.performDefaultRequest("CheckAccountValid", "GET", null, username+";"+password);
-       return info;
+        String info = PerformRequest.performDefaultRequest("CheckAccountValid", "GET", null, username+";"+password);
+        return info;
     }
     public void LoadRecipeList(AppFrame root, String username){
         root.getRecipeList().setRecipeId(username);
