@@ -18,7 +18,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-public class DallE {
+
+public class DallE implements ImageGenerator {
  private static final String API_ENDPOINT ="https://api.openai.com/v1/images/generations";
  private static final String API_KEY = "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";
 
