@@ -125,6 +125,11 @@ public class LogInView extends VBox {
     public void CreateAccount(Stage LogInViewWindow, AppFrame root) throws UnsupportedEncodingException{
         String username = this.getUsername().getText();
         String password = this.getPassword().getText();
+        if (username.equals("") || password.equals("")){
+            ErrorMessageView.OpenErrorMessageView("Username and password must be non-empty",
+                     false, LogInViewWindow);
+            return;
+        }
         Account NewAccount = new Account(username, password);
         String feedback = NewAccount.InsertNewAccount();
         if(feedback.equals("Welcome to PantryPal! " + username)){

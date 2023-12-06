@@ -3,7 +3,7 @@ package server;
 import java.util.List;
 import java.util.ArrayList;
 
-
+// RecipeList class manages a list of recipes with sorting and filtering strategies
 public class RecipeList {
 
     List<Recipe> recipes;
@@ -11,21 +11,20 @@ public class RecipeList {
     ListModifyingStrategy filterStrategy;
     List<Recipe> modifiedRecipes; // up to date modified list (according to lms)
 
-
-
     RecipeList () {
         this.sortStrategy = new ChronologicalSorter();
         this.filterStrategy = new NoFilter();
         this.recipes = new ArrayList<Recipe>();
         modifiedRecipes = new ArrayList<Recipe>();
     }
+    // Constructor with custom sorting and filtering strategies
     RecipeList (ListModifyingStrategy sortStrategy, ListModifyingStrategy filterStrategy) {
         this.sortStrategy = sortStrategy;
         this.filterStrategy = filterStrategy;
         this.recipes = new ArrayList<Recipe>();
         modifiedRecipes = new ArrayList<Recipe>();
     }
-
+    // Set a new sorting or filtering strategy
     public void setListModifyingStrategy(ListModifyingStrategy newStrategy) {
         if (newStrategy.isSortingStrategy()) {
             this.sortStrategy = newStrategy;
@@ -37,23 +36,27 @@ public class RecipeList {
         this.updateModifiedRecipes();
     }
 
-    
+     // Update the modified list according to the current sorting and filtering strategies
     private void updateModifiedRecipes() {
         this.modifiedRecipes = sortStrategy.getModifiedList(recipes);
         this.modifiedRecipes = filterStrategy.getModifiedList(modifiedRecipes);
     }
-
+     // Add a recipe to the list and update the modified list
     public void add (Recipe r) {
         this.recipes.add(0, r);
         this.updateModifiedRecipes();
     }
-
+     // Add a recipe at a specific index and update the modified list
     public void add (int i, Recipe r) {
         this.recipes.add(i, r);
         this.updateModifiedRecipes();
     }
-
-
+    // Add a list of recipes to the current list and update the modified list
+    public void addAll(List<Recipe> recipesToAdd) {
+        this.recipes.addAll(recipesToAdd);
+        this.updateModifiedRecipes();
+    }
+    // Get the current modified list of recipes
     public List<Recipe> getModifiedRecipes() {
         return this.modifiedRecipes;
     }
@@ -61,13 +64,12 @@ public class RecipeList {
     public List<Recipe> getList() {
         return this.recipes;
     }
+    public Recipe get(int i) {
+        return this.modifiedRecipes.get(i);
+    }
 
     public int size() {
         return this.modifiedRecipes.size();
-    }
-
-    public Recipe get(int i) {
-        return this.modifiedRecipes.get(i);
     }
 
     public void remove(Recipe recipe) {
@@ -82,11 +84,7 @@ public class RecipeList {
         this.updateModifiedRecipes();
     }
 
-    public void addAll(List<Recipe> recipesToAdd) {
-        this.recipes.addAll(recipesToAdd);
-        this.updateModifiedRecipes();
-    }
-
+    // Set a sorting or filtering strategy based on a string query
     public void setListModifyingStrategy(String query) {
         switch (query) {
             case "Alphabetical":
