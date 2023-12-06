@@ -1,6 +1,6 @@
 package pantrypal;
 
-// import necessary libraries and files 
+// import necessary libraries and files
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -101,7 +101,7 @@ class AudioRecorder extends VBox {
         int sampleSizeInBits = 16;
 
         // the number of audio channels in this format (1 for mono, 2 for stereo).
-        int channels = 2;
+        int channels = 1;
 
         // whether the data is signed or unsigned.
         boolean signed = true;

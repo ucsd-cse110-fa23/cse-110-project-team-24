@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="server.MultiplePlatformsTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-12-06T02:30:44" hostname="Safias-MacBook-Pro.local" time="0.129">
+  <properties/>
+  <testcase name="handleDeleteTest()" classname="server.MultiplePlatformsTest" time="0.118"/>
+  <testcase name="testGetParsedAndDecodedQuery()" classname="server.MultiplePlatformsTest" time="0.001"/>
+  <testcase name="testHandleGet()" classname="server.MultiplePlatformsTest" time="0.004"/>
+  <testcase name="testHandlePost()" classname="server.MultiplePlatformsTest" time="0.003"/>
+  <testcase name="handlePostTest()" classname="server.MultiplePlatformsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Dec 05, 2023 6:30:44 PM com.mongodb.internal.diagnostics.logging.Loggers shouldUseSLF4J
+WARNING: SLF4J not found on the classpath.  Logging is disabled for the 'org.mongodb.driver' component
+]]></system-err>
+</testsuite>
