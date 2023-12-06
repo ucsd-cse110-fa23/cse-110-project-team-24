@@ -9,13 +9,14 @@ import java.util.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+// MockBaseHandler class handles HTTP requests related to recipes
 public class MockBaseHandler implements HttpHandler {
     private List<Recipe> recipes;
     
     public MockBaseHandler(List<Recipe> recipes) {
         this.recipes = recipes;
     }
-
+    // Handle the incoming HTTP request
     public void handle(HttpExchange httpExchange) throws IOException {
         String response = "Request Received";
         String method = httpExchange.getRequestMethod();
@@ -42,7 +43,7 @@ public class MockBaseHandler implements HttpHandler {
         outStream.write(response.getBytes());
         outStream.close();
     }
-
+    // Handle PUT request: Add a new recipe to the list
     public String handlePut(HttpExchange httpExchange) throws IOException {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
@@ -58,7 +59,7 @@ public class MockBaseHandler implements HttpHandler {
         scanner.close();
         return URLEncoder.encode("Added recipe " + toAdd.toString(), "US-ASCII");
     }
-
+    // Handle DELETE request: Remove a recipe from the list
     public String handleDelete(HttpExchange httpExchange) throws IOException {
         String response = "Invalid DELETE Request";
         URI uri = httpExchange.getRequestURI();
@@ -82,7 +83,7 @@ public class MockBaseHandler implements HttpHandler {
         }
         return response;
     }
-
+    // Handle POST request: Update an existing recipe in the list
     public String handlePost(HttpExchange httpExchange) throws IOException {
         InputStream inStream = httpExchange.getRequestBody();
         Scanner scanner = new Scanner(inStream);
@@ -107,6 +108,7 @@ public class MockBaseHandler implements HttpHandler {
 
 
     }
+    // Handle GET request: Retrieve all recipes in the list
     public String handleGet(HttpExchange httpExchange) {
         String result = "";
         for (Recipe recipe:recipes){

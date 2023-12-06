@@ -83,17 +83,3 @@ class ChatGPTResponse implements APIResponse{
         return request;
     }
 }
-
-
-
-// class MockAPIResponse implements APIResponse {
-//     String response;
-//     MockAPIResponse (String response) {
-//         this.response = response;
-//     }
-
-//     public String getText(String mealType, String Ingredients) {
-//         return this.response;
-//     }
-
-// }
