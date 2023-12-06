@@ -9,7 +9,7 @@ public class NoFilter implements ListModifyingStrategy{
     public List<Recipe> getModifiedList(List<Recipe> recipes) {
         List<Recipe> result = new ArrayList<Recipe>();
         for (Recipe recipe: recipes) {
-            result.add(result.size(), recipe);
+            result.add(result.size(), recipe); // add every recipe in same order
         }
         return result;
     }

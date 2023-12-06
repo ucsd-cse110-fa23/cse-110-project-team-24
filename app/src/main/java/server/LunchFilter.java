@@ -10,7 +10,7 @@ public class LunchFilter implements ListModifyingStrategy{
         List<Recipe> result = new ArrayList<Recipe>();
         for (Recipe recipe: recipes) {
             if (recipe.getMealType().equals(Recipe.LUNCH)) {
-                result.add(result.size(), recipe);
+                result.add(result.size(), recipe); // add recipe if meal type is lunch
             }
         }
         return result;

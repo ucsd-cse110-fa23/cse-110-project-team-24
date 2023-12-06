@@ -9,11 +9,12 @@ public class ReverseAlphabeticalSorter implements ListModifyingStrategy{
     public List<Recipe> getModifiedList(List<Recipe> recipes) {
         List<Recipe> result = new ArrayList<Recipe>();
         for (Recipe recipe:recipes) {
-            this.addInReverseAlphabeticalPostition(result, recipe);
+            this.addInReverseAlphabeticalPostition(result, recipe);  // add each recipe in appropriate position
         }
         return result;
     }
 
+    // Add recipe in to recipes in way that maintains reverse-alphabetical sorting
     void addInReverseAlphabeticalPostition(List<Recipe> recipes, Recipe recipe) {
         String title = recipe.getTitle().toLowerCase();
         for (int i = 0; i < recipes.size(); i++) {
