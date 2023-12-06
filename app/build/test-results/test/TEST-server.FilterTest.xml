@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="server.FilterTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2023-12-06T02:30:44" hostname="Safias-MacBook-Pro.local" time="0.006">
+  <properties/>
+  <testcase name="scenario1Test()" classname="server.FilterTest" time="0.002"/>
+  <testcase name="scenario2Test()" classname="server.FilterTest" time="0.002"/>
+  <testcase name="DinnerFilterTest()" classname="server.FilterTest" time="0.0"/>
+  <testcase name="BreakfastFilterTest()" classname="server.FilterTest" time="0.001"/>
+  <testcase name="LunchFilterTest()" classname="server.FilterTest" time="0.001"/>
+  <testcase name="NoFilterTest()" classname="server.FilterTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

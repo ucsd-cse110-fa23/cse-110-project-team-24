@@ -11,7 +11,7 @@ public class ServerErrorView extends VBox {
     private Label errorMessage;
     private Button closeButton;
 
-    ServerErrorView(){
+    public ServerErrorView(){
         String message = "Unable to connect to Server. Please try again later.";
         this.errorMessage = new Label(message);
         errorMessage.setPrefSize(400, 200);
@@ -25,7 +25,9 @@ public class ServerErrorView extends VBox {
         closeButton.setOnAction(e -> ((Stage) this.getScene().getWindow()).close());
         this.getChildren().add(closeButton);
     }
-
+    public Label getErrorMessage(){
+        return this.errorMessage;
+    }
 
     public static void display() {
         Stage  ServerErrorViewWindow= new Stage();
